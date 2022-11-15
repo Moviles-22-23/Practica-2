@@ -14,19 +14,132 @@ import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import es.ucm.stalos.engine.AbstractGraphics;
-import es.ucm.stalos.engine.Engine;
-import es.ucm.stalos.engine.Font;
-import es.ucm.stalos.engine.Image;
-
-public class AndroidGraphics extends AbstractGraphics {
+public class AndroidGraphics {
     protected AndroidGraphics(int w, int h, WindowManager windowManager, Window window) {
-        super(w, h);
+        _logWidth = w;
+        _logHeight = h;
+        _logPosX = 0.0f;
+        _logPosY = 0.0f;
         _wManager = windowManager;
         _window = window;
         _assetManager = _window.getContext().getAssets();
         _paint = new Paint();
     }
+
+    //---------------------------ABSTRACT-GRAPHICS-VIEJO------------------------------------------//
+
+    /**
+     * Calculate the scale to force a determined aspect ratio
+     *
+     * @return the scale factor
+     */
+    private float getScaleFactor() {
+        float widthScale = getWidth() / _logWidth;
+        float heightScale = getHeight() / _logHeight;
+
+        // Nos interesa el tamaño más pequeño
+        return Math.min(widthScale, heightScale);
+    }
+
+    /**
+     * Calculate the physic position applying the scale factor
+     *
+     * @param x X-axis position
+     * @param y Y-axis position
+     * @return the real position [x, y]
+     */
+    protected int[] finalPosition(float x, float y) {
+        _scaleFactor = getScaleFactor();
+        float offsetX = (getWidth() - (_logWidth * _scaleFactor)) / 2.0f;
+        float offsetY = (getHeight() - (_logHeight) * _scaleFactor) / 2.0f;
+
+        return new int [] {
+                (int) ((x * _scaleFactor) + offsetX),
+                (int) ((y * _scaleFactor) + offsetY)
+        };
+    }
+
+    /**
+     * Calculate the physic size applying the scale factor
+     *
+     * @param w width value
+     * @param h height value
+     * @return the real size [width, height]
+     */
+    protected int[] finalSize(float w, float h) {
+        _scaleFactor = getScaleFactor();
+
+        return new int[] {
+                (int) (w * _scaleFactor),
+                (int) (h * _scaleFactor)
+        };
+    }
+
+    /**
+     * Calculate the physic size applying the scale factor
+     *
+     * @param size size value
+     * @return the real size
+     */
+    protected int finalSize(float size) {
+        _scaleFactor = getScaleFactor();
+        return (int) (size * _scaleFactor);
+    }
+
+    /**
+     * Given a position P(x, y), returns a new value into the
+     * logic system of coordinates
+     * @param x X-axis position
+     * @param y Y-axis position
+     */
+    public int[] logPos(int x, int y) {
+        _scaleFactor = getScaleFactor();
+        float offsetX = (_logWidth - (getWidth() / _scaleFactor)) / 2;
+        float offsetY = (_logHeight - (getHeight() / _scaleFactor)) / 2;
+
+        int newPosX = (int) ((x / _scaleFactor) + offsetX);
+        int newPosY = (int) ((y / _scaleFactor) + offsetY);
+
+        int[] newPos = new int[2];
+        newPos[0] = newPosX;
+        newPos[1] = newPosY;
+
+        return newPos;
+    }
+
+    private int[] translateWindow() {
+        float offsetX = (getWidth() - (_logWidth * _scaleFactor)) / 2.0f;
+        float offsetY = (getHeight() - (_logHeight) * _scaleFactor) / 2.0f;
+
+        int newPosX = (int) ((_logPosX * _scaleFactor) + offsetX);
+        int newPosY = (int) ((_logPosY * _scaleFactor) + offsetY);
+
+        int[] newPos = new int[2];
+        newPos[0] = newPosX;
+        newPos[1] = newPosY;
+
+        return newPos;
+    }
+
+    public int getLogWidth() {
+        return (int) _logWidth;
+    }
+
+    public int getLogHeight() {
+        return (int) _logHeight;
+    }
+
+
+    // Logic position
+    private float _logPosX, _logPosY;
+
+    // Logic scale
+    private float _logWidth, _logHeight;
+
+    // Scale factor
+    private float _scaleFactor;
+
+    //--------------------------------------------------------------------------------------------//
 
     public boolean init(AndroidInput input, AppCompatActivity activity) {
         try {
@@ -53,16 +166,14 @@ public class AndroidGraphics extends AbstractGraphics {
 
 //-----------------------------------------------------------------//
 
-    @Override
-    public Image newImage(String name) throws Exception {
+    public AndroidImage newImage(String name) throws Exception {
         AndroidImage img = new AndroidImage("images/" + name, _assetManager);
         if (!img.init()) throw new Exception();
 
         return img;
     }
 
-    @Override
-    public Font newFont(String filename, int size, boolean isBold) throws Exception {
+    public AndroidFont newFont(String filename, int size, boolean isBold) throws Exception {
         AndroidFont font = new AndroidFont("fonts/" + filename, size, isBold, _assetManager);
         if (!font.init()) throw new Exception();
         return font;
@@ -70,13 +181,11 @@ public class AndroidGraphics extends AbstractGraphics {
 
 //-----------------------------------------------------------------//
 
-    @Override
     public void clear(int color) {
         setColor(color);
         _canvas.drawColor(color);
     }
 
-    @Override
     public void setColor(int color) {
         int r = (color & 0xff000000) >> 24;
         int g = (color & 0x00ff0000) >> 16;
@@ -88,16 +197,14 @@ public class AndroidGraphics extends AbstractGraphics {
 
 //-----------------------------------------------------------------//
 
-    @Override
-    public void drawImage(Image image, int[] pos, float[] size) {
+    public void drawImage(AndroidImage image, int[] pos, float[] size) {
         Rect source = new Rect(0, 0, image.getWidth(), image.getHeight());
         Rect destiny = new Rect(pos[0], pos[1], (int) (pos[0] + size[0]), (int) (pos[1] + size[1]));
         _canvas.drawBitmap(((AndroidImage) image).getBitmap(), source, destiny, null);
     }
 
-    @Override
-    public void drawText(String text, int[] pos, Font font) {
-        Typeface currFont = ((AndroidFont) font).getAndroidFont();
+    public void drawText(String text, int[] pos, AndroidFont font) {
+        Typeface currFont = font.getAndroidFont();
         _paint.setTypeface(currFont);
         _paint.setTextSize(font.getSize());
         _paint.setTextAlign(Paint.Align.LEFT);
@@ -105,9 +212,8 @@ public class AndroidGraphics extends AbstractGraphics {
         _paint.reset();
     }
 
-    @Override
-    public void drawCenteredString(String text, int[] pos, float[] size, Font font) {
-        Typeface currFont = ((AndroidFont) font).getAndroidFont();
+    public void drawCenteredString(String text, int[] pos, float[] size, AndroidFont font) {
+        Typeface currFont = font.getAndroidFont();
 
         _paint.setTypeface(currFont);
         _paint.setTextSize(font.getSize());
@@ -116,32 +222,27 @@ public class AndroidGraphics extends AbstractGraphics {
         _paint.reset();
     }
 
-    @Override
     public void drawRect(int[] pos, float side) {
         _paint.setStyle(Paint.Style.STROKE);
         float[] s = {side, side};
         paintRect(pos, s);
     }
 
-    @Override
     public void drawRect(int[] pos, float[] size) {
         _paint.setStyle(Paint.Style.STROKE);
         paintRect(pos, size);
     }
 
-    @Override
     public void drawLine(int[] start, int[] end) {
         _canvas.drawLine(start[0], start[1], end[0], end[1], _paint);
     }
 
-    @Override
     public void fillSquare(int[] pos, float side) {
         _paint.setStyle(Paint.Style.FILL);
         float[] s = {side, side};
         paintRect(pos, s);
     }
 
-    @Override
     public void fillSquare(int[] pos, float[] size) {
         _paint.setStyle(Paint.Style.FILL);
         paintRect(pos, size);
@@ -157,39 +258,37 @@ public class AndroidGraphics extends AbstractGraphics {
     }
 //----------------------------------------------------------------//
 
-    @Override
     public int getWidth() {
         return _winSize.x;
     }
 
-    @Override
     public int getHeight() {
         return _winSize.y;
     }
 
 //----------------------------------------------------------------//
 
-    @Override
     public void prepareFrame() {
         while (!_holder.getSurface().isValid()) {
             System.out.println("PREPARE FRAME: NULL");
         }
 
         _canvas = _holder.lockCanvas();
-        super.prepareFrame();
+        // SCALE & TRANSLATE
+        _scaleFactor = getScaleFactor();
+        int[] newPos = translateWindow();
+        translate(newPos[0], newPos[1]);
+        scale(_scaleFactor, _scaleFactor);
     }
 
-    @Override
     public void translate(int x, int y) {
         _canvas.translate(x, y);
     }
 
-    @Override
     public void scale(float x, float y) {
         _canvas.scale(x, y);
     }
 
-    @Override
     public void restore() {
         _holder.unlockCanvasAndPost(_canvas);
     }

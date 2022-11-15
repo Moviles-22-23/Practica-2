@@ -3,9 +3,8 @@ package es.ucm.stalos.androidengine;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 
-import es.ucm.stalos.engine.Sound;
 
-public class AndroidSound implements Sound {
+public class AndroidSound {
     public AndroidSound(String filename, AssetManager assetManager) {
         _filename = filename;
         _assetManager = assetManager;

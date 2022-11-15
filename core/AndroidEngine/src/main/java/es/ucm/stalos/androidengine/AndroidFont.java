@@ -1,14 +1,9 @@
 package es.ucm.stalos.androidengine;
 
 import android.content.res.AssetManager;
-import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 
-import java.io.InputStream;
-
-import es.ucm.stalos.engine.Font;
-
-public class AndroidFont implements Font {
+public class AndroidFont {
 
     public AndroidFont(String fileName, float size, boolean isBold, AssetManager assetManager) {
         _fileName = fileName;
@@ -23,12 +18,10 @@ public class AndroidFont implements Font {
         return true;
     }
 
-    @Override
     public void setSize(float newSize) {
         _size = newSize;
     }
 
-    @Override
     public float getSize() {
         return _size;
     }

@@ -3,13 +3,10 @@ package es.ucm.stalos.androidengine;
 import android.content.res.AssetManager;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import es.ucm.stalos.engine.IFile;
-
-public class AndroidFile implements IFile {
+public class AndroidFile {
     public AndroidFile(String fileName, AssetManager assets)
     {
         _fileName = fileName;
@@ -29,7 +26,6 @@ public class AndroidFile implements IFile {
         return true;
     }
 
-    @Override
     public BufferedReader getBufferReader() {
         return _br;
     }

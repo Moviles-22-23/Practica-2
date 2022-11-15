@@ -5,7 +5,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import es.ucm.stalos.androidengine.AndroidEngine;
-import es.ucm.stalos.logic.states.LoadState;
+import es.ucm.stalos.nonogramas.logic.states.LoadState;
 
 public class MainActivity extends AppCompatActivity {
 

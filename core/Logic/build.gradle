@@ -8,5 +8,7 @@ java {
 }
 
 dependencies {
-    implementation project(path: ':Engine')
+    implementation project(path: ':AndroidEngine')
 }
+
+

@@ -5,16 +5,12 @@ import android.view.SurfaceView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import es.ucm.stalos.engine.AbstractEngine;
-import es.ucm.stalos.engine.IFile;
-import es.ucm.stalos.engine.State;
-
-public class AndroidEngine extends AbstractEngine implements Runnable {
+public class AndroidEngine implements Runnable {
     public AndroidEngine() {
 
     }
 
-    public boolean init(State initState, int w, int h, AppCompatActivity activity) {
+    public boolean init(AbstractState initState, int w, int h, AppCompatActivity activity) {
         AssetManager assetsMan = activity.getApplicationContext().getAssets();
 
         //STATE
@@ -35,7 +31,6 @@ public class AndroidEngine extends AbstractEngine implements Runnable {
         return ((AndroidGraphics) _graphics).init((AndroidInput) _input, activity) && _currState.init();
     }
 
-    @Override
     public void run() {
         if (_renderThread != Thread.currentThread()) {
             // Evita que cualquiera que no sea esta clase llame a este Runnable en un Thread
@@ -99,6 +94,50 @@ public class AndroidEngine extends AbstractEngine implements Runnable {
         }
     }
 
+    //---------------------------------------ABSTRACT-ENGINE-VIEJO--------------------------------//
+
+    protected void updateDeltaTime() {
+        _currentTime = System.nanoTime();
+        long nanoElapsedTime = _currentTime - _lastFrameTime;
+        _lastFrameTime = _currentTime;
+        _deltaTime = (double) nanoElapsedTime / 1.0E9;
+    }
+
+    public void reqNewState(AbstractState newState){
+        _changeState = true;
+        _newState = newState;
+    }
+
+    public AndroidGraphics getGraphics() {
+        return _graphics;
+    }
+
+    public AndroidInput getInput() {
+        return _input;
+    }
+
+    public AndroidAudio getAudio(){
+        return _audio;
+    }
+
+    public AndroidFileReader getFileReader(){
+        return _fReader;
+    }
+    //--------------------------------------------------------------------------------------------//
+
     private Thread _renderThread;
     private boolean _running;
+
+    protected boolean _changeState = false;
+    protected AbstractState _newState;
+    protected AbstractState _currState;
+    protected AndroidGraphics _graphics;
+    protected AndroidInput _input;
+    protected AndroidAudio _audio;
+    protected AndroidFileReader _fReader;
+
+    // DELTA TIME
+    protected long _lastFrameTime = 0;
+    protected long _currentTime = 0;
+    protected double _deltaTime = 0;
 }

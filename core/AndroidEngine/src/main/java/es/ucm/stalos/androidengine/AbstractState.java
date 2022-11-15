@@ -1,0 +1,68 @@
+package es.ucm.stalos.androidengine;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
+/**
+ * Clase base para definir las diferentes escenas
+ */
+public abstract class AbstractState {
+
+    protected AbstractState(AndroidEngine engine)
+    {
+        this._engine = engine;
+        this._graphics = engine.getGraphics();
+        this._audio = _engine.getAudio();
+    }
+
+    /**
+     * Initialize the state
+     * @return false if it fails
+     * */
+    protected boolean init(){
+        return true;
+    }
+
+    /**
+     * Calculate if the position of the click is inside an square
+     * @param clickPos CLick position to be checked
+     * @param squarePos Upper-left corner of the square
+     * @param squareSize Size of the square
+     * @return true if the click is inside the square
+     */
+    protected boolean clickInsideSquare(int[] clickPos, int[] squarePos, float[] squareSize) {
+        return (clickPos[0] > squarePos[0] && clickPos[0] < (squarePos[0] + squareSize[0]) &&
+                clickPos[1] > squarePos[1] && clickPos[1] < (squarePos[1] + squareSize[1]));
+    }
+
+    /**
+     * Updates logic
+     * */
+    protected void update(double deltaTime) {
+
+    }
+
+    /**
+     * Updates graphics
+     * */
+    protected void render() {
+
+    }
+
+    /**
+     * Updates input
+     * */
+    protected void handleInput() {
+
+    }
+
+    protected AndroidEngine _engine;
+    protected AndroidGraphics _graphics;
+    protected AndroidAudio _audio;
+
+    // Attributes to create a timer
+    protected Timer _timer;
+    protected TimerTask _timerTask;
+    protected int _timeDelay;
+}
+

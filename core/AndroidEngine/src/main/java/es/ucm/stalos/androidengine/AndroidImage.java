@@ -7,9 +7,7 @@ import android.graphics.BitmapFactory;
 import java.io.IOException;
 import java.io.InputStream;
 
-import es.ucm.stalos.engine.Image;
-
-public class AndroidImage implements Image {
+public class AndroidImage {
     public AndroidImage(String filename, AssetManager assetManager) {
         _filename = filename;
         _assetManager = assetManager;
@@ -36,12 +34,10 @@ public class AndroidImage implements Image {
         return true;
     }
 
-    @Override
     public int getWidth() {
         return _bitmap.getWidth();
     }
 
-    @Override
     public int getHeight() {
         return _bitmap.getHeight();
     }
