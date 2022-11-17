@@ -13,15 +13,15 @@ package es.ucm.stalos.nonogramas.logic.objects;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import es.ucm.stalos.androidengine.AndroidEngine;
-import es.ucm.stalos.androidengine.AndroidFont;
-import es.ucm.stalos.androidengine.AndroidGraphics;
-import es.ucm.stalos.androidengine.AndroidFile;
+import es.ucm.stalos.androidengine.Engine;
+import es.ucm.stalos.androidengine.Font;
+import es.ucm.stalos.androidengine.Graphics;
 import es.ucm.stalos.nonogramas.logic.enums.CellType;
 
 public class Board {
@@ -52,7 +52,7 @@ public class Board {
     }
 
     //-------------------------------------------INIT-------------------------------------------------//
-    public boolean init(AndroidEngine engine) {
+    public boolean init(Engine engine) {
         try {
             _engine = engine;
             _fontSize = (int) (_hintSize * 0.9f);
@@ -80,8 +80,8 @@ public class Board {
             // LevelPack Name
             String name = "levels/levelPack" + String.valueOf(_rows) + "x" + String.valueOf(_cols) + ".txt";
             // IFile from the current platform
-            AndroidFile file = _engine.getFileReader().newFile(name);
-            BufferedReader br = file.getBufferReader();
+            InputStream is = _engine.getAssetManager().open(name);
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
             //
             String line;
             line = br.readLine();
@@ -225,7 +225,7 @@ public class Board {
     }
 
     //----------------------------------------MAIN-LOOP-----------------------------------------------//
-    public void render(AndroidGraphics graphics) {
+    public void render(Graphics graphics) {
         if (!_isWin) {
             // Variable auiliares para pintar
             int[] pos = new int[2];
@@ -485,7 +485,7 @@ public class Board {
         _isWin = state;
     }
     //----------------------------------------ATTRIBUTES----------------------------------------------//
-    private AndroidEngine _engine;
+    private Engine _engine;
 
     /**
      *  Number of rows of the grid
@@ -535,7 +535,7 @@ public class Board {
     /**
      * Hints' text font
      */
-    AndroidFont _hintFont;
+    Font _hintFont;
     /**
      * Font size
      */

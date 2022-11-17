@@ -4,8 +4,8 @@ import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 
 
-public class AndroidSound {
-    public AndroidSound(String filename, AssetManager assetManager) {
+public class Sound {
+    public Sound(String filename, AssetManager assetManager) {
         _filename = filename;
         _assetManager = assetManager;
     }

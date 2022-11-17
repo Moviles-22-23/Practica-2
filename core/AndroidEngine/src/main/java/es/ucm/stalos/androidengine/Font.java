@@ -3,9 +3,9 @@ package es.ucm.stalos.androidengine;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 
-public class AndroidFont {
+public class Font {
 
-    public AndroidFont(String fileName, float size, boolean isBold, AssetManager assetManager) {
+    public Font(String fileName, float size, boolean isBold, AssetManager assetManager) {
         _fileName = fileName;
         _size = size;
         _isBold = isBold;
@@ -18,10 +18,16 @@ public class AndroidFont {
         return true;
     }
 
+    /**
+     * Apply a new size to the font
+     */
     public void setSize(float newSize) {
         _size = newSize;
     }
 
+    /**
+     * @return current font's size
+     */
     public float getSize() {
         return _size;
     }

@@ -1,34 +1,30 @@
 package es.ucm.stalos.androidengine;
 
 import android.content.res.AssetManager;
-import android.view.SurfaceView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class AndroidEngine implements Runnable {
-    public AndroidEngine() {
+public class Engine implements Runnable {
+    public Engine() {
 
     }
 
-    public boolean init(AbstractState initState, int w, int h, AppCompatActivity activity) {
-        AssetManager assetsMan = activity.getApplicationContext().getAssets();
+    public boolean init(State initState, int w, int h, AppCompatActivity activity) {
+        _assetsMan = activity.getApplicationContext().getAssets();
 
         //STATE
         _currState = initState;
 
         //GRAPHICS
-        _graphics = new AndroidGraphics(w, h, activity.getWindowManager(), activity.getWindow());
+        _graphics = new Graphics(w, h, activity.getWindowManager(), activity.getWindow());
 
         // INPUT
-        _input = new AndroidInput(this);
+        _input = new Input(this);
 
         // AUDIO
-        _audio = new AndroidAudio(assetsMan);
+        _audio = new Audio(_assetsMan, 10);
 
-        // FILE READER
-        _fReader = new AndroidFileReader(assetsMan);
-
-        return ((AndroidGraphics) _graphics).init((AndroidInput) _input, activity) && _currState.init();
+        return ((Graphics) _graphics).init((Input) _input, activity) && _currState.init();
     }
 
     public void run() {
@@ -72,7 +68,7 @@ public class AndroidEngine implements Runnable {
             this._renderThread = new Thread(this);
             this._renderThread.start();
 
-            ((AndroidAudio) _audio).resume();
+            ((Audio) _audio).resumeMusic();
         }
     }
 
@@ -90,12 +86,46 @@ public class AndroidEngine implements Runnable {
                 }
             }
 
-            ((AndroidAudio) _audio).pause();
+            ((Audio) _audio).pauseBackMusic();
         }
     }
 
     //---------------------------------------ABSTRACT-ENGINE-VIEJO--------------------------------//
 
+    /**
+     * Request a change state. It is used to not change immediately, but
+     * to do later.
+     * @param newState New state to change
+     */
+    public void reqNewState(State newState){
+        _changeState = true;
+        _newState = newState;
+    }
+
+    /**
+     * @return Instance of graphics engine
+     */
+    public Graphics getGraphics() {
+        return _graphics;
+    }
+
+    /**
+     * @return Instance of input manager
+     */
+    public Input getInput() {
+        return _input;
+    }
+
+    /**
+     * @return Instace of audio manager
+     */
+    public Audio getAudio(){
+        return _audio;
+    }
+
+    /**
+     * Update deltaTime value
+     */
     protected void updateDeltaTime() {
         _currentTime = System.nanoTime();
         long nanoElapsedTime = _currentTime - _lastFrameTime;
@@ -103,41 +133,25 @@ public class AndroidEngine implements Runnable {
         _deltaTime = (double) nanoElapsedTime / 1.0E9;
     }
 
-    public void reqNewState(AbstractState newState){
-        _changeState = true;
-        _newState = newState;
-    }
-
-    public AndroidGraphics getGraphics() {
-        return _graphics;
-    }
-
-    public AndroidInput getInput() {
-        return _input;
-    }
-
-    public AndroidAudio getAudio(){
-        return _audio;
-    }
-
-    public AndroidFileReader getFileReader(){
-        return _fReader;
+    public AssetManager getAssetManager()
+    {
+        return _assetsMan;
     }
     //--------------------------------------------------------------------------------------------//
 
     private Thread _renderThread;
     private boolean _running;
 
-    protected boolean _changeState = false;
-    protected AbstractState _newState;
-    protected AbstractState _currState;
-    protected AndroidGraphics _graphics;
-    protected AndroidInput _input;
-    protected AndroidAudio _audio;
-    protected AndroidFileReader _fReader;
+    private boolean _changeState = false;
+    private State _newState;
+    private State _currState;
+    private Graphics _graphics;
+    private Input _input;
+    private Audio _audio;
+    private AssetManager _assetsMan;
 
     // DELTA TIME
-    protected long _lastFrameTime = 0;
-    protected long _currentTime = 0;
-    protected double _deltaTime = 0;
+    private long _lastFrameTime = 0;
+    private long _currentTime = 0;
+    private double _deltaTime = 0;
 }

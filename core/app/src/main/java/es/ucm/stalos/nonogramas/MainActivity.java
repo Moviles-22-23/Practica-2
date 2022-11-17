@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import es.ucm.stalos.androidengine.AndroidEngine;
+import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.nonogramas.logic.states.LoadState;
 
 public class MainActivity extends AppCompatActivity {
@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
 
-        _engine = new AndroidEngine();
+        _engine = new Engine();
         LoadState loadAssets = new LoadState(_engine);
 
         if (!_engine.init(loadAssets, 400, 600, this)) {
@@ -34,5 +34,5 @@ public class MainActivity extends AppCompatActivity {
         _engine.pause();
     }
 
-    protected AndroidEngine _engine;
+    protected Engine _engine;
 }

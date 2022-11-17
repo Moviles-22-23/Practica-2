@@ -6,9 +6,9 @@ import java.util.TimerTask;
 /**
  * Clase base para definir las diferentes escenas
  */
-public abstract class AbstractState {
+public abstract class State {
 
-    protected AbstractState(AndroidEngine engine)
+    protected State(Engine engine)
     {
         this._engine = engine;
         this._graphics = engine.getGraphics();
@@ -56,9 +56,9 @@ public abstract class AbstractState {
 
     }
 
-    protected AndroidEngine _engine;
-    protected AndroidGraphics _graphics;
-    protected AndroidAudio _audio;
+    protected Engine _engine;
+    protected Graphics _graphics;
+    protected Audio _audio;
 
     // Attributes to create a timer
     protected Timer _timer;

@@ -3,7 +3,7 @@ package es.ucm.stalos.nonogramas.logic.objects;
 import java.util.HashMap;
 import java.util.Map;
 
-import es.ucm.stalos.androidengine.AndroidGraphics;
+import es.ucm.stalos.androidengine.Graphics;
 import es.ucm.stalos.nonogramas.logic.enums.CellType;
 
 public class Cell {
@@ -32,7 +32,7 @@ public class Cell {
         _colors.put(CellType.RED, 0xFF0000FF);
     }
 
-    public void render(AndroidGraphics graphics) {
+    public void render(Graphics graphics) {
         // Filled Square
         int[] fillPos = new int[]{fx, fy};
         graphics.setColor(_colors.get(cellType));

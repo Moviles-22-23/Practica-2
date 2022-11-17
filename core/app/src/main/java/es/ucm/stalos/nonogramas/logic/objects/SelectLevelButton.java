@@ -1,12 +1,12 @@
 package es.ucm.stalos.nonogramas.logic.objects;
 
-import es.ucm.stalos.androidengine.AndroidFont;
-import es.ucm.stalos.androidengine.AndroidGraphics;
+import es.ucm.stalos.androidengine.Font;
+import es.ucm.stalos.androidengine.Graphics;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 
 public class SelectLevelButton {
-    public SelectLevelButton(int[] pos, float[] size, GridType gridType, AndroidFont font) {
+    public SelectLevelButton(int[] pos, float[] size, GridType gridType, Font font) {
         _buttonPos[0] = pos[0];
         _buttonPos[1] = pos[1];
 
@@ -56,7 +56,7 @@ public class SelectLevelButton {
         }
     }
 
-    public void render(AndroidGraphics gr) {
+    public void render(Graphics gr) {
         gr.drawRect(_buttonPos, _buttonSize);
         gr.drawCenteredString(_text, _buttonPos, _buttonSize, _font);
     }
@@ -99,7 +99,7 @@ public class SelectLevelButton {
     /**
      * Font of the text
      */
-    private final AndroidFont _font;
+    private final Font _font;
     /**
      * Grid's row number to
      * create with the button

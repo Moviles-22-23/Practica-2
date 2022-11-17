@@ -1,23 +1,23 @@
 package es.ucm.stalos.nonogramas.logic;
 
-import es.ucm.stalos.androidengine.AndroidImage;
-import es.ucm.stalos.androidengine.AndroidSound;
+import es.ucm.stalos.androidengine.Image;
+import es.ucm.stalos.androidengine.Sound;
 
 public class Assets {
     // Images
-    public static AndroidImage playButton;
-    public static AndroidImage greyButton;
-    public static AndroidImage giveUpButton;
-    public static AndroidImage checkButton;
-    public static AndroidImage cellHelp;
-    public static AndroidImage cellHelp2;
-    public static AndroidImage cellHelp3;
-    public static AndroidImage backArrow;
-    public static AndroidImage lens;
+    public static Image playButton;
+    public static Image greyButton;
+    public static Image giveUpButton;
+    public static Image checkButton;
+    public static Image cellHelp;
+    public static Image cellHelp2;
+    public static Image cellHelp3;
+    public static Image backArrow;
+    public static Image lens;
 
     // Audio
-    public static AndroidSound mainTheme;
-    public static AndroidSound menuTheme;
-    public static AndroidSound clickSound;
-    public static AndroidSound winSound;
+    public static Sound mainTheme;
+    public static Sound menuTheme;
+    public static Sound clickSound;
+    public static Sound winSound;
 }

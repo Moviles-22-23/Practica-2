@@ -5,13 +5,15 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AndroidInput implements View.OnTouchListener {
-    public AndroidInput(AndroidEngine e) {
+public class Input implements View.OnTouchListener {
+    public Input(Engine e) {
         _engine = e;
         _events = new ArrayList<>();
     }
-//-------------------------------------------------ABSTRACT-INPUT-VIEJO---------------------------//
 
+    /**
+     * @return return the list of all events
+     */
     public List<TouchEvent> getTouchEvents() {
         if (!_events.isEmpty()) {
             List<TouchEvent> touchEvents = new ArrayList<>(_events);
@@ -28,7 +30,7 @@ public class AndroidInput implements View.OnTouchListener {
      * @param y Window Y position
      */
     protected void onTouchDownEvent(int x, int y) {
-        AndroidGraphics g = _engine.getGraphics();
+        Graphics g = _engine.getGraphics();
 
         TouchEvent currEvent = TouchEvent.touchDown;
         int[] eventPos = g.logPos(x, y);
@@ -38,15 +40,13 @@ public class AndroidInput implements View.OnTouchListener {
         _events.add(currEvent);
     }
 
-    protected AndroidEngine _engine;
-    protected List<TouchEvent> _events;
-
-    //--------------------------------------------------------------------------------------------//
-
     public boolean onTouch(View v, MotionEvent e) {
         if (e.getAction() == MotionEvent.ACTION_DOWN) {
             onTouchDownEvent((int) e.getX(), (int) e.getY());
         }
         return true;
     }
+
+    private Engine _engine;
+    private List<TouchEvent> _events;
 }

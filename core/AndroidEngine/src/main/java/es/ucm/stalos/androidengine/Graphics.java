@@ -14,8 +14,8 @@ import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class AndroidGraphics {
-    protected AndroidGraphics(int w, int h, WindowManager windowManager, Window window) {
+public class Graphics {
+    protected Graphics(int w, int h, WindowManager windowManager, Window window) {
         _logWidth = w;
         _logHeight = h;
         _logPosX = 0.0f;
@@ -141,7 +141,7 @@ public class AndroidGraphics {
 
     //--------------------------------------------------------------------------------------------//
 
-    public boolean init(AndroidInput input, AppCompatActivity activity) {
+    public boolean init(Input input, AppCompatActivity activity) {
         try {
             // ADDITIONAL FLAGS
             _window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -166,15 +166,15 @@ public class AndroidGraphics {
 
 //-----------------------------------------------------------------//
 
-    public AndroidImage newImage(String name) throws Exception {
-        AndroidImage img = new AndroidImage("images/" + name, _assetManager);
+    public Image newImage(String name) throws Exception {
+        Image img = new Image("images/" + name, _assetManager);
         if (!img.init()) throw new Exception();
 
         return img;
     }
 
-    public AndroidFont newFont(String filename, int size, boolean isBold) throws Exception {
-        AndroidFont font = new AndroidFont("fonts/" + filename, size, isBold, _assetManager);
+    public Font newFont(String filename, int size, boolean isBold) throws Exception {
+        Font font = new Font("fonts/" + filename, size, isBold, _assetManager);
         if (!font.init()) throw new Exception();
         return font;
     }
@@ -197,13 +197,13 @@ public class AndroidGraphics {
 
 //-----------------------------------------------------------------//
 
-    public void drawImage(AndroidImage image, int[] pos, float[] size) {
+    public void drawImage(Image image, int[] pos, float[] size) {
         Rect source = new Rect(0, 0, image.getWidth(), image.getHeight());
         Rect destiny = new Rect(pos[0], pos[1], (int) (pos[0] + size[0]), (int) (pos[1] + size[1]));
-        _canvas.drawBitmap(((AndroidImage) image).getBitmap(), source, destiny, null);
+        _canvas.drawBitmap(((Image) image).getBitmap(), source, destiny, null);
     }
 
-    public void drawText(String text, int[] pos, AndroidFont font) {
+    public void drawText(String text, int[] pos, Font font) {
         Typeface currFont = font.getAndroidFont();
         _paint.setTypeface(currFont);
         _paint.setTextSize(font.getSize());
@@ -212,7 +212,7 @@ public class AndroidGraphics {
         _paint.reset();
     }
 
-    public void drawCenteredString(String text, int[] pos, float[] size, AndroidFont font) {
+    public void drawCenteredString(String text, int[] pos, float[] size, Font font) {
         Typeface currFont = font.getAndroidFont();
 
         _paint.setTypeface(currFont);

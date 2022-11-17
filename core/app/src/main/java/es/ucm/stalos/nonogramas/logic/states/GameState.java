@@ -5,18 +5,35 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import es.ucm.stalos.androidengine.TouchEvent;
-import es.ucm.stalos.androidengine.AbstractState;
-import es.ucm.stalos.androidengine.AndroidEngine;
-import es.ucm.stalos.androidengine.AndroidFont;
-import es.ucm.stalos.androidengine.AndroidImage;
+import es.ucm.stalos.androidengine.State;
+import es.ucm.stalos.androidengine.Engine;
+import es.ucm.stalos.androidengine.Font;
+import es.ucm.stalos.androidengine.Image;
 import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.enums.PlayingState;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 import es.ucm.stalos.nonogramas.logic.objects.Board;
 
-public class GameState extends AbstractState {
 
-    public GameState(AndroidEngine engine, int rows, int columns, boolean isRandom) {
+// TODO: REWARDED VIDEO, SISTEMA DE VIDAS, PALETA DE COLORES
+
+// REWARDED VIDEO: Los vídeos recompensados serán opcionales para el jugador, dándole ventajas sobre el
+//juego si deciden verlos. Para más información sobre cómo recompensamos al jugador leer
+//la subsección siguiente, Retención y recompensas
+
+
+// SISTEMA DE VIDAS: Implementar la lógica del sistema de vidas para que no pueda colocar nuevas
+// casillas hasta tener vidas de nuevo. Añadir apartado gráfico para las vidas (corazones o lo que sea)
+
+// PALETA DE COLORES: crearemos un conjunto de características que les permite customizar la vista
+// del juego y la paleta de colores del tablero.
+
+// ENUNCIADO: Por ello crearemos un sistema de recompensas que permite conseguir las paletas de
+//colores y a su vez que nos de la opción a ganar también vidas (?)
+
+public class GameState extends State {
+
+    public GameState(Engine engine, int rows, int columns, boolean isRandom) {
         super(engine);
         this._rows = rows;
         this._cols = columns;
@@ -82,7 +99,7 @@ public class GameState extends AbstractState {
                         _timer = null;
                     }
                     _board.handleInput(clickPos);
-                    _audio.play(Assets.clickSound, 0);
+                    _audio.playSound(Assets.clickSound, 0);
                 }
                 // BACK BUTTON WIN
                 else if (_playState == PlayingState.Win && clickInsideSquare(clickPos, _backImagePos, _backButtonSize))
@@ -112,10 +129,19 @@ public class GameState extends AbstractState {
         _giveupCallback = new ButtonCallback() {
             @Override
             public void doSomething() {
-                AbstractState selectLevelState = new SelectLevelState(_engine, _isRandom);
-                _engine.reqNewState(selectLevelState);
-                _audio.stopMusic(Assets.mainTheme);
-                _audio.play(Assets.clickSound, 0);
+                State selectLevel;
+                // Story mode
+                // TODO: En lugar de volver a StoryPackage hay que volver a PackageLevel
+                //  para ello habría que guardar el paquete que se está jugando actualmente
+                //  porque el SelectPackageLevel pedirá como parámetro el paquete a cargar
+                if(!_isRandom)
+                    selectLevel = new SelectStoryPackage(_engine);
+                    // Random mode
+                else
+                    selectLevel = new SelectRandomLevel(_engine);
+                _engine.reqNewState(selectLevel);
+                _audio.stopMusic();
+                _audio.playSound(Assets.clickSound, 0);
             }
         };
 
@@ -140,7 +166,7 @@ public class GameState extends AbstractState {
                     _playState = PlayingState.Win;
                     _board.setPos(new int[]{_posBoard[0], _posBoard[1] - 50});
                     _board.setWin(true);
-                    _audio.play(Assets.winSound, 0);
+                    _audio.playSound(Assets.winSound, 0);
                 }
                 // Then check for another one
                 else if (_board.checkAnotherSolution()) {
@@ -148,12 +174,12 @@ public class GameState extends AbstractState {
                     _winText2 = "Otra solución";
                     _board.setPos(new int[]{_posBoard[0], _posBoard[1] - 50});
                     _board.setWin(true);
-                    _audio.play(Assets.winSound, 0);
+                    _audio.playSound(Assets.winSound, 0);
                 } else {
                     _playState = PlayingState.Checking;
                     showText();
                 }
-                _audio.play(Assets.clickSound, 0);
+                _audio.playSound(Assets.clickSound, 0);
             }
         };
 
@@ -173,10 +199,20 @@ public class GameState extends AbstractState {
         _backCallback = new ButtonCallback() {
             @Override
             public void doSomething() {
-                AbstractState selectLevel = new SelectLevelState(_engine, _isRandom);
+                State selectLevel;
+                // Story mode
+                // TODO: En lugar de volver a StoryPackage hay que volver a PackageLevel
+                //  para ello habría que guardar el paquete que se está jugando actualmente
+                //  porque el SelectPackageLevel pedirá como parámetro el paquete a cargar
+                if(!_isRandom)
+                    selectLevel = new SelectStoryPackage(_engine);
+                // Random mode
+                else
+                    selectLevel = new SelectRandomLevel(_engine);
+
                 _engine.reqNewState(selectLevel);
-                _audio.stopMusic(Assets.mainTheme);
-                _audio.play(Assets.clickSound, 0);
+                _audio.stopMusic();
+                _audio.playSound(Assets.clickSound, 0);
             }
         };
 
@@ -301,7 +337,7 @@ public class GameState extends AbstractState {
     private float[] _sizeBoard = new float[2];
 
     // Texts
-    private AndroidFont _fontText;
+    private Font _fontText;
 
     private String _hintsText1 = "Te faltan x casillas";
     private int[] _hintPos1 = new int[2];
@@ -320,14 +356,14 @@ public class GameState extends AbstractState {
     private float[] _winSize2 = new float[2];
 
     // Buttons
-    private AndroidFont _fontButtons;
+    private Font _fontButtons;
 
     // Give Up Button
     private final String _giveupText = "Rendirse";
     private int[] _giveupTextPos = new int[2];
     private float[] _giveupTextSize = new float[2];
 
-    private final AndroidImage _giveupImage = Assets.backArrow;
+    private final Image _giveupImage = Assets.backArrow;
     private int[] _giveupImagePos = new int[2];
     private float[] _giveupImageSize = new float[2];
 
@@ -339,7 +375,7 @@ public class GameState extends AbstractState {
     private int[] _checkTextPos = new int[2];
     private float[] _checkTextSize = new float[2];
 
-    private final AndroidImage _checkImage = Assets.lens;
+    private final Image _checkImage = Assets.lens;
     private int[] _checkImagePos = new int[2];
     private float[] _checkImageSize = new float[2];
 
@@ -351,7 +387,7 @@ public class GameState extends AbstractState {
     private int[] _backTextPos = new int[2];
     private float[] _backTextSize = new float[2];
 
-    private final AndroidImage _backImage = Assets.backArrow;
+    private final Image _backImage = Assets.backArrow;
     private int[] _backImagePos = new int[2];
     private float[] _backImageSize = new float[2];
 

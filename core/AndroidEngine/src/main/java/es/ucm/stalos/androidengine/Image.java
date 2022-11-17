@@ -7,8 +7,8 @@ import android.graphics.BitmapFactory;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class AndroidImage {
-    public AndroidImage(String filename, AssetManager assetManager) {
+public class Image {
+    public Image(String filename, AssetManager assetManager) {
         _filename = filename;
         _assetManager = assetManager;
     }
@@ -34,10 +34,16 @@ public class AndroidImage {
         return true;
     }
 
+    /**
+     * @return Width of the image
+     */
     public int getWidth() {
         return _bitmap.getWidth();
     }
 
+    /**
+     * @return Height of the image
+     */
     public int getHeight() {
         return _bitmap.getHeight();
     }
