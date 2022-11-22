@@ -23,6 +23,7 @@ public class LoadState extends State {
             //Sprites
             Assets.backArrow = graphics.newImage("backArrow.png");
             Assets.lens = graphics.newImage("lents.png");
+            Assets.heart = graphics.newImage("heart.png");
 
             // Audio
             Assets.menuTheme = audio.newSound("menuTheme.wav");

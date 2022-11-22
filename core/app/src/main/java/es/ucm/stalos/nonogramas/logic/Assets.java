@@ -14,6 +14,7 @@ public class Assets {
     public static Image cellHelp3;
     public static Image backArrow;
     public static Image lens;
+    public static Image heart;
 
     // Audio
     public static Sound mainTheme;

@@ -2,6 +2,7 @@ package es.ucm.stalos.androidengine;
 
 import android.view.MotionEvent;
 import android.view.View;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class Input implements View.OnTouchListener {
      * Process input's coordinates to transform them into
      * x and y logical positions.
      * Also adds the event to the list
+     *
      * @param x Window X position
      * @param y Window Y position
      */
@@ -40,13 +42,36 @@ public class Input implements View.OnTouchListener {
         _events.add(currEvent);
     }
 
+
+    protected void onLongTouchEvent(int x, int y) {
+        Graphics g = _engine.getGraphics();
+
+        TouchEvent currEvent = TouchEvent.longTouch;
+        int[] eventPos = g.logPos(x, y);
+        currEvent.setX(eventPos[0]);
+        currEvent.setY(eventPos[1]);
+
+        _events.add(currEvent);
+    }
+
     public boolean onTouch(View v, MotionEvent e) {
         if (e.getAction() == MotionEvent.ACTION_DOWN) {
             onTouchDownEvent((int) e.getX(), (int) e.getY());
+        } else if (longTouch) {
+            onLongTouchEvent((int) e.getX(), (int) e.getY());
+            longTouch = false;
         }
         return true;
     }
 
+    /*
+        @Override
+        public boolean onLongClick(View v) {
+            longTouch = true;
+            return false;
+        }
+    */
     private Engine _engine;
+    private boolean longTouch;
     private List<TouchEvent> _events;
 }

@@ -31,7 +31,8 @@ import es.ucm.stalos.nonogramas.logic.objects.Board;
 // ENUNCIADO: Por ello crearemos un sistema de recompensas que permite conseguir las paletas de
 //colores y a su vez que nos de la opción a ganar también vidas (?)
 
-public class GameState extends State {
+public class
+GameState extends State {
 
     public GameState(Engine engine, int rows, int columns, boolean isRandom) {
         super(engine);
@@ -66,7 +67,7 @@ public class GameState extends State {
 
     @Override
     public void update(double deltaTime) {
-
+        _lifeText = "x" + _lifes;
     }
 
     @Override
@@ -87,10 +88,10 @@ public class GameState extends State {
                 /// GIVE-UP BUTTON
                 if (_playState == PlayingState.Gaming && clickInsideSquare(clickPos, _giveupImagePos, _giveupButtonSize))
                     _giveupCallback.doSomething();
-                // CHECK BUTTON
+                    // CHECK BUTTON
                 else if (_playState == PlayingState.Gaming && clickInsideSquare(clickPos, _checkImagePos, _checkButtonSize))
                     _checkCallback.doSomething();
-                // BOARD INPUT
+                    // BOARD INPUT
                 else if (_playState != PlayingState.Win && clickInsideSquare(clickPos, _posBoard, _sizeBoard)) {
                     if (_playState == PlayingState.Checking && _timer != null && _timerTask != null) {
                         _timerTask.run();
@@ -134,7 +135,7 @@ public class GameState extends State {
                 // TODO: En lugar de volver a StoryPackage hay que volver a PackageLevel
                 //  para ello habría que guardar el paquete que se está jugando actualmente
                 //  porque el SelectPackageLevel pedirá como parámetro el paquete a cargar
-                if(!_isRandom)
+                if (!_isRandom)
                     selectLevel = new SelectStoryPackage(_engine);
                     // Random mode
                 else
@@ -204,9 +205,9 @@ public class GameState extends State {
                 // TODO: En lugar de volver a StoryPackage hay que volver a PackageLevel
                 //  para ello habría que guardar el paquete que se está jugando actualmente
                 //  porque el SelectPackageLevel pedirá como parámetro el paquete a cargar
-                if(!_isRandom)
+                if (!_isRandom)
                     selectLevel = new SelectStoryPackage(_engine);
-                // Random mode
+                    // Random mode
                 else
                     selectLevel = new SelectRandomLevel(_engine);
 
@@ -215,6 +216,17 @@ public class GameState extends State {
                 _audio.playSound(Assets.clickSound, 0);
             }
         };
+
+        // Life
+        _lifeImageSize[0] = _giveupImageSize[0] * 1.5f;
+        _lifeImageSize[1] = _giveupImageSize[1] * 1.5f;
+        _lifeTextSize[0] = _graphics.getLogWidth() * 0.2f;
+        _lifeTextSize[1] = _giveupImageSize[1];
+
+        _lifeImagePos[0] = (int) (_graphics.getLogWidth() / 2 - _lifeImageSize[0] - _lifeTextSize[0]);
+        _lifeImagePos[1] = _giveupImagePos[1];
+        _lifeTextPos[0] = (int) (_graphics.getLogWidth() / 2 - _lifeTextSize[0]);
+        _lifeTextPos[1] = _giveupImagePos[1];
 
     }
 
@@ -254,6 +266,9 @@ public class GameState extends State {
                 // Check Button
                 _graphics.drawImage(_checkImage, _checkImagePos, _checkImageSize);
                 _graphics.drawCenteredString(_checkText, _checkTextPos, _checkTextSize, _fontButtons);
+                // Life Image
+                _graphics.drawImage(_lifeImage, _lifeImagePos, _lifeImageSize);
+                _graphics.drawCenteredString(_lifeText, _lifeTextPos, _lifeTextSize, _fontButtons);
                 break;
             case Win: {
                 // Back Button
@@ -292,7 +307,7 @@ public class GameState extends State {
         _sizeBoard[1] = 360.0f;
 
         _board = new Board(_rows, _cols, _posBoard, _sizeBoard, _isRandom);
-        if(!_board.init(_engine)) throw new Exception("Error al crear el board");
+        if (!_board.init(_engine)) throw new Exception("Error al crear el board");
     }
 
     private void showText() {
@@ -300,11 +315,11 @@ public class GameState extends State {
         // ATTRIBUTES
         int[] mistakes = _board.countMistakes();
 
-        if(mistakes[0] == 0) _hintsText1 = "No te faltan casillas";
+        if (mistakes[0] == 0) _hintsText1 = "No te faltan casillas";
         else if (mistakes[0] == 1) _hintsText1 = "Te falta " + mistakes[0] + " casilla";
         else _hintsText1 = "Te faltan " + mistakes[0] + " casillas";
 
-        if(mistakes[1] == 0) _hintsText2 = "No tienes casillas mal";
+        if (mistakes[1] == 0) _hintsText2 = "No tienes casillas mal";
         else if (mistakes[1] == 1) _hintsText2 = "Tienes mal " + mistakes[1] + " casilla";
         else _hintsText2 = "Tienes mal " + mistakes[1] + " casillas";
 
@@ -393,6 +408,16 @@ public class GameState extends State {
 
     private float[] _backButtonSize = new float[2];
     private ButtonCallback _backCallback;
+
+    // Life management
+    private int _lifes = 5;
+    private String _lifeText = "xX";
+    private int[] _lifeTextPos = new int[2];
+    private float[] _lifeTextSize = new float[2];
+
+    private final Image _lifeImage = Assets.heart;
+    private int[] _lifeImagePos = new int[2];
+    private float[] _lifeImageSize = new float[2];
 
     // Colors
     private final int _blackColor = 0x000000FF;
