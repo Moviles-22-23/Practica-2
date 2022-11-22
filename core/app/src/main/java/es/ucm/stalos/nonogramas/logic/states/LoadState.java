@@ -24,6 +24,7 @@ public class LoadState extends State {
             Assets.backArrow = graphics.newImage("backArrow.png");
             Assets.lens = graphics.newImage("lents.png");
             Assets.heart = graphics.newImage("heart.png");
+            Assets.lock = graphics.newImage("lock.png");
 
             // Audio
             Assets.menuTheme = audio.newSound("menuTheme.wav");

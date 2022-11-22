@@ -12,7 +12,7 @@ import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
-import es.ucm.stalos.nonogramas.logic.objects.SelectLevelButton;
+import es.ucm.stalos.nonogramas.logic.objects.SelectPackageButton;
 
 //TODO: Hacer toda la lógica de los paquetes
 
@@ -91,7 +91,7 @@ public class SelectStoryPackage extends State {
             };
 
             // BUTTONS
-            initSelectLevelButtons();
+            initSelectPackageButtons();
 
             // AUDIO
             _audio.playMusic(Assets.menuTheme);
@@ -118,7 +118,7 @@ public class SelectStoryPackage extends State {
         _graphics.drawCenteredString(_backText, _backTextPos, _backTextSize, _textsFont);
 
         // SelectLevel buttons
-        for (SelectLevelButton button : _selectButtons) {
+        for (SelectPackageButton button : _selectButtons) {
             button.render(_graphics);
         }
     }
@@ -133,7 +133,7 @@ public class SelectStoryPackage extends State {
 
                 if (clickInsideSquare(clickPos, _backImagePos, _backButtonSize)) _backCallback.doSomething();
                 else {
-                    for (SelectLevelButton button : _selectButtons) {
+                    for (SelectPackageButton button : _selectButtons) {
                         int[] pos = button.getPos();
                         float[] size = button.getSize();
                         if (clickInsideSquare(clickPos, pos, size)) {
@@ -152,7 +152,7 @@ public class SelectStoryPackage extends State {
      *
      * @throws Exception in case of font creation fails
      */
-    private void initSelectLevelButtons() throws Exception {
+    private void initSelectPackageButtons() throws Exception {
         _selectButtons = new ArrayList<>();
 
         float min = Math.min((_graphics.getLogWidth() * 0.2f), (_graphics.getLogHeight() * 0.2f));
@@ -169,14 +169,16 @@ public class SelectStoryPackage extends State {
             pos[0] = (int)(_graphics.getLogWidth() * 0.1f) * (1 + (3 * j));
             pos[1] = (int)(_graphics.getLogHeight() * 0.143f) * (3 + (i / 3) * 2);
 
-            final SelectLevelButton _level = new SelectLevelButton(pos, size, _gridTypes.get(i), font);
+            // TODO: Logica de comprobación de archivos guardados
+            boolean unlocked = i == 0 ? true : false;
+            _choosenGrid = _gridTypes.get(i);
+
+            final SelectPackageButton _level = new SelectPackageButton(pos, size, _choosenGrid, font, unlocked);
             _level.setCallback(new ButtonCallback() {
                 @Override
                 public void doSomething() {
-                    int r = _level.getRows();
-                    int c = _level.getCols();
-                    State gameState = new GameState(_engine, r, c, false);
-                    _engine.reqNewState(gameState);
+                    State selectLevel = new SelectPackageLevel(_engine, _choosenGrid);
+                    _engine.reqNewState(selectLevel);
                     _audio.playSound(Assets.clickSound, 0);
                     _audio.stopMusic();
                 }
@@ -210,7 +212,7 @@ public class SelectStoryPackage extends State {
     private float[] _modeSize = new float[2];
 
     // Comment Text
-    private final String _commentText = "Selecciona el tamaño del puzzle";
+    private final String _commentText = "Selecciona el paquete";
     private int[] _commentPos = new int[2];
     private float[] _commentSize = new float[2];
 
@@ -230,14 +232,20 @@ public class SelectStoryPackage extends State {
     /**
      * List of all select level buttons
      */
-    List<SelectLevelButton> _selectButtons;
+    List<SelectPackageButton> _selectButtons;
     /**
      * Dictionary of information about
      * different grid level types
      */
     Map<Integer, GridType> _gridTypes;
+    /**
+     * Choosen grid type
+     */
+    GridType _choosenGrid;
 
     // Colors
     private final int _greyColor = 0x313131FF;
     private final int _blackColor = 0x000000FF;
+
+
 }

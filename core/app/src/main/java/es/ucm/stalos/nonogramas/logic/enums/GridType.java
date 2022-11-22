@@ -12,9 +12,63 @@ public enum GridType {
     _10x15(5),
     MAX(6);
 
-    GridType(int i) { this.value = i; }
+    GridType(int i) {
+        this.value = i;
+        switch (i) {
+            case 0:
+                _rows = 4;
+                _cols = 4;
+                _text = 4 + "x" + 4;
+                break;
+            case 1:
+                _rows = 5;
+                _cols = 5;
+                _text = 5 + "x" + 5;
+                break;
+            case 2:
+                _rows = 5;
+                _cols = 10;
+                _text = 5 + "x" + 10;
+                break;
+            case 3:
+                _rows = 8;
+                _cols = 8;
+                _text = 8 + "x" + 8;
+                break;
+            case 4:
+                _rows = 10;
+                _cols = 10;
+                _text = 10 + "x" + 10;
+                break;
+            case 5:
+                _rows = 10;
+                _cols = 15;
+                _text = 10 + "x" + 15;
+                break;
+        }
+    }
 
-    public int getValue () { return value; }
+    public int getValue() {
+        return value;
+    }
 
     private int value;
+
+    public String getText() {
+        return _text;
+    }
+
+    public int getRows()
+    {
+        return _rows;
+    }
+
+    public int getCols()
+    {
+        return _cols;
+    }
+
+    private String _text;
+    private int _rows;
+    private int _cols;
 }

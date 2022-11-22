@@ -2,11 +2,13 @@ package es.ucm.stalos.nonogramas.logic.objects;
 
 import es.ucm.stalos.androidengine.Font;
 import es.ucm.stalos.androidengine.Graphics;
+import es.ucm.stalos.androidengine.Image;
+import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 
-public class SelectLevelButton {
-    public SelectLevelButton(int[] pos, float[] size, GridType gridType, Font font) {
+public class SelectPackageButton {
+    public SelectPackageButton(int[] pos, float[] size, GridType gridType, Font font, boolean unlocked) {
         _buttonPos[0] = pos[0];
         _buttonPos[1] = pos[1];
 
@@ -16,49 +18,31 @@ public class SelectLevelButton {
         initType(gridType);
 
         _font = font;
+
+        _isUnlocked = unlocked;
     }
 
     /**
      * Initialize the buttonType
      */
     private void initType(GridType gridType) {
-        switch (gridType) {
-            case _4x4:
-                _rows = 4;
-                _cols = 4;
-                _text = 4 + "x" + 4;
-                break;
-            case _5x5:
-                _rows = 5;
-                _cols = 5;
-                _text = 5 + "x" + 5;
-                break;
-            case _5x10:
-                _rows = 5;
-                _cols = 10;
-                _text = 5 + "x" + 10;
-                break;
-            case _8x8:
-                _rows = 8;
-                _cols = 8;
-                _text = 8 + "x" + 8;
-                break;
-            case _10x10:
-                _rows = 10;
-                _cols = 10;
-                _text = 10 + "x" + 10;
-                break;
-            case _10x15:
-                _rows = 10;
-                _cols = 15;
-                _text = 10 + "x" + 15;
-                break;
-        }
+        _rows = gridType.getRows();
+        _cols = gridType.getCols();
+        _text = gridType.getText();
     }
 
     public void render(Graphics gr) {
         gr.drawRect(_buttonPos, _buttonSize);
-        gr.drawCenteredString(_text, _buttonPos, _buttonSize, _font);
+        if(!_isUnlocked)
+        {
+            gr.setColor(0x9B9B9BFF);
+            gr.fillSquare(_buttonPos, _buttonSize);
+            gr.drawImage(_lockImage, _buttonPos, _buttonSize);
+        }
+        else {
+            gr.setColor(0x000000FF);
+            gr.drawCenteredString(_text, _buttonPos, _buttonSize, _font);
+        }
     }
 
     public void setCallback(ButtonCallback cb) {
@@ -69,6 +53,7 @@ public class SelectLevelButton {
      * Callback function
      */
     public void doSomething() {
+        if(!_isUnlocked) return;
         _cb.doSomething();
     }
 
@@ -100,6 +85,15 @@ public class SelectLevelButton {
      * Font of the text
      */
     private final Font _font;
+    /**
+     * Determines if the level
+     * is unlocked or not
+     */
+    private boolean _isUnlocked;
+    /**
+     * Locked image
+     */
+    private Image _lockImage = Assets.lock;
     /**
      * Grid's row number to
      * create with the button

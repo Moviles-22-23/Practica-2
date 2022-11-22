@@ -13,7 +13,7 @@ import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
-import es.ucm.stalos.nonogramas.logic.objects.SelectLevelButton;
+import es.ucm.stalos.nonogramas.logic.objects.SelectPackageButton;
 
 public class SelectRandomLevel extends State {
     public SelectRandomLevel(Engine engine) {
@@ -93,7 +93,7 @@ public class SelectRandomLevel extends State {
         _graphics.drawCenteredString(_backText, _backTextPos, _backTextSize, _textsFont);
 
         // SelectLevel buttons
-        for (SelectLevelButton button : _selectButtons) {
+        for (SelectPackageButton button : _selectButtons) {
             button.render(_graphics);
         }
     }
@@ -109,7 +109,7 @@ public class SelectRandomLevel extends State {
                 if (clickInsideSquare(clickPos, _backImagePos, _backButtonSize))
                     _backCallback.doSomething();
                 else {
-                    for (SelectLevelButton button : _selectButtons) {
+                    for (SelectPackageButton button : _selectButtons) {
                         int[] pos = button.getPos();
                         float[] size = button.getSize();
                         if (clickInsideSquare(clickPos, pos, size)) {
@@ -145,7 +145,7 @@ public class SelectRandomLevel extends State {
             pos[0] = (int) (_graphics.getLogWidth() * 0.1f) * (1 + (3 * j));
             pos[1] = (int) (_graphics.getLogHeight() * 0.143f) * (3 + (i / 3) * 2);
 
-            final SelectLevelButton _level = new SelectLevelButton(pos, size, _gridTypes.get(i), font);
+            final SelectPackageButton _level = new SelectPackageButton(pos, size, _gridTypes.get(i), font, true);
             _level.setCallback(new ButtonCallback() {
                 @Override
                 public void doSomething() {
@@ -206,7 +206,7 @@ public class SelectRandomLevel extends State {
     /**
      * List of all select level buttons
      */
-    List<SelectLevelButton> _selectButtons;
+    List<SelectPackageButton> _selectButtons;
     /**
      * Dictionary of information about
      * different grid level types
