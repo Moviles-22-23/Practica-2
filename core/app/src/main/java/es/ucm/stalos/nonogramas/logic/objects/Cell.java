@@ -50,37 +50,20 @@ public class Cell {
         }
     }
 
-    public void handleInput(int[] clickPos, TouchEvent touch) {
-        if (clickInside(clickPos)) {
-            /*switch (cellType) {
-                case GREY:
-                    cellType = CellType.BLUE;
-                    break;
-                case BLUE:
-                    cellType = CellType.WHITE;
-                    break;
-                case WHITE:
-                    cellType = CellType.GREY;
-                    break;
-            }*/
-            switch (touch) {
-                case touchDown:
-                    cellType = CellType.BLUE;
-                    break;
-                case longTouch:
-                    cellType = CellType.WHITE;
-                    break;
-            }
-        }
+    public void update(float deltaTime)
+    {
+
     }
 
-    /**
-     * @param clickPos Mouse position
-     * @return if the mouse has clicked inside the cell
-     */
-    private boolean clickInside(int[] clickPos) {
-        return (clickPos[0] > x && clickPos[0] < (x + size) &&
-                clickPos[1] > y && clickPos[1] < (y + size));
+    public void handleInput(int[] clickPos, TouchEvent touch) {
+        switch (touch) {
+            case touchDown:
+                cellType = CellType.BLUE;
+                break;
+            case longTouch:
+                cellType = CellType.WHITE;
+                break;
+        }
     }
 
     /**
@@ -129,4 +112,8 @@ public class Cell {
      * Different colors of the cel
      */
     private Map<CellType, Integer> _colors;
+    /**
+     *
+     */
+    public TouchEvent _lastTouchEvent;
 }

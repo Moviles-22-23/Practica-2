@@ -10,6 +10,8 @@ import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.androidengine.Font;
 import es.ucm.stalos.androidengine.Image;
 import es.ucm.stalos.nonogramas.logic.Assets;
+import es.ucm.stalos.nonogramas.logic.data.LevelData;
+import es.ucm.stalos.nonogramas.logic.data.PackageData;
 import es.ucm.stalos.nonogramas.logic.enums.PlayingState;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 import es.ucm.stalos.nonogramas.logic.objects.Board;
@@ -31,14 +33,15 @@ import es.ucm.stalos.nonogramas.logic.objects.Board;
 // ENUNCIADO: Por ello crearemos un sistema de recompensas que permite conseguir las paletas de
 //colores y a su vez que nos de la opción a ganar también vidas (?)
 
-public class
-GameState extends State {
+public class GameStateStory extends State {
 
-    public GameState(Engine engine, int rows, int columns, boolean isRandom) {
+    public GameStateStory(Engine engine, int rows, int columns, boolean isRandom, LevelData levelData) {
         super(engine);
         this._rows = rows;
         this._cols = columns;
         this._isRandom = isRandom;
+        this._levelData = levelData;
+        this._lives = _levelData._lives;
     }
 
 //-----------------------------------------OVERRIDE-----------------------------------------------//
@@ -99,18 +102,27 @@ GameState extends State {
                         _timerTask = null;
                         _timer = null;
                     }
+
                     _board.handleInput(clickPos, TouchEvent.touchDown);
                     _audio.playSound(Assets.clickSound, 0);
                 }
                 // BACK BUTTON WIN
                 else if (_playState == PlayingState.Win && clickInsideSquare(clickPos, _backImagePos, _backButtonSize))
                     _backCallback.doSomething();
-            }
-            if (currEvent == TouchEvent.longTouch) {
+            } else if (currEvent == TouchEvent.longTouch) {
                 int[] clickPos = {currEvent.getX(), currEvent.getY()};
-                _board.handleInput(clickPos, TouchEvent.longTouch);
-                //TODO: buscar un sonido para holdClick
-                //_audio.playSound(Assets.clickSound, 0);
+                if (_playState != PlayingState.Win && clickInsideSquare(clickPos, _posBoard, _sizeBoard)) {
+                    if (_playState == PlayingState.Checking && _timer != null && _timerTask != null) {
+                        _timerTask.run();
+                        _timer.cancel();
+                        _timerTask = null;
+                        _timer = null;
+                    }
+
+                    _board.handleInput(clickPos, TouchEvent.longTouch);
+                    //TODO: buscar un sonido para holdClick
+                    //_audio.playSound(Assets.clickSound, 0);
+                }
             }
         }
     }
@@ -229,10 +241,10 @@ GameState extends State {
         _lifeTextSize[0] = _graphics.getLogWidth() * 0.3f;
         _lifeTextSize[1] = _giveupImageSize[1];
 
-        _lifeImagePos[0] = (int) (_graphics.getLogWidth() / 2 - _lifeImageSize[0]);
+        _lifeImagePos[0] = (int) ((_graphics.getLogWidth() * 0.5f) - _lifeImageSize[0]);
         _lifeImagePos[1] = _giveupImagePos[1];
-        _lifeTextPos[0] = (int) (_lifeImagePos[0]);//+ _lifeImageSize[0] / 3
-        _lifeTextPos[1] = _giveupImagePos[1];
+        _lifeTextPos[0] = (int) (_lifeImagePos[0]);
+        _lifeTextPos[1] = _giveupTextPos[1];
 
     }
 
@@ -312,7 +324,7 @@ GameState extends State {
         _sizeBoard[0] = 360.0f;
         _sizeBoard[1] = 360.0f;
 
-        _board = new Board(_rows, _cols, _posBoard, _sizeBoard, _isRandom);
+        _board = new Board(_rows, _cols, _posBoard, _sizeBoard, _isRandom, _lives);
         if (!_board.init(_engine)) throw new Exception("Error al crear el board");
     }
 
@@ -416,7 +428,7 @@ GameState extends State {
     private ButtonCallback _backCallback;
 
     // Life management
-    private int _lives = 5;
+    private int _lives = 3;
     private String _lifeText = "xX";
     private int[] _lifeTextPos = new int[2];
     private float[] _lifeTextSize = new float[2];
@@ -428,4 +440,6 @@ GameState extends State {
     // Colors
     private final int _blackColor = 0x000000FF;
     private final int _redColor = 0xFF0000FF;
+
+    private LevelData _levelData;
 }

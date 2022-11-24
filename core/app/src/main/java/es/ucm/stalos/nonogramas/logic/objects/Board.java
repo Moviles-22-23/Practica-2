@@ -11,8 +11,6 @@ package es.ucm.stalos.nonogramas.logic.objects;
 //     1 | - X - - -
 //     3 | X X X - -
 
-import android.text.method.Touch;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -36,7 +34,7 @@ public class Board {
      * @param pos  Up-Left position
      * @param size Board size (hints includes)
      */
-    public Board(int rows, int cols, int[] pos, float[] size, boolean isRandom) {
+    public Board(int rows, int cols, int[] pos, float[] size, boolean isRandom, int lives) {
         this._rows = rows;
         this._cols = cols;
         this._sol = new boolean[rows][cols];
@@ -46,6 +44,7 @@ public class Board {
         this._pos = pos;
         this._size = size;
         this._isRandom = isRandom;
+        this._lives = lives;
 
         // Cell Size must be square so we have to use the min between rows and cols
         float maxRowsSize = size[1] * 2 / (rows * 2 + (int) Math.ceil(rows / 2.0f));
@@ -321,9 +320,29 @@ public class Board {
     public void handleInput(int[] clickPos, TouchEvent touch) {
         for (int i = 0; i < _rows; i++) {
             for (int j = 0; j < _cols; j++) {
-                _boardState[i][j].handleInput(clickPos, touch);
+                Cell c = _boardState[i][j];
+                if (clickInside(clickPos, c.x, c.y, c.size)) {
+                    if (touch == TouchEvent.touchDown && !_sol[i][j] ||
+                            touch == TouchEvent.longTouch && _sol[i][j]) {
+                        //DataSave.lives--;
+                        return;
+                    }
+
+                    _boardState[i][j].handleInput(clickPos, touch);
+                    return;
+                }
             }
         }
+    }
+
+
+    /**
+     * @param clickPos Mouse position
+     * @return if the mouse has clicked inside the cell
+     */
+    private boolean clickInside(int[] clickPos, int x, int y, float size) {
+        return (clickPos[0] > x && clickPos[0] < (x + size) &&
+                clickPos[1] > y && clickPos[1] < (y + size));
     }
 
     /**
@@ -549,4 +568,6 @@ public class Board {
      * Font size
      */
     int _fontSize;
+
+    int _lives = 0;
 }

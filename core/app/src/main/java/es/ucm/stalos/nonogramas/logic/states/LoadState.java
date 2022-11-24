@@ -4,7 +4,9 @@ import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.Audio;
 import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.androidengine.Graphics;
+import es.ucm.stalos.nonogramas.DataSystem;
 import es.ucm.stalos.nonogramas.logic.Assets;
+import es.ucm.stalos.nonogramas.logic.data.PackageData;
 
 /**
  * This state is created to initialize all the assets of the game before it starts
@@ -31,6 +33,10 @@ public class LoadState extends State {
             Assets.mainTheme = audio.newSound("mainTheme.wav");
             Assets.clickSound = audio.newSound("clickSound.wav");
             Assets.winSound = audio.newSound("winSound.wav");
+
+            for (int i = 0; i < 6; i++) {
+                DataSystem._packageDataList.add(new PackageData());
+            }
 
             // Start MainMenu
             State mainMenu = new MainMenuState(_engine);

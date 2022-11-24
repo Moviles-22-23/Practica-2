@@ -151,7 +151,7 @@ public class SelectRandomLevel extends State {
                 public void doSomething() {
                     int r = _level.getRows();
                     int c = _level.getCols();
-                    State gameState = new GameState(_engine, r, c, true);
+                    State gameState = new GameStateRandom(_engine, r, c, true);
                     _engine.reqNewState(gameState);
                     _audio.playSound(Assets.clickSound, 0);
                     _audio.stopMusic();

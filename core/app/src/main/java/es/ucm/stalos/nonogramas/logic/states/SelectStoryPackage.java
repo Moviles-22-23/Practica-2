@@ -9,7 +9,9 @@ import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.androidengine.Font;
 import es.ucm.stalos.androidengine.Image;
 import es.ucm.stalos.androidengine.TouchEvent;
+import es.ucm.stalos.nonogramas.DataSystem;
 import es.ucm.stalos.nonogramas.logic.Assets;
+import es.ucm.stalos.nonogramas.logic.data.PackageData;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 import es.ucm.stalos.nonogramas.logic.objects.SelectPackageButton;
@@ -177,7 +179,8 @@ public class SelectStoryPackage extends State {
             _level.setCallback(new ButtonCallback() {
                 @Override
                 public void doSomething() {
-                    State selectLevel = new SelectPackageLevel(_engine, _choosenGrid);
+                    PackageData data = DataSystem._packageDataList.get(_choosenGrid.getValue());
+                    State selectLevel = new SelectPackageLevel(_engine, _choosenGrid, data);
                     _engine.reqNewState(selectLevel);
                     _audio.playSound(Assets.clickSound, 0);
                     _audio.stopMusic();

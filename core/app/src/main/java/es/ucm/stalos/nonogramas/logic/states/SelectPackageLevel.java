@@ -31,17 +31,21 @@ import es.ucm.stalos.androidengine.Font;
 import es.ucm.stalos.androidengine.Image;
 import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.TouchEvent;
+import es.ucm.stalos.nonogramas.DataSystem;
 import es.ucm.stalos.nonogramas.logic.Assets;
+import es.ucm.stalos.nonogramas.logic.data.LevelData;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 import es.ucm.stalos.nonogramas.logic.objects.SelectPackageButton;
+import es.ucm.stalos.nonogramas.logic.data.PackageData;
+import es.ucm.stalos.nonogramas.logic.data.LevelData;
 
 public class SelectPackageLevel extends State {
 
-    protected SelectPackageLevel(Engine engine, GridType gridType) {
+    protected SelectPackageLevel(Engine engine, GridType gridType, PackageData packageData) {
         super(engine);
-
         _gridType = gridType;
+        _packageData = packageData;
     }
 
     @Override
@@ -168,12 +172,13 @@ public class SelectPackageLevel extends State {
             // TODO: Logica de comprobación de archivos guardados
             boolean unlocked = true;
             final SelectPackageButton _level = new SelectPackageButton(pos, size, _gridType, font, unlocked);
+            _levelData = _packageData._levelDataList.get(i);
             _level.setCallback(new ButtonCallback() {
                 @Override
                 public void doSomething() {
                     int r = _level.getRows();
                     int c = _level.getCols();
-                    State gameState = new GameState(_engine, r, c, false);
+                    State gameState = new GameStateStory(_engine, r, c, false, _levelData);
                     _engine.reqNewState(gameState);
                     _audio.playSound(Assets.clickSound, 0);
                     _audio.stopMusic();
@@ -236,4 +241,7 @@ public class SelectPackageLevel extends State {
     // Colors
     private final int _greyColor = 0x313131FF;
     private final int _blackColor = 0x000000FF;
+
+    LevelData _levelData;
+    PackageData _packageData;
 }
