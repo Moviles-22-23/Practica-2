@@ -67,7 +67,7 @@ GameState extends State {
 
     @Override
     public void update(double deltaTime) {
-        _lifeText = "x" + _lifes;
+        _lifeText = "x" + _lives;
     }
 
     @Override
@@ -99,12 +99,18 @@ GameState extends State {
                         _timerTask = null;
                         _timer = null;
                     }
-                    _board.handleInput(clickPos);
+                    _board.handleInput(clickPos, TouchEvent.touchDown);
                     _audio.playSound(Assets.clickSound, 0);
                 }
                 // BACK BUTTON WIN
                 else if (_playState == PlayingState.Win && clickInsideSquare(clickPos, _backImagePos, _backButtonSize))
                     _backCallback.doSomething();
+            }
+            if (currEvent == TouchEvent.longTouch) {
+                int[] clickPos = {currEvent.getX(), currEvent.getY()};
+                _board.handleInput(clickPos, TouchEvent.longTouch);
+                //TODO: buscar un sonido para holdClick
+                //_audio.playSound(Assets.clickSound, 0);
             }
         }
     }
@@ -220,12 +226,12 @@ GameState extends State {
         // Life
         _lifeImageSize[0] = _giveupImageSize[0] * 1.5f;
         _lifeImageSize[1] = _giveupImageSize[1] * 1.5f;
-        _lifeTextSize[0] = _graphics.getLogWidth() * 0.2f;
+        _lifeTextSize[0] = _graphics.getLogWidth() * 0.3f;
         _lifeTextSize[1] = _giveupImageSize[1];
 
-        _lifeImagePos[0] = (int) (_graphics.getLogWidth() / 2 - _lifeImageSize[0] - _lifeTextSize[0]);
+        _lifeImagePos[0] = (int) (_graphics.getLogWidth() / 2 - _lifeImageSize[0]);
         _lifeImagePos[1] = _giveupImagePos[1];
-        _lifeTextPos[0] = (int) (_graphics.getLogWidth() / 2 - _lifeTextSize[0]);
+        _lifeTextPos[0] = (int) (_lifeImagePos[0]);//+ _lifeImageSize[0] / 3
         _lifeTextPos[1] = _giveupImagePos[1];
 
     }
@@ -410,7 +416,7 @@ GameState extends State {
     private ButtonCallback _backCallback;
 
     // Life management
-    private int _lifes = 5;
+    private int _lives = 5;
     private String _lifeText = "xX";
     private int[] _lifeTextPos = new int[2];
     private float[] _lifeTextSize = new float[2];

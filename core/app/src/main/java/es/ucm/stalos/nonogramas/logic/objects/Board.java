@@ -11,6 +11,8 @@ package es.ucm.stalos.nonogramas.logic.objects;
 //     1 | - X - - -
 //     3 | X X X - -
 
+import android.text.method.Touch;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -22,6 +24,7 @@ import java.util.Random;
 import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.androidengine.Font;
 import es.ucm.stalos.androidengine.Graphics;
+import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.enums.CellType;
 
 public class Board {
@@ -73,6 +76,7 @@ public class Board {
     /**
      * Read a levelPack from the assets to
      * make a new gridLevel
+     *
      * @throws FileNotFoundException
      */
     private void readSolution() throws FileNotFoundException {
@@ -113,7 +117,7 @@ public class Board {
     /**
      * Generate a random grid
      */
-    private void createRandomSolution(){
+    private void createRandomSolution() {
         // 1. Initialize all solutions to false
         for (int i = 0; i < _rows; i++) {
             for (int j = 0; j < _cols; j++) {
@@ -127,10 +131,10 @@ public class Board {
 
         // 2. Randomly set cells to true
         //    until get a 70% filled grid
-        while(total / (_rows * _cols) < percent){
+        while (total / (_rows * _cols) < percent) {
             int i = Math.abs(rn.nextInt() % _rows);
             int j = Math.abs(rn.nextInt() % _cols);
-            if(!_sol[i][j]){
+            if (!_sol[i][j]) {
                 _sol[i][j] = true;
                 total++;
             }
@@ -148,7 +152,7 @@ public class Board {
 
     /**
      * Load the hints' row in function of the filled cells in the row
-     *
+     * <p>
      * Is important to read right to left the row to fill hintsRows
      * - 2 1 | 1 1 0 1 0
      */
@@ -314,16 +318,17 @@ public class Board {
         }
     }
 
-    public void handleInput(int[] clickPos) {
+    public void handleInput(int[] clickPos, TouchEvent touch) {
         for (int i = 0; i < _rows; i++) {
             for (int j = 0; j < _cols; j++) {
-                _boardState[i][j].handleInput(clickPos);
+                _boardState[i][j].handleInput(clickPos, touch);
             }
         }
     }
 
     /**
      * Checking of the original solution
+     *
      * @return true if it is the original one
      */
     public boolean checkOriginalSolution() {
@@ -345,6 +350,7 @@ public class Board {
 
     /**
      * Checking for another possible solution
+     *
      * @return true if it isn't the original one
      */
     public boolean checkAnotherSolution() {
@@ -369,6 +375,7 @@ public class Board {
 
     /**
      * Auxiliar function to check a row in checkAnotherSolution()
+     *
      * @param row to be checked
      * @return true if the row matches with the respective hint
      */
@@ -406,6 +413,7 @@ public class Board {
 
     /**
      * Auxiliar function to check a col in checkAnotherSolution()
+     *
      * @param col to be checked
      * @return true if the column matches with the respective hint
      */
@@ -484,15 +492,16 @@ public class Board {
     public void setWin(boolean state) {
         _isWin = state;
     }
+
     //----------------------------------------ATTRIBUTES----------------------------------------------//
     private Engine _engine;
 
     /**
-     *  Number of rows of the grid
+     * Number of rows of the grid
      */
     private final int _rows;
     /**
-     *  Number of columns of the grid
+     * Number of columns of the grid
      */
     private final int _cols;
     /**
@@ -505,12 +514,12 @@ public class Board {
     int[][] _hintRows;
     int[][] _hintCols;
     /**
-     *  Array of the cells
+     * Array of the cells
      */
     Cell[][] _boardState;
     /**
-     *  List of the red cells that
-     *  have to turn back into blue
+     * List of the red cells that
+     * have to turn back into blue
      */
     List<int[]> _wrongCells;
     boolean _isWin = false;

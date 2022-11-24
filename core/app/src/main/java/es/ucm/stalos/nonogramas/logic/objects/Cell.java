@@ -1,9 +1,13 @@
 package es.ucm.stalos.nonogramas.logic.objects;
 
+import static es.ucm.stalos.androidengine.TouchEvent.*;
+import static es.ucm.stalos.androidengine.TouchEvent.longTouch;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import es.ucm.stalos.androidengine.Graphics;
+import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.enums.CellType;
 
 public class Cell {
@@ -46,9 +50,9 @@ public class Cell {
         }
     }
 
-    public void handleInput(int[] clickPos) {
+    public void handleInput(int[] clickPos, TouchEvent touch) {
         if (clickInside(clickPos)) {
-            switch (cellType) {
+            /*switch (cellType) {
                 case GREY:
                     cellType = CellType.BLUE;
                     break;
@@ -57,6 +61,14 @@ public class Cell {
                     break;
                 case WHITE:
                     cellType = CellType.GREY;
+                    break;
+            }*/
+            switch (touch) {
+                case touchDown:
+                    cellType = CellType.BLUE;
+                    break;
+                case longTouch:
+                    cellType = CellType.WHITE;
                     break;
             }
         }

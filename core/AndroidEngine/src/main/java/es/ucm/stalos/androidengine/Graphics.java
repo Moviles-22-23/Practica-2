@@ -53,7 +53,7 @@ public class Graphics {
         float offsetX = (getWidth() - (_logWidth * _scaleFactor)) / 2.0f;
         float offsetY = (getHeight() - (_logHeight) * _scaleFactor) / 2.0f;
 
-        return new int [] {
+        return new int[]{
                 (int) ((x * _scaleFactor) + offsetX),
                 (int) ((y * _scaleFactor) + offsetY)
         };
@@ -69,7 +69,7 @@ public class Graphics {
     protected int[] finalSize(float w, float h) {
         _scaleFactor = getScaleFactor();
 
-        return new int[] {
+        return new int[]{
                 (int) (w * _scaleFactor),
                 (int) (h * _scaleFactor)
         };
@@ -89,6 +89,7 @@ public class Graphics {
     /**
      * Given a position P(x, y), returns a new value into the
      * logic system of coordinates
+     *
      * @param x X-axis position
      * @param y Y-axis position
      */
@@ -151,6 +152,7 @@ public class Graphics {
             activity.setContentView(surfaceView);
             // INPUT LISTENER
             surfaceView.setOnTouchListener(input);
+            surfaceView.setOnLongClickListener(input);
 
             // WIN SIZE
             Point winSize = new Point();

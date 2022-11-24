@@ -6,7 +6,7 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Input implements View.OnTouchListener {
+public class Input implements View.OnTouchListener, View.OnLongClickListener {
     public Input(Engine e) {
         _engine = e;
         _events = new ArrayList<>();
@@ -56,22 +56,32 @@ public class Input implements View.OnTouchListener {
 
     public boolean onTouch(View v, MotionEvent e) {
         if (e.getAction() == MotionEvent.ACTION_DOWN) {
-            onTouchDownEvent((int) e.getX(), (int) e.getY());
-        } else if (longTouch) {
-            onLongTouchEvent((int) e.getX(), (int) e.getY());
-            longTouch = false;
+            lastTouchX = e.getX();
+            lastTouchY = e.getY();
         }
-        return true;
+        if (e.getAction() == MotionEvent.ACTION_UP) {
+            if (!_longTouching) {
+                System.out.println("Touch UP pos: X: " + e.getX() + " Y: " + e.getY());
+                onTouchDownEvent((int) e.getX(), (int) e.getY());
+            } else if (e.getX() == lastTouchX && e.getY() == lastTouchY) {
+                System.out.println("Long Touch UP pos: X: " + e.getX() + " Y: " + e.getY());
+                onLongTouchEvent((int) e.getX(), (int) e.getY());
+                _longTouching = false;
+            } else _longTouching = false;
+            System.out.println("INPUT: --Fin del touch--");
+        }
+        return false;
     }
 
-    /*
-        @Override
-        public boolean onLongClick(View v) {
-            longTouch = true;
-            return false;
-        }
-    */
+
+    @Override
+    public boolean onLongClick(View v) {
+        _longTouching = true;
+        return false;
+    }
+
     private Engine _engine;
-    private boolean longTouch;
+    private boolean _longTouching = false;
     private List<TouchEvent> _events;
+    private float lastTouchX = 0, lastTouchY = 0;
 }
