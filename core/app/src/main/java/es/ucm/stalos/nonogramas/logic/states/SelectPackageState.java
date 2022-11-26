@@ -4,19 +4,46 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.androidengine.Font;
 import es.ucm.stalos.androidengine.Image;
 import es.ucm.stalos.androidengine.TouchEvent;
+import es.ucm.stalos.nonogramas.logic.data.DataSystem;
 import es.ucm.stalos.nonogramas.logic.Assets;
+import es.ucm.stalos.nonogramas.logic.data.PackageData;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 import es.ucm.stalos.nonogramas.logic.objects.SelectPackageButton;
 
-public class SelectRandomLevel extends State {
-    public SelectRandomLevel(Engine engine) {
+//TODO: Hacer toda la lógica de los paquetes
+
+// LÓGICA: Crear una interfaz que nos muestre las categorías y niveles disponibles, diferenciando
+// entre bloqueados (no pueden jugarse) y desbloqueados (podemos volver a acceder a ellos en
+// cualquier momento).
+
+// LÓGICA CON DATOS GUARDADOS: Consiste en un conjunto de categorías y niveles en los que
+// únicamente podremos avanzar al siguiente si hemos completado el nivel actual. Los niveles y
+// categorías en este modo son fijos. Para poder tener este modo tenemos que guardar cuantos niveles
+// ha desbloqueado el jugador hasta el momento
+
+// GRAFICOS: En estos niveles del modo historia, deben representarse imágenes pixeladas (una
+//abeja, una casa, un árbol, un faro, etc.)
+
+// CATEGORÍAS POR DIFICULTAD: ada categoría tendrá X niveles de una misma dificultad / tamaño, y
+// según avance el jugador completando los niveles de la categoría actual se desbloquearan nuevas
+// categorías con mayor dificultad / tamaño de los tableros.
+// EJEMPLO: Categoría fácil, 20 con tableros de 5x5. Al completar los 20 niveles se desbloquea la
+// categoría intermedia con 20 niveles de 10x10.
+
+
+
+/**
+ * State where the user select the package to play into the Story mode
+ */
+public class SelectPackageState extends State {
+
+    public SelectPackageState(Engine engine) {
         super(engine);
     }
 
@@ -66,7 +93,7 @@ public class SelectRandomLevel extends State {
             };
 
             // BUTTONS
-            initSelectLevelButtons();
+            initSelectPackageButtons();
 
             // AUDIO
             _audio.playMusic(Assets.menuTheme);
@@ -106,8 +133,7 @@ public class SelectRandomLevel extends State {
             if (currEvent == TouchEvent.touchDown) {
                 int[] clickPos = {currEvent.getX(), currEvent.getY()};
 
-                if (clickInsideSquare(clickPos, _backImagePos, _backButtonSize))
-                    _backCallback.doSomething();
+                if (clickInsideSquare(clickPos, _backImagePos, _backButtonSize)) _backCallback.doSomething();
                 else {
                     for (SelectPackageButton button : _selectButtons) {
                         int[] pos = button.getPos();
@@ -128,7 +154,7 @@ public class SelectRandomLevel extends State {
      *
      * @throws Exception in case of font creation fails
      */
-    private void initSelectLevelButtons() throws Exception {
+    private void initSelectPackageButtons() throws Exception {
         _selectButtons = new ArrayList<>();
 
         float min = Math.min((_graphics.getLogWidth() * 0.2f), (_graphics.getLogHeight() * 0.2f));
@@ -142,17 +168,21 @@ public class SelectRandomLevel extends State {
 
         int j = 0;
         for (int i = 0; i < GridType.MAX.getValue(); i++) {
-            pos[0] = (int) (_graphics.getLogWidth() * 0.1f) * (1 + (3 * j));
-            pos[1] = (int) (_graphics.getLogHeight() * 0.143f) * (3 + (i / 3) * 2);
+            pos[0] = (int)(_graphics.getLogWidth() * 0.1f) * (1 + (3 * j));
+            pos[1] = (int)(_graphics.getLogHeight() * 0.143f) * (3 + (i / 3) * 2);
 
-            final SelectPackageButton _level = new SelectPackageButton(pos, size, _gridTypes.get(i), font, true);
+            // TODO: Logica de comprobación de archivos guardados
+            boolean unlocked = i == 0 ? true : false;
+            _choosenGrid = _gridTypes.get(i);
+
+            final SelectPackageButton _level = new SelectPackageButton(pos, size, _choosenGrid, font, unlocked);
             _level.setCallback(new ButtonCallback() {
                 @Override
                 public void doSomething() {
-                    int r = _level.getRows();
-                    int c = _level.getCols();
-                    State gameState = new GameStateRandom(_engine, r, c, true);
-                    _engine.reqNewState(gameState);
+                    // Seleccion de los datos del paquete escogido
+                    PackageData data = DataSystem._packageDataList.get(_choosenGrid.getValue());
+                    State selectLevel = new SelectLevelState(_engine, _choosenGrid, data);
+                    _engine.reqNewState(selectLevel);
                     _audio.playSound(Assets.clickSound, 0);
                     _audio.stopMusic();
                 }
@@ -176,17 +206,17 @@ public class SelectRandomLevel extends State {
         _gridTypes.put(5, GridType._10x15);
     }
 
-    //----------------------------------------ATTRIBUTES----------------------------------------------//
+//----------------------------------------ATTRIBUTES----------------------------------------------//
     // Texts
     private Font _textsFont;
 
     // Mode Text
-    private String _modeText = "JUEGO ALEATORIO";
+    private String _modeText = "Modo Historia";
     private int[] _modePos = new int[2];
     private float[] _modeSize = new float[2];
 
     // Comment Text
-    private final String _commentText = "Selecciona el tamaño del puzzle";
+    private final String _commentText = "Selecciona el paquete";
     private int[] _commentPos = new int[2];
     private float[] _commentSize = new float[2];
 
@@ -212,8 +242,14 @@ public class SelectRandomLevel extends State {
      * different grid level types
      */
     Map<Integer, GridType> _gridTypes;
+    /**
+     * Choosen grid type
+     */
+    GridType _choosenGrid;
 
     // Colors
     private final int _greyColor = 0x313131FF;
     private final int _blackColor = 0x000000FF;
+
+
 }

@@ -39,7 +39,7 @@ public class MainMenuState extends State {
             _randCallback = new ButtonCallback() {
                 @Override
                 public void doSomething() {
-                    State selectLevelState = new SelectRandomLevel(_engine);
+                    State selectLevelState = new SelectRandLevelState(_engine);
                     _engine.reqNewState(selectLevelState);
                     _audio.playSound(Assets.clickSound, 0);
                 }
@@ -47,7 +47,7 @@ public class MainMenuState extends State {
             _storyCallback = new ButtonCallback() {
                 @Override
                 public void doSomething() {
-                    State selectLevelState = new SelectStoryPackage(_engine);
+                    State selectLevelState = new SelectPackageState(_engine);
                     _engine.reqNewState(selectLevelState);
                     _audio.playSound(Assets.clickSound, 0);
                 }

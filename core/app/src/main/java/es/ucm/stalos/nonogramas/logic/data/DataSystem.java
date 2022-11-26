@@ -1,4 +1,4 @@
-package es.ucm.stalos.nonogramas;
+package es.ucm.stalos.nonogramas.logic.data;
 
 import java.util.ArrayList;
 import java.util.List;

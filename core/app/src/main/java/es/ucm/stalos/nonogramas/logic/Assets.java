@@ -9,6 +9,8 @@ public class Assets {
     public static Image lens;
     public static Image heart;
     public static Image lock;
+    public static Image gameOver;
+    public static Image ads;
 
     // Audio
     public static Sound mainTheme;

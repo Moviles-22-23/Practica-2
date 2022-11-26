@@ -1,20 +1,5 @@
 package es.ucm.stalos.nonogramas.logic.states;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import es.ucm.stalos.androidengine.State;
-import es.ucm.stalos.androidengine.Engine;
-import es.ucm.stalos.androidengine.Font;
-import es.ucm.stalos.androidengine.Image;
-import es.ucm.stalos.androidengine.TouchEvent;
-import es.ucm.stalos.nonogramas.DataSystem;
-import es.ucm.stalos.nonogramas.logic.Assets;
-import es.ucm.stalos.nonogramas.logic.data.PackageData;
-import es.ucm.stalos.nonogramas.logic.enums.GridType;
-import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
-import es.ucm.stalos.nonogramas.logic.objects.SelectPackageButton;
 
 //TODO: Hacer toda la lógica de los paquetes
 
@@ -36,36 +21,43 @@ import es.ucm.stalos.nonogramas.logic.objects.SelectPackageButton;
 // EJEMPLO: Categoría fácil, 20 con tableros de 5x5. Al completar los 20 niveles se desbloquea la
 // categoría intermedia con 20 niveles de 10x10.
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import es.ucm.stalos.androidengine.Engine;
+import es.ucm.stalos.androidengine.Font;
+import es.ucm.stalos.androidengine.Image;
+import es.ucm.stalos.androidengine.State;
+import es.ucm.stalos.androidengine.TouchEvent;
+import es.ucm.stalos.nonogramas.logic.Assets;
+import es.ucm.stalos.nonogramas.logic.data.LevelData;
+import es.ucm.stalos.nonogramas.logic.enums.GridType;
+import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
+import es.ucm.stalos.nonogramas.logic.objects.SelectPackageButton;
+import es.ucm.stalos.nonogramas.logic.data.PackageData;
 
-/**
- * State where the user select the package to play into the Story mode
- */
-public class SelectStoryPackage extends State {
+public class SelectLevelState extends State {
 
-    public SelectStoryPackage(Engine engine) {
+    protected SelectLevelState(Engine engine, GridType gridType, PackageData packageData) {
         super(engine);
+        _gridType = gridType;
+        _packageData = packageData;
     }
-
-//-----------------------------------------OVERRIDE-----------------------------------------------//
 
     @Override
     public boolean init() {
         try {
             // Texts
+            _modeText = "Paquete " + _gridType.getText();
             _textsFont = _graphics.newFont("JosefinSans-Bold.ttf", 25, true);
 
             // MODE TEXT
             _modeSize[0] = _graphics.getLogWidth();
             _modeSize[1] = _graphics.getLogHeight() * 0.1f;
             _modePos[0] = (int) (_graphics.getLogWidth() - _modeSize[0]);
-            _modePos[1] = (int) ((_graphics.getLogHeight() - _modeSize[1]) * 0.18f);
-
-            // Comment Text
-            _commentSize[0] = _graphics.getLogWidth();
-            _commentSize[1] = _graphics.getLogHeight() * 0.1f;
-            _commentPos[0] = (int) (_graphics.getLogWidth() - _commentSize[0]);
-            _commentPos[1] = (int) ((_graphics.getLogHeight() - _commentSize[1]) * 0.28f);
+            _modePos[1] = (int) ((_graphics.getLogHeight() - _modeSize[1]) * 0.09f);
 
             // Back Button
             // Image
@@ -86,14 +78,14 @@ public class SelectStoryPackage extends State {
             _backCallback = new ButtonCallback() {
                 @Override
                 public void doSomething() {
-                    State mainMenuState = new MainMenuState(_engine);
-                    _engine.reqNewState(mainMenuState);
+                    State selectPackage = new SelectPackageState(_engine);
+                    _engine.reqNewState(selectPackage);
                     _audio.playSound(Assets.clickSound, 0);
                 }
             };
 
             // BUTTONS
-            initSelectPackageButtons();
+            initSelectLevelButtons();
 
             // AUDIO
             _audio.playMusic(Assets.menuTheme);
@@ -112,7 +104,6 @@ public class SelectStoryPackage extends State {
         // Texts
         _graphics.setColor(_greyColor);
         _graphics.drawCenteredString(_modeText, _modePos, _modeSize, _textsFont);
-        _graphics.drawCenteredString(_commentText, _commentPos, _commentSize, _textsFont);
 
         // Back Button
         _graphics.setColor(_blackColor);
@@ -154,41 +145,45 @@ public class SelectStoryPackage extends State {
      *
      * @throws Exception in case of font creation fails
      */
-    private void initSelectPackageButtons() throws Exception {
+    private void initSelectLevelButtons() throws Exception {
+        Font font = _graphics.newFont("Molle-Regular.ttf", 1, true);
         _selectButtons = new ArrayList<>();
 
-        float min = Math.min((_graphics.getLogWidth() * 0.2f), (_graphics.getLogHeight() * 0.2f));
-        float[] size = new float[]{min, min};
+        float minSize = Math.min((_graphics.getLogWidth() * 0.15f), (_graphics.getLogHeight() * 0.15f));
+        float[] size = new float[]{minSize, minSize};
 
-        Font font = _graphics.newFont("Molle-Regular.ttf", 20, true);
+        float separation = Math.min((_graphics.getLogWidth() * 0.2f), (_graphics.getLogHeight() * 0.2f));
+
 
         int[] pos = new int[2];
+        int[] initialPos = new int[2];
+        initialPos[0] = (int)(_graphics.getLogWidth() * 0.125f);
+        initialPos[1] = (int)(_graphics.getLogHeight() * 0.2f);
 
         initGridTypesMap();
 
-        int j = 0;
-        for (int i = 0; i < GridType.MAX.getValue(); i++) {
-            pos[0] = (int)(_graphics.getLogWidth() * 0.1f) * (1 + (3 * j));
-            pos[1] = (int)(_graphics.getLogHeight() * 0.143f) * (3 + (i / 3) * 2);
+//        int j = 0;
+        for (int i = 0; i < _numLevels; i++) {
+            pos[0] = initialPos[0] + (int)((i % 4) * separation);
+            pos[1] = initialPos[1] + (int)((i / 4) * separation);
 
             // TODO: Logica de comprobación de archivos guardados
-            boolean unlocked = i == 0 ? true : false;
-            _choosenGrid = _gridTypes.get(i);
-
-            final SelectPackageButton _level = new SelectPackageButton(pos, size, _choosenGrid, font, unlocked);
+            boolean unlocked = true;
+            final SelectPackageButton _level = new SelectPackageButton(pos, size, _gridType, font, unlocked);
+            // Seleccion de los datos del nivel escogido
+            _levelData = _packageData._levelDataList.get(i);
             _level.setCallback(new ButtonCallback() {
                 @Override
                 public void doSomething() {
-                    PackageData data = DataSystem._packageDataList.get(_choosenGrid.getValue());
-                    State selectLevel = new SelectPackageLevel(_engine, _choosenGrid, data);
-                    _engine.reqNewState(selectLevel);
+                    int r = _level.getRows();
+                    int c = _level.getCols();
+                    State gameState = new GameStoryState(_engine, r, c, _levelData);
+                    _engine.reqNewState(gameState);
                     _audio.playSound(Assets.clickSound, 0);
                     _audio.stopMusic();
                 }
             });
             _selectButtons.add(_level);
-            j++;
-            if (j == 3) j = 0;
         }
     }
 
@@ -205,19 +200,17 @@ public class SelectStoryPackage extends State {
         _gridTypes.put(5, GridType._10x15);
     }
 
-//----------------------------------------ATTRIBUTES----------------------------------------------//
+    //----------------------------------------ATTRIBUTES----------------------------------------------//
+    private GridType _gridType;
+    private final int _numLevels = 20;
+
     // Texts
     private Font _textsFont;
 
     // Mode Text
-    private String _modeText = "Modo Historia";
+    private String _modeText = "Paquete NxM";
     private int[] _modePos = new int[2];
     private float[] _modeSize = new float[2];
-
-    // Comment Text
-    private final String _commentText = "Selecciona el paquete";
-    private int[] _commentPos = new int[2];
-    private float[] _commentSize = new float[2];
 
     // Back Button
     private final String _backText = "Volver";
@@ -241,14 +234,11 @@ public class SelectStoryPackage extends State {
      * different grid level types
      */
     Map<Integer, GridType> _gridTypes;
-    /**
-     * Choosen grid type
-     */
-    GridType _choosenGrid;
 
     // Colors
     private final int _greyColor = 0x313131FF;
     private final int _blackColor = 0x000000FF;
 
-
+    LevelData _levelData;
+    PackageData _packageData;
 }

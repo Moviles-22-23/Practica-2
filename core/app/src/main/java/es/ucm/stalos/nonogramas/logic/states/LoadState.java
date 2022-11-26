@@ -4,7 +4,7 @@ import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.Audio;
 import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.androidengine.Graphics;
-import es.ucm.stalos.nonogramas.DataSystem;
+import es.ucm.stalos.nonogramas.logic.data.DataSystem;
 import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.data.PackageData;
 
@@ -27,6 +27,8 @@ public class LoadState extends State {
             Assets.lens = graphics.newImage("lents.png");
             Assets.heart = graphics.newImage("heart.png");
             Assets.lock = graphics.newImage("lock.png");
+            Assets.gameOver = graphics.newImage("gameOver.png");
+            Assets.ads = graphics.newImage("ads.png");
 
             // Audio
             Assets.menuTheme = audio.newSound("menuTheme.wav");
@@ -34,6 +36,7 @@ public class LoadState extends State {
             Assets.clickSound = audio.newSound("clickSound.wav");
             Assets.winSound = audio.newSound("winSound.wav");
 
+            // Inicializacion de los datos
             for (int i = 0; i < 6; i++) {
                 DataSystem._packageDataList.add(new PackageData());
             }

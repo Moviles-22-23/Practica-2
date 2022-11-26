@@ -24,6 +24,7 @@ import es.ucm.stalos.androidengine.Font;
 import es.ucm.stalos.androidengine.Graphics;
 import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.enums.CellType;
+import es.ucm.stalos.nonogramas.logic.states.AbstractGameState;
 
 public class Board {
     /**
@@ -34,7 +35,7 @@ public class Board {
      * @param pos  Up-Left position
      * @param size Board size (hints includes)
      */
-    public Board(int rows, int cols, int[] pos, float[] size, boolean isRandom, int lives) {
+    public Board(AbstractGameState state, int rows, int cols, int[] pos, float[] size, boolean isRandom, int lives) {
         this._rows = rows;
         this._cols = cols;
         this._sol = new boolean[rows][cols];
@@ -45,6 +46,7 @@ public class Board {
         this._size = size;
         this._isRandom = isRandom;
         this._lives = lives;
+        this._state = state;
 
         // Cell Size must be square so we have to use the min between rows and cols
         float maxRowsSize = size[1] * 2 / (rows * 2 + (int) Math.ceil(rows / 2.0f));
@@ -317,6 +319,7 @@ public class Board {
         }
     }
 
+    // PRACTICA 2: Cambios en el handleInput para realizar la gestion de las vidas
     public void handleInput(int[] clickPos, TouchEvent touch) {
         for (int i = 0; i < _rows; i++) {
             for (int j = 0; j < _cols; j++) {
@@ -324,7 +327,8 @@ public class Board {
                 if (clickInside(clickPos, c.x, c.y, c.size)) {
                     if (touch == TouchEvent.touchDown && !_sol[i][j] ||
                             touch == TouchEvent.longTouch && _sol[i][j]) {
-                        //DataSave.lives--;
+                        _lives--;
+                        _state.updateLives(_lives);
                         return;
                     }
 
@@ -334,7 +338,6 @@ public class Board {
             }
         }
     }
-
 
     /**
      * @param clickPos Mouse position
@@ -526,48 +529,55 @@ public class Board {
     /**
      * Array which contains the solution
      */
-    boolean[][] _sol;
+    private boolean[][] _sol;
     /**
      * Array which contains
      */
-    int[][] _hintRows;
-    int[][] _hintCols;
+    private int[][] _hintRows;
+    private int[][] _hintCols;
     /**
      * Array of the cells
      */
-    Cell[][] _boardState;
+    private Cell[][] _boardState;
     /**
      * List of the red cells that
      * have to turn back into blue
      */
-    List<int[]> _wrongCells;
-    boolean _isWin = false;
-    boolean _isRandom;
+    private List<int[]> _wrongCells;
+    private boolean _isWin = false;
+    private boolean _isRandom;
 
     /**
      * Logic position of the entire grid
      */
-    int[] _pos;
+    private int[] _pos;
     /**
      * Size of the entire grid
      */
-    float[] _size;
+    private float[] _size;
     /**
      * Cell size
      */
-    float _cellSize;
+    private float _cellSize;
     /**
      * Hints' text size
      */
-    float _hintSize;
+    private float _hintSize;
     /**
      * Hints' text font
      */
-    Font _hintFont;
+    private Font _hintFont;
     /**
      * Font size
      */
-    int _fontSize;
+    private int _fontSize;
 
-    int _lives = 0;
+    /**
+     * Number of lives of the level
+     */
+    private int _lives = 0;
+    /**
+     * Reference to the GameState
+     */
+    private AbstractGameState _state;
 }

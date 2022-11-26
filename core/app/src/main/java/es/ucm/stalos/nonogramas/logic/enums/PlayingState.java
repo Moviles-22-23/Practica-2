@@ -5,8 +5,8 @@ package es.ucm.stalos.nonogramas.logic.enums;
  */
 public enum PlayingState {
     Gaming(0),
-    Checking(1),
-    Win(2);
+    Win(1),
+    GameOver(2);
 
     PlayingState(int i) { this.value = i; }
 
