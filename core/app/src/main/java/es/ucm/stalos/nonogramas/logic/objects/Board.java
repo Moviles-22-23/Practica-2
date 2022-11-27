@@ -22,6 +22,7 @@ import java.util.Random;
 import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.androidengine.Font;
 import es.ucm.stalos.androidengine.Graphics;
+import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.enums.CellType;
@@ -333,8 +334,13 @@ public class Board {
                         _state.updateLives(_lives);
                         return;
                     }
+                    else _engine.getAudio().playSound(Assets.goodSound, 0);
 
                     _boardState[i][j].handleInput(clickPos, touch);
+
+                    // Comprueba si hay victoria
+                    _isWin = checkOriginalSolution();
+
                     return;
                 }
             }

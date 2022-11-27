@@ -36,6 +36,7 @@ public class LoadState extends State {
             Assets.mainTheme = audio.newSound("mainTheme.wav");
             Assets.clickSound = audio.newSound("clickSound.wav");
             Assets.failSound = audio.newSound("failSound.wav");
+            Assets.goodSound = audio.newSound("goodSound.wav");
             Assets.winSound = audio.newSound("winSound.wav");
 
             // Inicializacion de los datos
