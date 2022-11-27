@@ -5,6 +5,9 @@ import java.util.List;
 
 import es.ucm.stalos.nonogramas.logic.data.PackageData;
 
+/**
+ * Son los datos que se van a guardar
+ */
 public class DataSystem {
     /**
      * List of the data of each package

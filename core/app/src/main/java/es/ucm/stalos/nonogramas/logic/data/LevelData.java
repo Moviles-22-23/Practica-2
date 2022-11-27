@@ -15,5 +15,4 @@ public class LevelData {
     public int _lives = 5;
 
     // Cualquier info extra
-
 }

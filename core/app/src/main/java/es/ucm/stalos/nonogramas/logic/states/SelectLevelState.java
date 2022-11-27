@@ -78,7 +78,7 @@ public class SelectLevelState extends State {
             _backCallback = new ButtonCallback() {
                 @Override
                 public void doSomething() {
-                    State selectPackage = new SelectPackageState(_engine);
+                    State selectPackage = new SelectPackBoardState(_engine);
                     _engine.reqNewState(selectPackage);
                     _audio.playSound(Assets.clickSound, 0);
                 }
