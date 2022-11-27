@@ -6,6 +6,7 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
+// PRACTICA 2: Cambios ahora la clase Input hererda de OnLongClickListener para dar soporte a LongClick
 public class Input implements View.OnTouchListener, View.OnLongClickListener {
     public Input(Engine e) {
         _engine = e;
@@ -42,7 +43,16 @@ public class Input implements View.OnTouchListener, View.OnLongClickListener {
         _events.add(currEvent);
     }
 
+    // PRACTICA 2: Cambios metodo para añadir un evento de longTouch a la cola de eventos
 
+    /**
+     * Process input's coordinates to transform them into
+     * x and y logical positions.
+     * Also adds the event to the list
+     *
+     * @param x Window X position
+     * @param y Window Y position
+     */
     protected void onLongTouchEvent(int x, int y) {
         Graphics g = _engine.getGraphics();
 
@@ -54,12 +64,14 @@ public class Input implements View.OnTouchListener, View.OnLongClickListener {
         _events.add(currEvent);
     }
 
+    // PRACTICA 2: Cambios diferenciacion entre touch normal y longTouch
     public boolean onTouch(View v, MotionEvent e) {
         if (e.getAction() == MotionEvent.ACTION_DOWN) {
             lastTouchX = e.getX();
             lastTouchY = e.getY();
         }
         if (e.getAction() == MotionEvent.ACTION_UP) {
+            v.performClick();
             if (!_longTouching) {
                 System.out.println("Touch UP pos: X: " + e.getX() + " Y: " + e.getY());
                 onTouchDownEvent((int) e.getX(), (int) e.getY());
@@ -73,7 +85,7 @@ public class Input implements View.OnTouchListener, View.OnLongClickListener {
         return false;
     }
 
-
+    // PRACTICA 2: Sobreescritura del metodo OnLongClick
     @Override
     public boolean onLongClick(View v) {
         _longTouching = true;
