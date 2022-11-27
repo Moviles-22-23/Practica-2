@@ -6,6 +6,7 @@ import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.androidengine.Graphics;
 import es.ucm.stalos.nonogramas.logic.data.DataSystem;
 import es.ucm.stalos.nonogramas.logic.Assets;
+import es.ucm.stalos.nonogramas.logic.data.HistoryData;
 import es.ucm.stalos.nonogramas.logic.data.PackageData;
 
 /**
@@ -34,12 +35,17 @@ public class LoadState extends State {
             Assets.menuTheme = audio.newSound("menuTheme.wav");
             Assets.mainTheme = audio.newSound("mainTheme.wav");
             Assets.clickSound = audio.newSound("clickSound.wav");
+            Assets.failSound = audio.newSound("failSound.wav");
             Assets.winSound = audio.newSound("winSound.wav");
 
             // Inicializacion de los datos
             for (int i = 0; i < 6; i++) {
                 DataSystem._packageDataList.add(new PackageData());
             }
+
+            DataSystem._historyData = new HistoryData();
+            DataSystem._historyData._currentPackage = 2;
+            DataSystem._historyData._currentLevel = 10;
 
             // Start MainMenu
             State mainMenu = new MainMenuState(_engine);

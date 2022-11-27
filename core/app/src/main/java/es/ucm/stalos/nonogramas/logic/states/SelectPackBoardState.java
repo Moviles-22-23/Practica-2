@@ -1,5 +1,7 @@
 package es.ucm.stalos.nonogramas.logic.states;
 
+import android.provider.ContactsContract;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -93,17 +95,18 @@ public class SelectPackBoardState extends AbstractSelectBoard {
             pos[0] = (int)(_graphics.getLogWidth() * 0.1f) * (1 + (3 * j));
             pos[1] = (int)(_graphics.getLogHeight() * 0.143f) * (3 + (i / 3) * 2);
 
-            // TODO: Logica de comprobación de archivos guardados
-            boolean unlocked = i == 0 ? true : false;
-            _choosenGrid = _gridTypes.get(i);
+            // Comprueba si el paquete esta desbloqueado
+            boolean unlocked = (i <= DataSystem._historyData._currentPackage);
 
-            final SelectPackageButton _level = new SelectPackageButton(pos, size, _choosenGrid, font, unlocked);
+            GridType grid = _gridTypes.get(i);
+
+            final SelectPackageButton _level = new SelectPackageButton(pos, size, grid, font, unlocked);
             _level.setCallback(new ButtonCallback() {
                 @Override
                 public void doSomething() {
                     // Seleccion de los datos del paquete escogido
-                    PackageData data = DataSystem._packageDataList.get(_choosenGrid.getValue());
-                    State selectLevel = new SelectLevelState(_engine, _choosenGrid, data);
+//                    PackageData data = DataSystem._packageDataList.get(grid.getValue());
+                    State selectLevel = new SelectLevelState(_engine, grid);//, data);
                     _engine.reqNewState(selectLevel);
                     _audio.playSound(Assets.clickSound, 0);
                     _audio.stopMusic();
@@ -120,5 +123,5 @@ public class SelectPackBoardState extends AbstractSelectBoard {
     /**
      * Choosen grid type
      */
-    GridType _choosenGrid;
+//    GridType _choosenGrid;
 }

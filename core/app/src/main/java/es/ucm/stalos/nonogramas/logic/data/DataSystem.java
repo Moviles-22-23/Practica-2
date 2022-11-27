@@ -10,6 +10,11 @@ import es.ucm.stalos.nonogramas.logic.data.PackageData;
  */
 public class DataSystem {
     /**
+     * Datos del modo historia
+     */
+    public static HistoryData _historyData;
+
+    /**
      * List of the data of each package
      */
     public static List<PackageData> _packageDataList = new ArrayList<>();

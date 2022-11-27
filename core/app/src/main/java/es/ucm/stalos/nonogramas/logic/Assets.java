@@ -16,5 +16,6 @@ public class Assets {
     public static Sound mainTheme;
     public static Sound menuTheme;
     public static Sound clickSound;
+    public static Sound failSound;
     public static Sound winSound;
 }

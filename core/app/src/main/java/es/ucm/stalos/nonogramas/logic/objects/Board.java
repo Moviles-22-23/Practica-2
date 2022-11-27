@@ -23,6 +23,7 @@ import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.androidengine.Font;
 import es.ucm.stalos.androidengine.Graphics;
 import es.ucm.stalos.androidengine.TouchEvent;
+import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.enums.CellType;
 import es.ucm.stalos.nonogramas.logic.states.AbstractGameState;
 
@@ -327,6 +328,7 @@ public class Board {
                 if (clickInside(clickPos, c.x, c.y, c.size)) {
                     if (touch == TouchEvent.touchDown && !_sol[i][j] ||
                             touch == TouchEvent.longTouch && _sol[i][j]) {
+                        _engine.getAudio().playSound(Assets.failSound, 0);
                         _lives--;
                         _state.updateLives(_lives);
                         return;

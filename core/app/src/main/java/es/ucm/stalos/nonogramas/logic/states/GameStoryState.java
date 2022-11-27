@@ -26,10 +26,10 @@ import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 // PRACTICA 2: Refactorización de los GameState
 public class GameStoryState extends AbstractGameState {
 
-    public GameStoryState(Engine engine, int rows, int columns, LevelData levelData) {
+    public GameStoryState(Engine engine, int rows, int columns)/*, LevelData levelData)*/ {
         super(engine, rows, columns, false);
-        this._levelData = levelData;
-        this._lives = _levelData._lives;
+//        this._levelData = levelData;
+//        this._lives = _levelData._lives;
     }
 
 //-----------------------------------------OVERRIDE-----------------------------------------------//

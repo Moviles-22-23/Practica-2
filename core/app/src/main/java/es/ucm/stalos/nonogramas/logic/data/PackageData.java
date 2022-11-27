@@ -12,7 +12,6 @@ public class PackageData {
         }
     }
 
-
     /**
      * List of the data of each level of the package
      */

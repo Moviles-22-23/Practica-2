@@ -32,6 +32,7 @@ import es.ucm.stalos.androidengine.Image;
 import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.Assets;
+import es.ucm.stalos.nonogramas.logic.data.DataSystem;
 import es.ucm.stalos.nonogramas.logic.data.LevelData;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
@@ -40,10 +41,10 @@ import es.ucm.stalos.nonogramas.logic.data.PackageData;
 
 public class SelectLevelState extends State {
 
-    protected SelectLevelState(Engine engine, GridType gridType, PackageData packageData) {
+    protected SelectLevelState(Engine engine, GridType gridType)/*, PackageData packageData)*/ {
         super(engine);
         _gridType = gridType;
-        _packageData = packageData;
+//        _packageData = packageData;
     }
 
     @Override
@@ -154,7 +155,6 @@ public class SelectLevelState extends State {
 
         float separation = Math.min((_graphics.getLogWidth() * 0.2f), (_graphics.getLogHeight() * 0.2f));
 
-
         int[] pos = new int[2];
         int[] initialPos = new int[2];
         initialPos[0] = (int)(_graphics.getLogWidth() * 0.125f);
@@ -168,16 +168,20 @@ public class SelectLevelState extends State {
             pos[1] = initialPos[1] + (int)((i / 4) * separation);
 
             // TODO: Logica de comprobación de archivos guardados
-            boolean unlocked = true;
+            // Si vamos por un package superior al seleccionado todoo esta desbloqueado,
+            // si no hay que comprobar el boton que se crea con cada nivel
+            boolean unlocked = ((_gridType.getValue() < DataSystem._historyData._currentPackage)
+                    || (i <= DataSystem._historyData._currentLevel));
+
             final SelectPackageButton _level = new SelectPackageButton(pos, size, _gridType, font, unlocked);
             // Seleccion de los datos del nivel escogido
-            _levelData = _packageData._levelDataList.get(i);
+//            _levelData = _packageData._levelDataList.get(i);
             _level.setCallback(new ButtonCallback() {
                 @Override
                 public void doSomething() {
                     int r = _level.getRows();
                     int c = _level.getCols();
-                    State gameState = new GameStoryState(_engine, r, c, _levelData);
+                    State gameState = new GameStoryState(_engine, r, c);//, _levelData);
                     _engine.reqNewState(gameState);
                     _audio.playSound(Assets.clickSound, 0);
                     _audio.stopMusic();

@@ -29,6 +29,7 @@ public class SelectPackageButton {
         _rows = gridType.getRows();
         _cols = gridType.getCols();
         _text = gridType.getText();
+        System.out.println("Creado boton con texto " + _text);
     }
 
     public void render(Graphics gr) {
