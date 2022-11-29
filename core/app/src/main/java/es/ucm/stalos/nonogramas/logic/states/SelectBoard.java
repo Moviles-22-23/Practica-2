@@ -15,9 +15,10 @@ import es.ucm.stalos.nonogramas.logic.enums.GridType;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 import es.ucm.stalos.nonogramas.logic.objects.SelectPackageButton;
 
-public class AbstractSelectBoard extends State {
-    public AbstractSelectBoard(Engine engine) {
+public class SelectBoard extends State {
+    public SelectBoard(Engine engine, boolean isRandom) {
         super(engine);
+        this._isRandom = isRandom;
     }
 
 //-----------------------------------------OVERRIDE-----------------------------------------------//
@@ -27,6 +28,15 @@ public class AbstractSelectBoard extends State {
         try {
             // Texts
             _textsFont = _graphics.newFont("JosefinSans-Bold.ttf", 25, true);
+
+            if(_isRandom) {
+                _modeText = "JUEGO ALEATORIO";
+                _commentText = "Selecciona el tamaño del puzzle";
+            }
+            else {
+                _modeText = "MODO HISTORIA";
+                _commentText = "Selecciona el paquete";
+            }
 
             // MODE TEXT
             _modeSize[0] = _graphics.getLogWidth();
@@ -64,6 +74,9 @@ public class AbstractSelectBoard extends State {
                     _audio.playSound(Assets.clickSound, 0);
                 }
             };
+
+            // Buttons
+            initSelectButtons();
 
             // AUDIO
             _audio.playMusic(Assets.menuTheme);
@@ -124,7 +137,6 @@ public class AbstractSelectBoard extends State {
      * Initializes rows and cols types of the selectButton.
      */
     protected void initGridTypesMap() {
-        _gridTypes = new HashMap<>();
         _gridTypes.put(0, GridType._4x4);
         _gridTypes.put(1, GridType._5x5);
         _gridTypes.put(2, GridType._5x10);
@@ -133,7 +145,58 @@ public class AbstractSelectBoard extends State {
         _gridTypes.put(5, GridType._10x15);
     }
 
+    /**
+     * Initialize the buttons to select the levels
+     *
+     * @throws Exception in case of font creation fails
+     */
+    private void initSelectButtons() throws Exception {
+        // Calculate buttons dimensions
+        float min = Math.min((_graphics.getLogWidth() * 0.2f), (_graphics.getLogHeight() * 0.2f));
+        float[] size = new float[]{min, min};
+
+        // Buttons text font
+        Font font = _graphics.newFont("Molle-Regular.ttf", 20, true);
+        int[] pos = new int[2];
+
+        initGridTypesMap();
+
+        int j = 0;
+        for (int i = 0; i < GridType.MAX.getValue(); i++) {
+            pos[0] = (int) (_graphics.getLogWidth() * 0.1f) * (1 + (3 * j));
+            pos[1] = (int) (_graphics.getLogHeight() * 0.143f) * (3 + (i / 3) * 2);
+            int aux_i = i;
+
+            final GridType _this_gridType = _gridTypes.get(aux_i);
+            final SelectPackageButton _level = new SelectPackageButton(pos, size, _gridTypes.get(i), font, true);
+
+            _level.setCallback(new ButtonCallback() {
+                @Override
+                public void doSomething() {
+                    int r = _level.getRows();
+                    int c = _level.getCols();
+
+                    State gameState;
+
+                    // Dependiendo de si estamos en modo random o no harán cosas distintas
+                    if(_isRandom) gameState = new GameState(_engine, _this_gridType, true, 0);
+                    else gameState = new SelectLevelState(_engine, _this_gridType);
+
+                    _engine.reqNewState(gameState);
+                    _audio.playSound(Assets.clickSound, 0);
+                    _audio.stopMusic();
+                }
+            });
+            _selectButtons.add(_level);
+            j++;
+            if (j == 3) j = 0;
+        }
+    }
+
     //----------------------------------------ATTRIBUTES----------------------------------------------//
+    // GameMode
+    private boolean _isRandom;
+
     // Texts
     protected Font _textsFont;
 
@@ -163,12 +226,12 @@ public class AbstractSelectBoard extends State {
     /**
      * List of all select level buttons
      */
-    protected List<SelectPackageButton> _selectButtons;
+    protected List<SelectPackageButton> _selectButtons = new ArrayList<>();
     /**
      * Dictionary of information about
      * different grid level types
      */
-    protected Map<Integer, GridType> _gridTypes;
+    protected Map<Integer, GridType> _gridTypes = new HashMap<>();
 
     // Colors
     protected final int _greyColor = 0x313131FF;

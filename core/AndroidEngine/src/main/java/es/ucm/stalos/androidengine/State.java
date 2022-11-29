@@ -12,7 +12,7 @@ public abstract class State {
     {
         this._engine = engine;
         this._graphics = engine.getGraphics();
-        this._audio = _engine.getAudio();
+        this._audio = engine.getAudio();
     }
 
     /**

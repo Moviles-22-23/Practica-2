@@ -22,67 +22,67 @@ import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 //colores y a su vez que nos de la opción a ganar también vidas (?)
 
 // PRACTICA 2: Refactorización de los GameState
-public class GameRandState extends AbstractGameState {
-
-    public GameRandState(Engine engine, int rows, int columns, boolean isRandom) {
-        super(engine, rows, columns, true, 0);
-    }
-
-//-----------------------------------------OVERRIDE-----------------------------------------------//
-
-    @Override
-    public void update(double deltaTime) {
-        super.update(deltaTime);
-
-    }
-
-    @Override
-    public void render() {
-        super.render();
-    }
-
-//-------------------------------------------MISC-------------------------------------------------//
-
-    @Override
-    protected void initButtons() throws Exception {
-        super.initButtons();
-
-        _giveupCallback = new ButtonCallback() {
-            @Override
-            public void doSomething() {
-                State selectLevel;
-                // Story mode
-                // TODO: En lugar de volver a StoryPackage hay que volver a PackageLevel
-                //  para ello habría que guardar el paquete que se está jugando actualmente
-                //  porque el SelectPackageLevel pedirá como parámetro el paquete a cargar
-                if (!_isRandom)
-                    selectLevel = new SelectPackBoardState(_engine);
-                    // Random mode
-                else
-                    selectLevel = new SelectRandBoardState(_engine);
-                _engine.reqNewState(selectLevel);
-                _audio.stopMusic();
-                _audio.playSound(Assets.clickSound, 0);
-            }
-        };
-        _backCallback = new ButtonCallback() {
-            @Override
-            public void doSomething() {
-                State selectLevel;
-                // Story mode
-                // TODO: En lugar de volver a StoryPackage hay que volver a PackageLevel
-                //  para ello habría que guardar el paquete que se está jugando actualmente
-                //  porque el SelectPackageLevel pedirá como parámetro el paquete a cargar
-                if (!_isRandom)
-                    selectLevel = new SelectPackBoardState(_engine);
-                    // Random mode
-                else
-                    selectLevel = new SelectRandBoardState(_engine);
-
-                _engine.reqNewState(selectLevel);
-                _audio.stopMusic();
-                _audio.playSound(Assets.clickSound, 0);
-            }
-        };
-    }
-}
+//public class GameRandState extends GameState {
+//
+//    public GameRandState(Engine engine, int rows, int columns, boolean isRandom) {
+//        super(engine, rows, columns, true, 0);
+//    }
+//
+////-----------------------------------------OVERRIDE-----------------------------------------------//
+//
+//    @Override
+//    public void update(double deltaTime) {
+//        super.update(deltaTime);
+//
+//    }
+//
+//    @Override
+//    public void render() {
+//        super.render();
+//    }
+//
+////-------------------------------------------MISC-------------------------------------------------//
+//
+//    @Override
+//    protected void initButtons() throws Exception {
+//        super.initButtons();
+//
+//        _giveupCallback = new ButtonCallback() {
+//            @Override
+//            public void doSomething() {
+//                State selectLevel;
+//                // Story mode
+//                // TODO: En lugar de volver a StoryPackage hay que volver a PackageLevel
+//                //  para ello habría que guardar el paquete que se está jugando actualmente
+//                //  porque el SelectPackageLevel pedirá como parámetro el paquete a cargar
+//                if (!_isRandom)
+//                    selectLevel = new SelectBoard(_engine, false);
+//                    // Random mode
+//                else
+//                    selectLevel = new SelectBoard(_engine, true);
+//                _engine.reqNewState(selectLevel);
+//                _audio.stopMusic();
+//                _audio.playSound(Assets.clickSound, 0);
+//            }
+//        };
+//        _backCallback = new ButtonCallback() {
+//            @Override
+//            public void doSomething() {
+//                State selectLevel;
+//                // Story mode
+//                // TODO: En lugar de volver a StoryPackage hay que volver a PackageLevel
+//                //  para ello habría que guardar el paquete que se está jugando actualmente
+//                //  porque el SelectPackageLevel pedirá como parámetro el paquete a cargar
+//                if (!_isRandom)
+//                    selectLevel = new SelectBoard(_engine, false);
+//                    // Random mode
+//                else
+//                    selectLevel = new SelectBoard(_engine, true);
+//
+//                _engine.reqNewState(selectLevel);
+//                _audio.stopMusic();
+//                _audio.playSound(Assets.clickSound, 0);
+//            }
+//        };
+//    }
+//}

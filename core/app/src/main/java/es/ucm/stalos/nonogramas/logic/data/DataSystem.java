@@ -17,7 +17,7 @@ public class DataSystem {
     /**
      * List of the data of each package
      */
-    public static List<PackageData> _packageDataList = new ArrayList<>();
+//    public static List<PackageData> _packageDataList = new ArrayList<>();
 
     // Cualquier info extra
 

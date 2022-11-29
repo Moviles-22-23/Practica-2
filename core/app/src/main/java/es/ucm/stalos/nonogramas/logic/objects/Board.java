@@ -22,11 +22,11 @@ import java.util.Random;
 import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.androidengine.Font;
 import es.ucm.stalos.androidengine.Graphics;
-import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.enums.CellType;
-import es.ucm.stalos.nonogramas.logic.states.AbstractGameState;
+import es.ucm.stalos.nonogramas.logic.enums.GridType;
+import es.ucm.stalos.nonogramas.logic.states.GameState;
 
 public class Board {
     /**
@@ -37,13 +37,14 @@ public class Board {
      * @param pos  Up-Left position
      * @param size Board size (hints includes)
      */
-    public Board(AbstractGameState state, int rows, int cols, int[] pos, float[] size, boolean isRandom, int lives, int index) {
-        this._rows = rows;
-        this._cols = cols;
-        this._sol = new boolean[rows][cols];
-        this._boardState = new Cell[rows][cols];
-        this._hintRows = new int[rows][(int) Math.ceil(cols / 2.0f)];
-        this._hintCols = new int[(int) Math.ceil(rows / 2.0f)][cols];
+    public Board(GameState state, GridType gridType, int[] pos, float[] size, boolean isRandom, int lives, int index) {
+        this._gridType = gridType;
+        this._rows = gridType.getRows();
+        this._cols = gridType.getCols();
+        this._sol = new boolean[_rows][_cols];
+        this._boardState = new Cell[_rows][_cols];
+        this._hintRows = new int[_rows][(int) Math.ceil(_cols / 2.0f)];
+        this._hintCols = new int[(int) Math.ceil(_rows / 2.0f)][_cols];
         this._pos = pos;
         this._size = size;
         this._isRandom = isRandom;
@@ -52,8 +53,8 @@ public class Board {
         this._index = index;
 
         // Cell Size must be square so we have to use the min between rows and cols
-        float maxRowsSize = size[1] * 2 / (rows * 2 + (int) Math.ceil(rows / 2.0f));
-        float maxColsSize = size[0] * 2 / (cols * 2 + (int) Math.ceil(cols / 2.0f));
+        float maxRowsSize = size[1] * 2 / (_rows * 2 + (int) Math.ceil(_rows / 2.0f));
+        float maxColsSize = size[0] * 2 / (_cols * 2 + (int) Math.ceil(_cols / 2.0f));
         _cellSize = Math.min(maxRowsSize, maxColsSize);
         _hintSize = _cellSize / 2;
     }
@@ -528,6 +529,8 @@ public class Board {
     //----------------------------------------ATTRIBUTES----------------------------------------------//
     private Engine _engine;
 
+
+    GridType _gridType;
     /**
      * Number of rows of the grid
      */
@@ -595,5 +598,5 @@ public class Board {
     /**
      * Reference to the GameState
      */
-    private AbstractGameState _state;
+    private GameState _state;
 }

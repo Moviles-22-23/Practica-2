@@ -39,15 +39,16 @@ public class MainMenuState extends State {
             _randCallback = new ButtonCallback() {
                 @Override
                 public void doSomething() {
-                    State selectLevelState = new SelectRandBoardState(_engine);
+                    State selectLevelState = new SelectBoard(_engine, true);
                     _engine.reqNewState(selectLevelState);
                     _audio.playSound(Assets.clickSound, 0);
                 }
             };
+
             _storyCallback = new ButtonCallback() {
                 @Override
                 public void doSomething() {
-                    State selectLevelState = new SelectPackBoardState(_engine);
+                    State selectLevelState = new SelectBoard(_engine, false);
                     _engine.reqNewState(selectLevelState);
                     _audio.playSound(Assets.clickSound, 0);
                 }
@@ -78,7 +79,6 @@ public class MainMenuState extends State {
     @Override
     public void render() {
         _graphics.setColor(_blackColor);
-
         // Title
         _graphics.drawCenteredString(_titleText, _titlePos, _titleSize, _titleFont);
         // Play Button

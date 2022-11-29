@@ -39,11 +39,11 @@ public class LoadState extends State {
             Assets.goodSound = audio.newSound("goodSound.wav");
             Assets.winSound = audio.newSound("winSound.wav");
 
-            // Inicializacion de los datos
-            for (int i = 0; i < 6; i++) {
-                DataSystem._packageDataList.add(new PackageData());
-            }
+//            for (int i = 0; i < 6; i++) {
+//                DataSystem._packageDataList.add(new PackageData());
+//            }
 
+            // Inicializacion de los datos
             DataSystem._historyData = new HistoryData();
             DataSystem._historyData._currentPackage = 2;
             DataSystem._historyData._currentLevel = 10;
@@ -53,6 +53,7 @@ public class LoadState extends State {
             _engine.reqNewState(mainMenu);
 
         } catch (Exception e) {
+            System.out.println("Error en init de LoadState");
             System.err.println(e);
             return false;
         }

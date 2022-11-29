@@ -79,7 +79,7 @@ public class SelectLevelState extends State {
             _backCallback = new ButtonCallback() {
                 @Override
                 public void doSomething() {
-                    State selectPackage = new SelectPackBoardState(_engine);
+                    State selectPackage = new SelectBoard(_engine, false);
                     _engine.reqNewState(selectPackage);
                     _audio.playSound(Assets.clickSound, 0);
                 }
@@ -183,7 +183,7 @@ public class SelectLevelState extends State {
                 public void doSomething() {
                     int r = _level.getRows();
                     int c = _level.getCols();
-                    State gameState = new GameStoryState(_engine, r, c, aux_i);//, _levelData);
+                    State gameState = new GameState(_engine, _gridType, _isRandom, aux_i);//, _levelData);
                     _engine.reqNewState(gameState);
                     _audio.playSound(Assets.clickSound, 0);
                     _audio.stopMusic();
@@ -209,6 +209,9 @@ public class SelectLevelState extends State {
     //----------------------------------------ATTRIBUTES----------------------------------------------//
     private GridType _gridType;
     private final int _numLevels = 20;
+
+    // Mode
+    private boolean _isRandom = false; // Siempre que vayamos a elegir un nivel va a ser false
 
     // Texts
     private Font _textsFont;

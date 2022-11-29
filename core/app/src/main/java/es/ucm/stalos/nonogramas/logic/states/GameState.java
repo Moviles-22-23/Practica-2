@@ -8,19 +8,19 @@ import es.ucm.stalos.androidengine.Image;
 import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.Assets;
+import es.ucm.stalos.nonogramas.logic.enums.GridType;
 import es.ucm.stalos.nonogramas.logic.enums.PlayingState;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 import es.ucm.stalos.nonogramas.logic.objects.Board;
 
 // PRACTICA 2: Refactorización de los GameState
-public class AbstractGameState extends State {
-
-    public AbstractGameState(Engine engine, int rows, int columns, boolean isRandom, int index) {
+public class GameState extends State {
+    public GameState(Engine engine, GridType gridType, boolean isRandom, int index) {
         super(engine);
-        this._rows = rows;
-        this._cols = columns;
+        this._gridType = gridType;
         this._isRandom = isRandom;
         this._index = index;
+        System.out.println("MODO: " + _isRandom + " ,INDEX: " + _index);
     }
 
 //-----------------------------------------OVERRIDE-----------------------------------------------//
@@ -37,7 +37,7 @@ public class AbstractGameState extends State {
             // Texts
             initTexts();
 
-//            _audio.playMusic(Assets.mainTheme);
+            _audio.playMusic(Assets.mainTheme);
 
         } catch (Exception e) {
             System.out.println("Error init Game State");
@@ -72,7 +72,7 @@ public class AbstractGameState extends State {
                 // GIVE-UP BUTTON
                 if (_playState != PlayingState.Win &&
                         clickInsideSquare(clickPos, _giveupImagePos, _giveupButtonSize)) {
-                    _giveupCallback.doSomething();
+                    _returnCallback.doSomething();
                 }
                 // BOARD TOUCH-DOWN
                 else if (_playState == PlayingState.Gaming &&
@@ -83,7 +83,7 @@ public class AbstractGameState extends State {
                 // BACK BUTTON WIN
                 else if (_playState == PlayingState.Win &&
                         clickInsideSquare(clickPos, _backImagePos, _backButtonSize)) {
-                    _backCallback.doSomething();
+                    _returnCallback.doSomething();
                 }
                 // ADS
                 else if (_playState == PlayingState.GameOver &&
@@ -177,7 +177,7 @@ public class AbstractGameState extends State {
         _sizeBoard[0] = 360.0f;
         _sizeBoard[1] = 360.0f;
 
-        _board = new Board(this, _rows, _cols, _posBoard, _sizeBoard, _isRandom, _lives, _index);
+        _board = new Board(this, _gridType, _posBoard, _sizeBoard, _isRandom, _lives, _index);
         if (!_board.init(_engine)) throw new Exception("Error al crear el board");
     }
 
@@ -216,6 +216,20 @@ public class AbstractGameState extends State {
 
         _backButtonSize[0] = _backImageSize[0] + _backTextSize[0];
         _backButtonSize[1] = _backImageSize[1];
+
+        _returnCallback = new ButtonCallback() {
+            @Override
+            public void doSomething() {
+                State previusState;
+
+                if (_isRandom) previusState = new SelectBoard(_engine, true);
+                else previusState = new SelectLevelState(_engine, _gridType);
+
+                _engine.reqNewState(previusState);
+                _audio.stopMusic();
+                _audio.playSound(Assets.clickSound, 0);
+            }
+        };
 
         // Life
         _lifeImageSize[0] = _giveupImageSize[0] * 1.5f;
@@ -300,10 +314,7 @@ public class AbstractGameState extends State {
     // Game Mode
     protected PlayingState _playState = PlayingState.Gaming;
     protected boolean _isRandom;
-
-    // Atributos del estado
-    protected int _rows;
-    protected int _cols;
+    private GridType _gridType;
 
     // Board
     protected Board _board;
@@ -312,7 +323,6 @@ public class AbstractGameState extends State {
 
     // Texts
     protected Font _fontText;
-
 
     // Win
     protected final String _winText1 = "ENHORABUENA!";
@@ -336,7 +346,6 @@ public class AbstractGameState extends State {
     protected float[] _giveupImageSize = new float[2];
 
     protected float[] _giveupButtonSize = new float[2];
-    protected ButtonCallback _giveupCallback;
 
     // Back Button
     protected final String _backText = "Volver";
@@ -348,7 +357,7 @@ public class AbstractGameState extends State {
     protected float[] _backImageSize = new float[2];
 
     protected float[] _backButtonSize = new float[2];
-    protected ButtonCallback _backCallback;
+    protected ButtonCallback _returnCallback;
 
     // Colors
     protected final int _blackColor = 0x000000FF;
