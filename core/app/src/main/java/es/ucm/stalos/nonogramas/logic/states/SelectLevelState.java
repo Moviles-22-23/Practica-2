@@ -135,6 +135,7 @@ public class SelectLevelState extends State {
                         }
                     }
                 }
+                System.out.println("f");
             }
         }
     }
@@ -175,13 +176,14 @@ public class SelectLevelState extends State {
 
             final SelectPackageButton _level = new SelectPackageButton(pos, size, _gridType, font, unlocked);
             // Seleccion de los datos del nivel escogido
+            final int aux_i = i;
 //            _levelData = _packageData._levelDataList.get(i);
             _level.setCallback(new ButtonCallback() {
                 @Override
                 public void doSomething() {
                     int r = _level.getRows();
                     int c = _level.getCols();
-                    State gameState = new GameStoryState(_engine, r, c);//, _levelData);
+                    State gameState = new GameStoryState(_engine, r, c, aux_i);//, _levelData);
                     _engine.reqNewState(gameState);
                     _audio.playSound(Assets.clickSound, 0);
                     _audio.stopMusic();

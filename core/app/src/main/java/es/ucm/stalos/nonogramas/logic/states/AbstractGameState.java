@@ -15,11 +15,12 @@ import es.ucm.stalos.nonogramas.logic.objects.Board;
 // PRACTICA 2: Refactorización de los GameState
 public class AbstractGameState extends State {
 
-    public AbstractGameState(Engine engine, int rows, int columns, boolean isRandom) {
+    public AbstractGameState(Engine engine, int rows, int columns, boolean isRandom, int index) {
         super(engine);
         this._rows = rows;
         this._cols = columns;
         this._isRandom = isRandom;
+        this._index = index;
     }
 
 //-----------------------------------------OVERRIDE-----------------------------------------------//
@@ -36,7 +37,7 @@ public class AbstractGameState extends State {
             // Texts
             initTexts();
 
-            _audio.playMusic(Assets.mainTheme);
+//            _audio.playMusic(Assets.mainTheme);
 
         } catch (Exception e) {
             System.out.println("Error init Game State");
@@ -113,6 +114,7 @@ public class AbstractGameState extends State {
         switch (_playState) {
             case Gaming:
                 // GiveUp Button
+                _graphics.drawRect(_giveupImagePos, _giveupButtonSize);
                 _graphics.drawImage(_giveupImage, _giveupImagePos, _giveupImageSize);
                 _graphics.drawCenteredString(_giveupText, _giveupTextPos, _giveupTextSize, _fontButtons);
                 // Life Image
@@ -175,7 +177,7 @@ public class AbstractGameState extends State {
         _sizeBoard[0] = 360.0f;
         _sizeBoard[1] = 360.0f;
 
-        _board = new Board(this, _rows, _cols, _posBoard, _sizeBoard, _isRandom, _lives);
+        _board = new Board(this, _rows, _cols, _posBoard, _sizeBoard, _isRandom, _lives, _index);
         if (!_board.init(_engine)) throw new Exception("Error al crear el board");
     }
 
@@ -258,6 +260,7 @@ public class AbstractGameState extends State {
      */
     protected void initTexts() throws Exception {
         _fontText = _graphics.newFont("JosefinSans-Bold.ttf", 30, true);
+        _fontButtons = _graphics.newFont("JosefinSans-Bold.ttf", 30, true);
 
         // WIN TEXT
         _winSize1[0] = _graphics.getLogWidth();
@@ -382,4 +385,6 @@ public class AbstractGameState extends State {
 
     protected float[] _adsButtonSize = new float[2];
     protected ButtonCallback _adsCallback;
+
+    int _index;
 }

@@ -37,7 +37,7 @@ public class Board {
      * @param pos  Up-Left position
      * @param size Board size (hints includes)
      */
-    public Board(AbstractGameState state, int rows, int cols, int[] pos, float[] size, boolean isRandom, int lives) {
+    public Board(AbstractGameState state, int rows, int cols, int[] pos, float[] size, boolean isRandom, int lives, int index) {
         this._rows = rows;
         this._cols = cols;
         this._sol = new boolean[rows][cols];
@@ -49,6 +49,7 @@ public class Board {
         this._isRandom = isRandom;
         this._lives = lives;
         this._state = state;
+        this._index = index;
 
         // Cell Size must be square so we have to use the min between rows and cols
         float maxRowsSize = size[1] * 2 / (rows * 2 + (int) Math.ceil(rows / 2.0f));
@@ -95,6 +96,7 @@ public class Board {
             int numLevels = Integer.parseInt(line);
             Random rn = new Random();
             int levelChoosen = Math.abs(rn.nextInt() % numLevels);
+            levelChoosen = _index;
 
             // Skip lines to be on the correct level
             for (int i = 0; i < levelChoosen; i++) {
@@ -584,6 +586,12 @@ public class Board {
      * Number of lives of the level
      */
     private int _lives = 0;
+
+    /**
+     * Index of current level
+     */
+    private int _index = 0;
+
     /**
      * Reference to the GameState
      */

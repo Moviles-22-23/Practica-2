@@ -25,9 +25,8 @@ import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 
 // PRACTICA 2: Refactorización de los GameState
 public class GameStoryState extends AbstractGameState {
-
-    public GameStoryState(Engine engine, int rows, int columns)/*, LevelData levelData)*/ {
-        super(engine, rows, columns, false);
+    public GameStoryState(Engine engine, int rows, int columns, int index)/*, LevelData levelData)*/ {
+        super(engine, rows, columns, false, index);
 //        this._levelData = levelData;
 //        this._lives = _levelData._lives;
     }
@@ -48,6 +47,8 @@ public class GameStoryState extends AbstractGameState {
 
     @Override
     protected void initButtons() throws Exception {
+        super.initButtons();
+
         _giveupCallback = new ButtonCallback() {
             @Override
             public void doSomething() {

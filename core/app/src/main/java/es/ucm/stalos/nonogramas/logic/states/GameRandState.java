@@ -25,7 +25,7 @@ import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 public class GameRandState extends AbstractGameState {
 
     public GameRandState(Engine engine, int rows, int columns, boolean isRandom) {
-        super(engine, rows, columns, true);
+        super(engine, rows, columns, true, 0);
     }
 
 //-----------------------------------------OVERRIDE-----------------------------------------------//
@@ -65,7 +65,6 @@ public class GameRandState extends AbstractGameState {
                 _audio.playSound(Assets.clickSound, 0);
             }
         };
-
         _backCallback = new ButtonCallback() {
             @Override
             public void doSomething() {
@@ -86,5 +85,4 @@ public class GameRandState extends AbstractGameState {
             }
         };
     }
-
 }
