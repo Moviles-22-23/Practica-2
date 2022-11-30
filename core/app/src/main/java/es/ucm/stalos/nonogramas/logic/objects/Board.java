@@ -24,6 +24,7 @@ import es.ucm.stalos.androidengine.Font;
 import es.ucm.stalos.androidengine.Graphics;
 import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.Assets;
+import es.ucm.stalos.nonogramas.logic.data.DataSystem;
 import es.ucm.stalos.nonogramas.logic.enums.CellType;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
 import es.ucm.stalos.nonogramas.logic.states.GameState;
@@ -32,8 +33,7 @@ public class Board {
     /**
      * Constructor of the board
      *
-     * @param rows Number of rows
-     * @param cols Number of columns
+     * @param gridType Number of rows
      * @param pos  Up-Left position
      * @param size Board size (hints includes)
      */
@@ -67,7 +67,14 @@ public class Board {
             _hintFont = engine.getGraphics().newFont("JosefinSans-Bold.ttf", _fontSize, true);
 
             if (_isRandom) createRandomSolution();
-            else readSolution();
+            else {
+                readSolution();
+                _nameFont = engine.getGraphics().newFont("JosefinSans-Bold.ttf", 50, true);
+                _nameSize[0] = engine.getGraphics().getLogWidth() * 0.7f;
+                _nameSize[1] = engine.getGraphics().getLogHeight() * 0.1f;
+                _namePos[0] = (int) ((engine.getGraphics().getLogWidth() - _nameSize[0]) * 0.5f);
+                _namePos[1] = (int) ((engine.getGraphics().getLogHeight() - _nameSize[1]) * 0.2f);
+            }
 
             loadLevel();
 
@@ -97,7 +104,9 @@ public class Board {
             int numLevels = Integer.parseInt(line);
             Random rn = new Random();
             int levelChoosen = Math.abs(rn.nextInt() % numLevels);
-            levelChoosen = _index;
+
+            // TODO Quitar pero de momento es defensivo para los paquetes con menos de 20 niveles
+            if(_index <= numLevels) levelChoosen = _index;
 
             // Skip lines to be on the correct level
             for (int i = 0; i < levelChoosen; i++) {
@@ -106,6 +115,7 @@ public class Board {
                     br.readLine();
                 }
             }
+
             // Read lines
             for (int i = 0; i < _rows; i++) {
                 line = br.readLine();
@@ -114,6 +124,11 @@ public class Board {
                     _sol[i][j] = line.charAt(j) != '0';
                 }
             }
+
+            // Lee la ultima linea para saber le nombre de la figura
+            line = br.readLine();
+            if(line != null) _nameText = line;
+            System.out.println("Error con el ultimo getLine: " + _nameText);
         } catch (Exception e) {
             System.out.println("ERROR ANDROID: " + e.getMessage());
             System.out.println("Error reading file");
@@ -300,7 +315,10 @@ public class Board {
             size[0] = _hintCols[0].length * _cellSize;
             size[1] = _hintCols.length * _hintSize;
             graphics.drawRect(pos, size);
-        } else {
+        }
+
+        // Cuando hemos ganado
+        else {
             int oneRowSize = (int) (_size[0] / _rows);
             int oneColSize = (int) (_size[1] / _cols);
             int rowMargin = (int) (((_size[0] / _rows) - _cellSize) * 0.5f);
@@ -320,6 +338,12 @@ public class Board {
                     if (_boardState[i][j].cellType == CellType.BLUE)
                         graphics.fillSquare(solPos, _cellSize);
                 }
+            }
+
+            // Muestra el nombre de la figura
+            if(!_isRandom) {
+                graphics.setColor(0x000000FF);
+                graphics.drawCenteredString(_nameText, _namePos, _nameSize, _nameFont);
             }
         }
     }
@@ -343,6 +367,26 @@ public class Board {
 
                     // Comprueba si hay victoria
                     _isWin = checkOriginalSolution();
+
+                    // Al completar el nivel
+                    if(_isWin){
+                        System.out.println("VICTORIA, NIVEL NUEVO DESBLOQUEADO");
+                        // Ha ganado así que comprueba si hay que desbloquear el siguiente nivel de la historia
+                        if(DataSystem._historyData._currentPackage == _gridType.getValue() &&
+                                DataSystem._historyData._currentLevel == _index){
+                            DataSystem._historyData._currentLevel += 1;
+                            // Si cambiamos de paquete
+                            if(DataSystem._historyData._currentLevel == 20){
+                                DataSystem._historyData._currentPackage += 1;
+                                DataSystem._historyData._currentLevel = 0;
+                                // No hace falta comprobar que el paquete sea el ultimo
+                                // Porque entonces quedaria desbloqueado hasta el paquete "7", y todos los codigos
+                                // Seguirian sirviendo, de hecho en proximas actualizaciones sería mas comodo para
+                                // Que les funcionase bien a las personas que habían completado el juego
+                                // Es la forma de decir que el ultimo nivel esta completado
+                            }
+                        }
+                    }
 
                     return;
                 }
@@ -526,9 +570,17 @@ public class Board {
         _isWin = state;
     }
 
+    public boolean getWin() { return _isWin; }
+
+
     //----------------------------------------ATTRIBUTES----------------------------------------------//
     private Engine _engine;
 
+    // Nombre de la figura
+    private String _nameText = "?????";
+    private Font _nameFont;
+    private int[] _namePos = new int[2];
+    private float[] _nameSize = new float[2];
 
     GridType _gridType;
     /**

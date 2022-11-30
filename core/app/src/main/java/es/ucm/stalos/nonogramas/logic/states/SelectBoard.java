@@ -11,9 +11,10 @@ import es.ucm.stalos.androidengine.Font;
 import es.ucm.stalos.androidengine.Image;
 import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.Assets;
+import es.ucm.stalos.nonogramas.logic.data.DataSystem;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
-import es.ucm.stalos.nonogramas.logic.objects.SelectPackageButton;
+import es.ucm.stalos.nonogramas.logic.objects.SelectButton;
 
 public class SelectBoard extends State {
     public SelectBoard(Engine engine, boolean isRandom) {
@@ -103,7 +104,7 @@ public class SelectBoard extends State {
         _graphics.drawCenteredString(_backText, _backTextPos, _backTextSize, _textsFont);
 
         // SelectLevel buttons
-        for (SelectPackageButton button : _selectButtons) {
+        for (SelectButton button : _selectButtons) {
             button.render(_graphics);
         }
     }
@@ -119,7 +120,7 @@ public class SelectBoard extends State {
                 if (clickInsideSquare(clickPos, _backImagePos, _backButtonSize))
                     _backCallback.doSomething();
                 else {
-                    for (SelectPackageButton button : _selectButtons) {
+                    for (SelectButton button : _selectButtons) {
                         int[] pos = button.getPos();
                         float[] size = button.getSize();
                         if (clickInsideSquare(clickPos, pos, size)) {
@@ -167,8 +168,11 @@ public class SelectBoard extends State {
             pos[1] = (int) (_graphics.getLogHeight() * 0.143f) * (3 + (i / 3) * 2);
             int aux_i = i;
 
+            boolean unlocked = DataSystem._historyData._currentPackage >= i;
+
             final GridType _this_gridType = _gridTypes.get(aux_i);
-            final SelectPackageButton _level = new SelectPackageButton(pos, size, _gridTypes.get(i), font, true);
+            String text = _gridTypes.get(i).getRows() + " x " + _gridTypes.get(i).getCols();
+            final SelectButton _level = new SelectButton(pos, size, text, font, unlocked);
 
             _level.setCallback(new ButtonCallback() {
                 @Override
@@ -226,7 +230,7 @@ public class SelectBoard extends State {
     /**
      * List of all select level buttons
      */
-    protected List<SelectPackageButton> _selectButtons = new ArrayList<>();
+    protected List<SelectButton> _selectButtons = new ArrayList<>();
     /**
      * Dictionary of information about
      * different grid level types

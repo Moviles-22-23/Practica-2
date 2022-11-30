@@ -1,15 +1,5 @@
 package es.ucm.stalos.nonogramas.logic.states;
 
-import java.util.ArrayList;
-
-import es.ucm.stalos.androidengine.State;
-import es.ucm.stalos.androidengine.Engine;
-import es.ucm.stalos.androidengine.Font;
-import es.ucm.stalos.nonogramas.logic.Assets;
-import es.ucm.stalos.nonogramas.logic.enums.GridType;
-import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
-import es.ucm.stalos.nonogramas.logic.objects.SelectPackageButton;
-
 //public class SelectRandBoardState extends SelectBoard {
 //    public SelectRandBoardState(Engine engine) {
 //        super(engine, true);

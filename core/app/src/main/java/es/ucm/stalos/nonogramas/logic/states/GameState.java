@@ -1,5 +1,7 @@
 package es.ucm.stalos.nonogramas.logic.states;
 
+import android.provider.ContactsContract;
+
 import java.util.List;
 
 import es.ucm.stalos.androidengine.Engine;
@@ -8,6 +10,7 @@ import es.ucm.stalos.androidengine.Image;
 import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.Assets;
+import es.ucm.stalos.nonogramas.logic.data.DataSystem;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
 import es.ucm.stalos.nonogramas.logic.enums.PlayingState;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
@@ -100,6 +103,8 @@ public class GameState extends State {
                     //_audio.playSound(Assets.clickSound, 0);
                 }
             }
+
+
         }
     }
 
@@ -308,6 +313,7 @@ public class GameState extends State {
         if (_lives <= 0)
             _playState = PlayingState.GameOver;
     }
+
 
 //----------------------------------------ATTRIBUTES----------------------------------------------//
 

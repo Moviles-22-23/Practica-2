@@ -7,15 +7,17 @@ import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 
-public class SelectPackageButton {
-    public SelectPackageButton(int[] pos, float[] size, GridType gridType, Font font, boolean unlocked) {
+public class SelectButton {
+    public SelectButton(int[] pos, float[] size, String text, Font font, boolean unlocked) {
         _buttonPos[0] = pos[0];
         _buttonPos[1] = pos[1];
 
         _buttonSize[0] = size[0];
         _buttonSize[1] = size[1];
 
-        initType(gridType);
+        this._text = text;
+
+//        initType(gridType);
 
         _font = font;
 
@@ -25,12 +27,12 @@ public class SelectPackageButton {
     /**
      * Initialize the buttonType
      */
-    private void initType(GridType gridType) {
-        _rows = gridType.getRows();
-        _cols = gridType.getCols();
-        _text = gridType.getText();
-        System.out.println("Creado boton con texto " + _text);
-    }
+//    private void initType(GridType gridType) {
+//        _rows = gridType.getRows();
+//        _cols = gridType.getCols();
+//        _text = gridType.getText();
+//        System.out.println("Creado boton con texto " + _text);
+//    }
 
     public void render(Graphics gr) {
         gr.drawRect(_buttonPos, _buttonSize);

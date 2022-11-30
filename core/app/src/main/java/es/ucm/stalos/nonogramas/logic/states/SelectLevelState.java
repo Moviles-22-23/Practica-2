@@ -21,6 +21,8 @@ package es.ucm.stalos.nonogramas.logic.states;
 // EJEMPLO: Categoría fácil, 20 con tableros de 5x5. Al completar los 20 niveles se desbloquea la
 // categoría intermedia con 20 niveles de 10x10.
 
+import android.provider.ContactsContract;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +38,7 @@ import es.ucm.stalos.nonogramas.logic.data.DataSystem;
 import es.ucm.stalos.nonogramas.logic.data.LevelData;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
-import es.ucm.stalos.nonogramas.logic.objects.SelectPackageButton;
+import es.ucm.stalos.nonogramas.logic.objects.SelectButton;
 import es.ucm.stalos.nonogramas.logic.data.PackageData;
 
 public class SelectLevelState extends State {
@@ -44,6 +46,7 @@ public class SelectLevelState extends State {
     protected SelectLevelState(Engine engine, GridType gridType)/*, PackageData packageData)*/ {
         super(engine);
         _gridType = gridType;
+        System.out.println("----------------------------------------- DATA PACKAGE: " + DataSystem._historyData._currentPackage + " LEVEL: " + DataSystem._historyData._currentLevel);
 //        _packageData = packageData;
     }
 
@@ -112,7 +115,7 @@ public class SelectLevelState extends State {
         _graphics.drawCenteredString(_backText, _backTextPos, _backTextSize, _textsFont);
 
         // SelectLevel buttons
-        for (SelectPackageButton button : _selectButtons) {
+        for (SelectButton button : _selectButtons) {
             button.render(_graphics);
         }
     }
@@ -127,7 +130,7 @@ public class SelectLevelState extends State {
 
                 if (clickInsideSquare(clickPos, _backImagePos, _backButtonSize)) _backCallback.doSomething();
                 else {
-                    for (SelectPackageButton button : _selectButtons) {
+                    for (SelectButton button : _selectButtons) {
                         int[] pos = button.getPos();
                         float[] size = button.getSize();
                         if (clickInsideSquare(clickPos, pos, size)) {
@@ -148,7 +151,7 @@ public class SelectLevelState extends State {
      * @throws Exception in case of font creation fails
      */
     private void initSelectLevelButtons() throws Exception {
-        Font font = _graphics.newFont("Molle-Regular.ttf", 1, true);
+        Font font = _graphics.newFont("Molle-Regular.ttf", 20, true);
         _selectButtons = new ArrayList<>();
 
         float minSize = Math.min((_graphics.getLogWidth() * 0.15f), (_graphics.getLogHeight() * 0.15f));
@@ -174,7 +177,8 @@ public class SelectLevelState extends State {
             boolean unlocked = ((_gridType.getValue() < DataSystem._historyData._currentPackage)
                     || (i <= DataSystem._historyData._currentLevel));
 
-            final SelectPackageButton _level = new SelectPackageButton(pos, size, _gridType, font, unlocked);
+            String text = "" + (i + 1);
+            final SelectButton _level = new SelectButton(pos, size, text, font, unlocked);
             // Seleccion de los datos del nivel escogido
             final int aux_i = i;
 //            _levelData = _packageData._levelDataList.get(i);
@@ -237,7 +241,7 @@ public class SelectLevelState extends State {
     /**
      * List of all select level buttons
      */
-    List<SelectPackageButton> _selectButtons;
+    List<SelectButton> _selectButtons;
     /**
      * Dictionary of information about
      * different grid level types
