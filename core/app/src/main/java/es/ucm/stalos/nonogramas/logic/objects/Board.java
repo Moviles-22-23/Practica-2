@@ -27,6 +27,7 @@ import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.data.DataSystem;
 import es.ucm.stalos.nonogramas.logic.enums.CellType;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
+import es.ucm.stalos.nonogramas.logic.enums.PlayingState;
 import es.ucm.stalos.nonogramas.logic.states.GameState;
 
 public class Board {
@@ -94,7 +95,7 @@ public class Board {
     private void readSolution() throws FileNotFoundException {
         try {
             // LevelPack Name
-            String name = "levels/levelPack" + String.valueOf(_rows) + "x" + String.valueOf(_cols) + ".txt";
+            String name = "levels/levelPack" + _rows + "x" + _cols + ".txt";
             // IFile from the current platform
             InputStream is = _engine.getAssetManager().open(name);
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -251,100 +252,15 @@ public class Board {
 
     //----------------------------------------MAIN-LOOP-----------------------------------------------//
     public void render(Graphics graphics) {
-        if (!_isWin) {
-            // Variable auiliares para pintar
-            int[] pos = new int[2];
-            float[] size = new float[2];
-            String numText;
-
-            // Number Colors
-            graphics.setColor(0x000000FF);
-
-            // TOTAL ROWS
-            for (int i = 0; i < (_boardState.length + _hintCols.length); i++) {
-                // TOTAL COLS
-                for (int j = 0; j < (_boardState[0].length + _hintRows[0].length); j++) {
-                    // Range of empty space (BORRAR)
-                    if (i < _hintCols.length && j < _hintRows[0].length) {
-                        // Empty o poner aqui el dibujo peque o algo
-                    }
-                    // Range of hints rows
-                    else if (i >= _hintCols.length && j < _hintRows[0].length) {
-                        // Los 0 no hace falta ponerlos
-                        if (_hintRows[i - _hintCols.length][j] != 0) {
-                            graphics.setColor(0x000000FF);
-                            pos[0] = _pos[0] + (int) (j * _hintSize);
-                            pos[1] = _pos[1] + (int) ((_hintCols.length * _hintSize) + ((i - _hintCols.length) * _cellSize));
-                            size[0] = _hintSize;
-                            size[1] = _cellSize;
-                            numText = Integer.toString(_hintRows[i - _hintCols.length][j]);
-                            graphics.drawCenteredString(numText, pos, size, _hintFont);
-                        }
-                    }
-                    // Range of hints cols
-                    else if (i < _hintCols.length && j >= _hintRows[0].length) {
-                        if (_hintCols[i][j - _hintRows[0].length] != 0) {
-                            graphics.setColor(0x000000FF);
-                            pos[0] = _pos[0] + (int) ((_hintRows[0].length * _hintSize) + ((j - _hintRows[0].length) * _cellSize));
-                            pos[1] = _pos[1] + (int) (i * _hintSize);
-                            size[0] = _cellSize;
-                            size[1] = _hintSize;
-                            numText = Integer.toString(_hintCols[i][j - _hintRows[0].length]);
-                            graphics.drawCenteredString(numText, pos, size, _hintFont);
-                        }
-                    }
-                    // Range of board
-                    else {
-                        _boardState[i - _hintCols.length][j - _hintRows[0].length].render(graphics);
-                    }
-                }
-            }
-
-            graphics.setColor(0x000000FF);
-
-            // HintsRows Rect
-            pos[0] = _pos[0];
-            pos[1] = _pos[1] + (int) (_hintSize * _hintCols.length);
-            size[0] = _hintRows[0].length * _hintSize;
-            size[1] = _hintRows.length * _cellSize;
-            graphics.drawRect(pos, size);
-
-            // HintCols Rect
-            pos[0] = _pos[0] + (int) (_hintSize * _hintRows[0].length);
-            pos[1] = _pos[1];
-            size[0] = _hintCols[0].length * _cellSize;
-            size[1] = _hintCols.length * _hintSize;
-            graphics.drawRect(pos, size);
-        }
-
-        // Cuando hemos ganado
-        else {
-            int oneRowSize = (int) (_size[0] / _rows);
-            int oneColSize = (int) (_size[1] / _cols);
-            int rowMargin = (int) (((_size[0] / _rows) - _cellSize) * 0.5f);
-            int colMargin = (int) (((_size[1] / _cols) - _cellSize) * 0.5f);
-
-            int size = Math.min(oneRowSize, oneColSize);
-            int margin = Math.min(rowMargin, colMargin);
-
-            // Aqui dibuja solo la solucion cuando hemos ganado
-            for (int i = 0; i < _rows; i++) {
-                for (int j = 0; j < _cols; j++) {
-                    graphics.setColor(0x0000FFFF);
-
-                    int[] solPos = {_pos[0] + size * j + margin, _pos[1] + size * i + margin};
-
-                    // Utiliza el estado del tablero por si se ha resuelto con otra solucion
-                    if (_boardState[i][j].cellType == CellType.BLUE)
-                        graphics.fillSquare(solPos, _cellSize);
-                }
-            }
-
-            // Muestra el nombre de la figura
-            if(!_isRandom) {
-                graphics.setColor(0x000000FF);
-                graphics.drawCenteredString(_nameText, _namePos, _nameSize, _nameFont);
-            }
+        switch (_state.getPlayingState()){
+            case Gaming:
+                renderGaming(graphics);
+                break;
+            case Win:
+                renderWin(graphics);
+                break;
+            default:
+                break;
         }
     }
 
@@ -360,39 +276,121 @@ public class Board {
                         _lives--;
                         _state.updateLives(_lives);
                         return;
-                    }
-                    else _engine.getAudio().playSound(Assets.goodSound, 0);
+                    } else _engine.getAudio().playSound(Assets.goodSound, 0);
 
                     _boardState[i][j].handleInput(clickPos, touch);
 
                     // Comprueba si hay victoria
-                    _isWin = checkOriginalSolution();
+                    if(checkOriginalSolution()) {
+                        _state.setPlayingState(PlayingState.Win);
 
-                    // Al completar el nivel
-                    if(_isWin){
-                        System.out.println("VICTORIA, NIVEL NUEVO DESBLOQUEADO");
-                        // Ha ganado así que comprueba si hay que desbloquear el siguiente nivel de la historia
-                        if(DataSystem._historyData._currentPackage == _gridType.getValue() &&
-                                DataSystem._historyData._currentLevel == _index){
-                            DataSystem._historyData._currentLevel += 1;
-                            // Si cambiamos de paquete
-                            if(DataSystem._historyData._currentLevel == 20){
-                                DataSystem._historyData._currentPackage += 1;
-                                DataSystem._historyData._currentLevel = 0;
-                                // No hace falta comprobar que el paquete sea el ultimo
-                                // Porque entonces quedaria desbloqueado hasta el paquete "7", y todos los codigos
-                                // Seguirian sirviendo, de hecho en proximas actualizaciones sería mas comodo para
-                                // Que les funcionase bien a las personas que habían completado el juego
-                                // Es la forma de decir que el ultimo nivel esta completado
-                            }
-                        }
+                        if(!_isRandom) _state.updateHistoryData();
                     }
 
                     return;
                 }
             }
+
         }
     }
+
+    private void renderGaming(Graphics graphics){
+        // Variable auiliares para pintar
+        int[] pos = new int[2];
+        float[] size = new float[2];
+        String numText;
+
+        // Number Colors
+        graphics.setColor(0x000000FF);
+
+        // TOTAL ROWS
+        for (int i = 0; i < (_boardState.length + _hintCols.length); i++) {
+            // TOTAL COLS
+            for (int j = 0; j < (_boardState[0].length + _hintRows[0].length); j++) {
+                // Range of empty space (BORRAR)
+                if (i < _hintCols.length && j < _hintRows[0].length) {
+                    // Empty o poner aqui el dibujo peque o algo
+                }
+                // Range of hints rows
+                else if (i >= _hintCols.length && j < _hintRows[0].length) {
+                    // Los 0 no hace falta ponerlos
+                    if (_hintRows[i - _hintCols.length][j] != 0) {
+                        graphics.setColor(0x000000FF);
+                        pos[0] = _pos[0] + (int) (j * _hintSize);
+                        pos[1] = _pos[1] + (int) ((_hintCols.length * _hintSize) + ((i - _hintCols.length) * _cellSize));
+                        size[0] = _hintSize;
+                        size[1] = _cellSize;
+                        numText = Integer.toString(_hintRows[i - _hintCols.length][j]);
+                        graphics.drawCenteredString(numText, pos, size, _hintFont);
+                    }
+                }
+                // Range of hints cols
+                else if (i < _hintCols.length && j >= _hintRows[0].length) {
+                    if (_hintCols[i][j - _hintRows[0].length] != 0) {
+                        graphics.setColor(0x000000FF);
+                        pos[0] = _pos[0] + (int) ((_hintRows[0].length * _hintSize) + ((j - _hintRows[0].length) * _cellSize));
+                        pos[1] = _pos[1] + (int) (i * _hintSize);
+                        size[0] = _cellSize;
+                        size[1] = _hintSize;
+                        numText = Integer.toString(_hintCols[i][j - _hintRows[0].length]);
+                        graphics.drawCenteredString(numText, pos, size, _hintFont);
+                    }
+                }
+                // Range of board
+                else {
+                    _boardState[i - _hintCols.length][j - _hintRows[0].length].render(graphics);
+                }
+            }
+        }
+
+        graphics.setColor(0x000000FF);
+
+        // HintsRows Rect
+        pos[0] = _pos[0];
+        pos[1] = _pos[1] + (int) (_hintSize * _hintCols.length);
+        size[0] = _hintRows[0].length * _hintSize;
+        size[1] = _hintRows.length * _cellSize;
+        graphics.drawRect(pos, size);
+
+        // HintCols Rect
+        pos[0] = _pos[0] + (int) (_hintSize * _hintRows[0].length);
+        pos[1] = _pos[1];
+        size[0] = _hintCols[0].length * _cellSize;
+        size[1] = _hintCols.length * _hintSize;
+        graphics.drawRect(pos, size);
+    }
+
+    private void renderWin(Graphics graphics){
+        // Cuando hemos ganado
+        int oneRowSize = (int) (_size[0] / _rows);
+        int oneColSize = (int) (_size[1] / _cols);
+        int rowMargin = (int) (((_size[0] / _rows) - _cellSize) * 0.5f);
+        int colMargin = (int) (((_size[1] / _cols) - _cellSize) * 0.5f);
+
+        int size = Math.min(oneRowSize, oneColSize);
+        int margin = Math.min(rowMargin, colMargin);
+
+        // Aqui dibuja solo la solucion cuando hemos ganado
+        for (int i = 0; i < _rows; i++) {
+            for (int j = 0; j < _cols; j++) {
+                graphics.setColor(0x0000FFFF);
+
+                int[] solPos = {_pos[0] + size * j + margin, _pos[1] + size * i + margin};
+
+                // Utiliza el estado del tablero por si se ha resuelto con otra solucion
+                if (_boardState[i][j].cellType == CellType.BLUE)
+                    graphics.fillSquare(solPos, _cellSize);
+            }
+        }
+
+        // Muestra el nombre de la figura
+        if(!_isRandom) {
+            graphics.setColor(0x000000FF);
+            graphics.drawCenteredString(_nameText, _namePos, _nameSize, _nameFont);
+        }
+    }
+
+
 
     /**
      * @param clickPos Mouse position
@@ -566,13 +564,6 @@ public class Board {
         _pos = newPos;
     }
 
-    public void setWin(boolean state) {
-        _isWin = state;
-    }
-
-    public boolean getWin() { return _isWin; }
-
-
     //----------------------------------------ATTRIBUTES----------------------------------------------//
     private Engine _engine;
 
@@ -609,7 +600,7 @@ public class Board {
      * have to turn back into blue
      */
     private List<int[]> _wrongCells;
-    private boolean _isWin = false;
+//    private boolean _isWin = false;
     private boolean _isRandom;
 
     /**

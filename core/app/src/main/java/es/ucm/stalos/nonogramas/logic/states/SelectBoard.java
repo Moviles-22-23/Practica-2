@@ -168,7 +168,7 @@ public class SelectBoard extends State {
             pos[1] = (int) (_graphics.getLogHeight() * 0.143f) * (3 + (i / 3) * 2);
             int aux_i = i;
 
-            boolean unlocked = DataSystem._historyData._currentPackage >= i;
+            boolean unlocked = DataSystem._historyData._currentPackage >= i || _isRandom;
 
             final GridType _this_gridType = _gridTypes.get(aux_i);
             String text = _gridTypes.get(i).getRows() + " x " + _gridTypes.get(i).getCols();

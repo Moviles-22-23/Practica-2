@@ -69,42 +69,45 @@ public class GameState extends State {
         List<TouchEvent> events = _engine.getInput().getTouchEvents();
         for (int i = 0; i < events.size(); i++) {
             TouchEvent currEvent = events.get(i);
-            if (currEvent == TouchEvent.touchDown) {
-                int[] clickPos = {currEvent.getX(), currEvent.getY()};
+            int[] clickPos = {currEvent.getX(), currEvent.getY()};
 
+            // touchDown
+            if (currEvent == TouchEvent.touchDown) {
                 // GIVE-UP BUTTON
                 if (_playState != PlayingState.Win &&
                         clickInsideSquare(clickPos, _giveupImagePos, _giveupButtonSize)) {
                     _returnCallback.doSomething();
                 }
+
                 // BOARD TOUCH-DOWN
                 else if (_playState == PlayingState.Gaming &&
                         clickInsideSquare(clickPos, _posBoard, _sizeBoard)) {
-                    _board.handleInput(clickPos, TouchEvent.touchDown);
+                    _board.handleInput(clickPos, currEvent);
                     _audio.playSound(Assets.clickSound, 0);
                 }
+
                 // BACK BUTTON WIN
                 else if (_playState == PlayingState.Win &&
                         clickInsideSquare(clickPos, _backImagePos, _backButtonSize)) {
                     _returnCallback.doSomething();
                 }
+
                 // ADS
                 else if (_playState == PlayingState.GameOver &&
                         clickInsideSquare(clickPos, _adsImagePos, _adsButtonSize))
                     _adsCallback.doSomething();
+            }
 
-            } else if (currEvent == TouchEvent.longTouch) {
-                int[] clickPos = {currEvent.getX(), currEvent.getY()};
+            // longTouch
+            else if (currEvent == TouchEvent.longTouch) {
                 // BOARD LONG TOUCH
                 if (_playState == PlayingState.Gaming &&
                         clickInsideSquare(clickPos, _posBoard, _sizeBoard)) {
-                    _board.handleInput(clickPos, TouchEvent.longTouch);
+                    _board.handleInput(clickPos, currEvent);
                     //TODO: buscar un sonido para holdClick
                     //_audio.playSound(Assets.clickSound, 0);
                 }
             }
-
-            if(_board.getWin()) _playState = PlayingState.Win;
         }
     }
 
@@ -165,7 +168,6 @@ public class GameState extends State {
                 // TEXT WIN
                 _graphics.setColor(_blackColor);
                 _graphics.drawCenteredString(_winText1, _winPos1, _winSize1, _fontText);
-                _graphics.drawCenteredString(_winText2, _winPos2, _winSize2, _fontText);
                 break;
             case GameOver:
                 _graphics.drawImage(_gameOverImage, _gameOverImagePos, _gameOverImageSize);
@@ -290,11 +292,6 @@ public class GameState extends State {
         _winPos1[0] = 0;
         _winPos1[1] = (int) (_graphics.getLogHeight() * 0.1f);
 
-        _winSize2[0] = _graphics.getLogWidth();
-        _winSize2[1] = _graphics.getLogHeight() * 0.08f;
-        _winPos2[0] = 0;
-        _winPos2[1] = (int) (_graphics.getLogHeight() * 0.18f);
-
         // GameOver Text
         _gameOverImageSize[0] = _graphics.getLogWidth() * 0.9f;
         _gameOverImageSize[1] = _graphics.getLogHeight() * 0.5f;
@@ -317,6 +314,28 @@ public class GameState extends State {
             _playState = PlayingState.GameOver;
     }
 
+    public void updateHistoryData(){
+        System.out.println("VICTORIA, NIVEL NUEVO DESBLOQUEADO");
+        // Ha ganado así que comprueba si hay que desbloquear el siguiente nivel de la historia
+        if (DataSystem._historyData._currentPackage == _gridType.getValue() &&
+                DataSystem._historyData._currentLevel == _index) {
+            DataSystem._historyData._currentLevel += 1;
+            // Si cambiamos de paquete
+            if (DataSystem._historyData._currentLevel == 20) {
+                DataSystem._historyData._currentPackage += 1;
+                DataSystem._historyData._currentLevel = 0;
+                // No hace falta comprobar que el paquete sea el ultimo
+                // Porque entonces quedaria desbloqueado hasta el paquete "7", y todos los codigos
+                // Seguirian sirviendo, de hecho en proximas actualizaciones sería mas comodo para
+                // Que les funcionase bien a las personas que habían completado el juego
+                // Es la forma de decir que el ultimo nivel esta completado
+            }
+        }
+    }
+
+    public PlayingState getPlayingState() { return _playState; }
+
+    public void setPlayingState(PlayingState newPlayingState) { _playState = newPlayingState; }
 
 //----------------------------------------ATTRIBUTES----------------------------------------------//
 
@@ -337,10 +356,6 @@ public class GameState extends State {
     protected final String _winText1 = "ENHORABUENA!";
     protected int[] _winPos1 = new int[2];
     protected float[] _winSize1 = new float[2];
-
-    protected String _winText2 = "Solución original";
-    protected int[] _winPos2 = new int[2];
-    protected float[] _winSize2 = new float[2];
 
     // Buttons
     protected Font _fontButtons;

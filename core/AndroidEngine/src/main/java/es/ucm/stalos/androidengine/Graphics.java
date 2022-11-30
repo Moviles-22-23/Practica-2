@@ -207,6 +207,7 @@ public class Graphics {
 
     public void drawText(String text, int[] pos, Font font) {
         Typeface currFont = font.getAndroidFont();
+
         _paint.setTypeface(currFont);
         _paint.setTextSize(font.getSize());
         _paint.setTextAlign(Paint.Align.LEFT);
@@ -222,7 +223,32 @@ public class Graphics {
         _paint.setTextAlign(Paint.Align.CENTER);
         _canvas.drawText(text, pos[0] + size[0] / 2, pos[1] + size[1] / 2, _paint);
         _paint.reset();
+        // TODO esto no centra bien
+
+
     }
+
+    // EN PC LO HACIAMOS ASI
+//    @Override
+//    public void drawCenteredString(String text, int[] pos, float[] size, Font font) {
+//        java.awt.Font javaFont = initFont(font);
+//
+//        // Calculates de logic pos and size
+//        int[] logicPos = finalPosition(pos[0], pos[1]);
+//        int[] logicSize = finalSize(size[0], size[1]);
+//
+//        // Get the FontMetrics
+//        FontMetrics metrics = _graphics.getFontMetrics(javaFont);
+//
+//        // Determine the X coordinate for the text
+//        int x = logicPos[0] + ((int) logicSize[0] - metrics.stringWidth(text)) / 2;
+//        // Determine the Y coordinate for the text (note we add the ascent, as in java_2D 0 is top of the screen)
+//        int y = logicPos[1] + (((int) logicSize[1] - metrics.getHeight()) / 2) + metrics.getAscent();
+//
+//        // Drawing
+//        _graphics.drawString(text, x, y);
+//        _graphics.setPaintMode();
+//    }
 
     public void drawRect(int[] pos, float side) {
         _paint.setStyle(Paint.Style.STROKE);
