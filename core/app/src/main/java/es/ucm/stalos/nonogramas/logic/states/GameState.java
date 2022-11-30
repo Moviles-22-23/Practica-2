@@ -104,7 +104,7 @@ public class GameState extends State {
                 }
             }
 
-
+            if(_board.getWin()) _playState = PlayingState.Win;
         }
     }
 
@@ -118,6 +118,7 @@ public class GameState extends State {
         _graphics.setColor(_blackColor);
         switch (_playState) {
             case Gaming:
+                System.out.println("GAMING");
                 // GiveUp Button
                 _graphics.drawRect(_giveupImagePos, _giveupButtonSize);
                 _graphics.drawImage(_giveupImage, _giveupImagePos, _giveupImageSize);
@@ -127,6 +128,8 @@ public class GameState extends State {
                 _graphics.drawCenteredString(_lifeText, _lifeTextPos, _lifeTextSize, _fontButtons);
                 break;
             case Win: {
+                System.out.println("WIN");
+
                 // Back Button
                 _graphics.drawImage(_backImage, _backImagePos, _backImageSize);
                 _graphics.drawCenteredString(_backText, _backTextPos, _backTextSize, _fontButtons);

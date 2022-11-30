@@ -45,10 +45,10 @@ public class LoadState extends State {
 //                DataSystem._packageDataList.add(new PackageData());
 //            }
 
-            // Inicializacion de los datos
+            // Inicializacion de los datos que tendra que leer del saveData
             DataSystem._historyData = new HistoryData();
-            DataSystem._historyData._currentPackage = 1;
-            DataSystem._historyData._currentLevel = 10;
+            DataSystem._historyData._currentPackage = 0;
+            DataSystem._historyData._currentLevel = 18;
 
             // TODO
 //            // Hacer algo así al arrancar
