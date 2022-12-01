@@ -24,7 +24,6 @@ import es.ucm.stalos.androidengine.Font;
 import es.ucm.stalos.androidengine.Graphics;
 import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.Assets;
-import es.ucm.stalos.nonogramas.logic.data.DataSystem;
 import es.ucm.stalos.nonogramas.logic.enums.CellType;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
 import es.ucm.stalos.nonogramas.logic.enums.PlayingState;
@@ -284,7 +283,8 @@ public class Board {
                     if(checkOriginalSolution()) {
                         _state.setPlayingState(PlayingState.Win);
 
-                        if(!_isRandom) _state.updateHistoryData();
+                        if(!_isRandom)
+                            _state.updateHistoryData();
                     }
 
                     return;
@@ -631,12 +631,12 @@ public class Board {
     /**
      * Number of lives of the level
      */
-    private int _lives = 0;
+    private int _lives;
 
     /**
      * Index of current level
      */
-    private int _index = 0;
+    private int _index;
 
     /**
      * Reference to the GameState

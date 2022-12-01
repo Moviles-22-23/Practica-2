@@ -1,16 +1,19 @@
 package es.ucm.stalos.nonogramas.logic.enums;
 
+import java.io.Serializable;
+
 /**
  * Information about different grid level types
  */
-public enum GridType {
+public enum GridType implements Serializable {
     _4x4(0),
     _5x5(1),
     _5x10(2),
     _8x8(3),
     _10x10(4),
     _10x15(5),
-    MAX(6);
+    MAX(6),
+    NONE(1000);
 
     GridType(int i) {
         this.value = i;

@@ -8,8 +8,7 @@ import java.util.TimerTask;
  */
 public abstract class State {
 
-    protected State(Engine engine)
-    {
+    protected State(Engine engine) {
         this._engine = engine;
         this._graphics = engine.getGraphics();
         this._audio = engine.getAudio();
@@ -17,16 +16,18 @@ public abstract class State {
 
     /**
      * Initialize the state
+     *
      * @return false if it fails
-     * */
-    protected boolean init(){
+     */
+    protected boolean init() {
         return true;
     }
 
     /**
      * Calculate if the position of the click is inside an square
-     * @param clickPos CLick position to be checked
-     * @param squarePos Upper-left corner of the square
+     *
+     * @param clickPos   CLick position to be checked
+     * @param squarePos  Upper-left corner of the square
      * @param squareSize Size of the square
      * @return true if the click is inside the square
      */
@@ -37,23 +38,27 @@ public abstract class State {
 
     /**
      * Updates logic
-     * */
+     */
     protected void update(double deltaTime) {
 
     }
 
     /**
      * Updates graphics
-     * */
+     */
     protected void render() {
 
     }
 
     /**
      * Updates input
-     * */
+     */
     protected void handleInput() {
 
+    }
+
+    protected void saveData() {
+        _serSystem.saveData();
     }
 
     protected Engine _engine;
@@ -64,5 +69,7 @@ public abstract class State {
     protected Timer _timer;
     protected TimerTask _timerTask;
     protected int _timeDelay;
+
+    protected static SerializableSystem _serSystem;
 }
 

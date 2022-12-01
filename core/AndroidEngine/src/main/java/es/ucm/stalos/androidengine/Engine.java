@@ -86,7 +86,8 @@ public class Engine implements Runnable {
                 }
             }
 
-            ((Audio) _audio).pauseBackMusic();
+            _audio.pauseBackMusic();
+            _currState.saveData();
         }
     }
 

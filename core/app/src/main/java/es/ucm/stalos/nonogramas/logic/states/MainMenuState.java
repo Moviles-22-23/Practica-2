@@ -1,6 +1,7 @@
 package es.ucm.stalos.nonogramas.logic.states;
 
 import java.util.List;
+
 import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.androidengine.Font;

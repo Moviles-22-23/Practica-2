@@ -1,7 +1,5 @@
 package es.ucm.stalos.nonogramas.logic.states;
 
-import android.provider.ContactsContract;
-
 import java.util.List;
 
 import es.ucm.stalos.androidengine.Engine;
@@ -10,7 +8,8 @@ import es.ucm.stalos.androidengine.Image;
 import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.Assets;
-import es.ucm.stalos.nonogramas.logic.data.DataSystem;
+import es.ucm.stalos.nonogramas.logic.data.GameData;
+import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
 import es.ucm.stalos.nonogramas.logic.enums.PlayingState;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
@@ -22,8 +21,10 @@ public class GameState extends State {
         super(engine);
         this._gridType = gridType;
         this._isRandom = isRandom;
-        this._index = index;
-        System.out.println("MODO: " + _isRandom + " ,INDEX: " + _index);
+        GameDataSystem._data._currentPackage = _gridType.getValue();
+        GameDataSystem._data._currentLevel = index;
+        this._currentLevel = index;
+        System.out.println("MODO: " + _isRandom + " ,INDEX: " + _currentLevel);
     }
 
 //-----------------------------------------OVERRIDE-----------------------------------------------//
@@ -111,6 +112,14 @@ public class GameState extends State {
         }
     }
 
+    @Override
+    protected void saveData() {
+        GameDataSystem._data._currentLevel = _currentLevel;
+        GameDataSystem._data._gridType = _gridType;
+        GameDataSystem._data._inGame = _playState != PlayingState.Win;
+
+        _serSystem.saveData();
+    }
 
 //-------------------------------------------MISC-------------------------------------------------//
 
@@ -187,7 +196,7 @@ public class GameState extends State {
         _sizeBoard[0] = 360.0f;
         _sizeBoard[1] = 360.0f;
 
-        _board = new Board(this, _gridType, _posBoard, _sizeBoard, _isRandom, _lives, _index);
+        _board = new Board(this, _gridType, _posBoard, _sizeBoard, _isRandom, _lives, _currentLevel);
         if (!_board.init(_engine)) throw new Exception("Error al crear el board");
     }
 
@@ -314,28 +323,27 @@ public class GameState extends State {
             _playState = PlayingState.GameOver;
     }
 
-    public void updateHistoryData(){
-        System.out.println("VICTORIA, NIVEL NUEVO DESBLOQUEADO");
-        // Ha ganado así que comprueba si hay que desbloquear el siguiente nivel de la historia
-        if (DataSystem._historyData._currentPackage == _gridType.getValue() &&
-                DataSystem._historyData._currentLevel == _index) {
-            DataSystem._historyData._currentLevel += 1;
+    public void updateHistoryData() {
+        // 1. Check if the currentPackage is the same as the last unlocked package
+        // 2. Check if the currentLevel is the same as the last unlocked level
+        if (GameDataSystem._data._currentPackage == GameDataSystem._data._lastUnlockedPack &&
+                GameDataSystem._data._currentLevel == GameDataSystem._data._lastUnlockedLevel) {
+            GameDataSystem._data._lastUnlockedLevel += 1;
             // Si cambiamos de paquete
-            if (DataSystem._historyData._currentLevel == 20) {
-                DataSystem._historyData._currentPackage += 1;
-                DataSystem._historyData._currentLevel = 0;
-                // No hace falta comprobar que el paquete sea el ultimo
-                // Porque entonces quedaria desbloqueado hasta el paquete "7", y todos los codigos
-                // Seguirian sirviendo, de hecho en proximas actualizaciones sería mas comodo para
-                // Que les funcionase bien a las personas que habían completado el juego
-                // Es la forma de decir que el ultimo nivel esta completado
+            if (GameDataSystem._data._lastUnlockedLevel == 20) {
+                GameDataSystem._data._lastUnlockedPack += 1;
+                GameDataSystem._data._lastUnlockedLevel = 0;
             }
         }
     }
 
-    public PlayingState getPlayingState() { return _playState; }
+    public PlayingState getPlayingState() {
+        return _playState;
+    }
 
-    public void setPlayingState(PlayingState newPlayingState) { _playState = newPlayingState; }
+    public void setPlayingState(PlayingState newPlayingState) {
+        _playState = newPlayingState;
+    }
 
 //----------------------------------------ATTRIBUTES----------------------------------------------//
 
@@ -399,10 +407,6 @@ public class GameState extends State {
     protected float[] _lifeImageSize = new float[2];
 
     // GameOver stuff
-//    protected final String _gameOverText = "¡HAS PERDIDO!";
-//    protected int[] _gameOverTextPos = new int[2];
-//    protected float[] _gameOverTextSize = new float[2];
-
     protected final Image _gameOverImage = Assets.gameOver;
     protected int[] _gameOverImagePos = new int[2];
     protected float[] _gameOverImageSize = new float[2];
@@ -419,5 +423,5 @@ public class GameState extends State {
     protected float[] _adsButtonSize = new float[2];
     protected ButtonCallback _adsCallback;
 
-    int _index;
+    int _currentLevel;
 }

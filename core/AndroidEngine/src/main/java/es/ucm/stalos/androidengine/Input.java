@@ -44,7 +44,6 @@ public class Input implements View.OnTouchListener, View.OnLongClickListener {
     }
 
     // PRACTICA 2: Cambios metodo para añadir un evento de longTouch a la cola de eventos
-
     /**
      * Process input's coordinates to transform them into
      * x and y logical positions.

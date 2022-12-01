@@ -11,7 +11,8 @@ import es.ucm.stalos.androidengine.Font;
 import es.ucm.stalos.androidengine.Image;
 import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.Assets;
-import es.ucm.stalos.nonogramas.logic.data.DataSystem;
+import es.ucm.stalos.nonogramas.logic.data.GameData;
+import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 import es.ucm.stalos.nonogramas.logic.objects.SelectButton;
@@ -168,7 +169,7 @@ public class SelectBoard extends State {
             pos[1] = (int) (_graphics.getLogHeight() * 0.143f) * (3 + (i / 3) * 2);
             int aux_i = i;
 
-            boolean unlocked = DataSystem._historyData._currentPackage >= i || _isRandom;
+            boolean unlocked = GameDataSystem._data._lastUnlockedPack >= i || _isRandom;
 
             final GridType _this_gridType = _gridTypes.get(aux_i);
             String text = _gridTypes.get(i).getRows() + " x " + _gridTypes.get(i).getCols();

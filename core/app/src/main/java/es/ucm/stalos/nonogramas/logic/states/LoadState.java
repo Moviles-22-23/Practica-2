@@ -1,15 +1,13 @@
 package es.ucm.stalos.nonogramas.logic.states;
 
-import android.provider.ContactsContract;
-
 import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.Audio;
 import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.androidengine.Graphics;
-import es.ucm.stalos.nonogramas.logic.data.DataSystem;
 import es.ucm.stalos.nonogramas.logic.Assets;
-import es.ucm.stalos.nonogramas.logic.data.HistoryData;
-import es.ucm.stalos.nonogramas.logic.data.LevelData;
+import es.ucm.stalos.nonogramas.logic.data.GameData;
+import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
+import es.ucm.stalos.nonogramas.logic.enums.GridType;
 
 /**
  * This state is created to initialize all the assets of the game before it starts
@@ -41,35 +39,25 @@ public class LoadState extends State {
             Assets.goodSound = audio.newSound("goodSound.wav");
             Assets.winSound = audio.newSound("winSound.wav");
 
-//            for (int i = 0; i < 6; i++) {
-//                DataSystem._packageDataList.add(new PackageData());
-//            }
+            _serSystem = new GameDataSystem();
+            GameDataSystem._data = new GameData();
 
-            // Inicializacion de los datos que tendra que leer del saveData
-            DataSystem._historyData = new HistoryData();
-            DataSystem._historyData._currentPackage = 0;
-            DataSystem._historyData._currentLevel = 0;
+            // LOAD DATA
+            _serSystem.loadData();
 
-            // TODO
-//            // Hacer algo así al arrancar
-//            if(DataSystem._inGame){
-//                // Lee los datos que llevaba el nivel y los carga
-//                LevelData levelToContinue = DataSystem._levelData;
-//                State gameState = new GameState(_engine, levelToContinue);
-//
-//                // TODO no se si sera mejor hacer otra constructora o hacer un setter con los datos
-//                _engine.reqNewState(gameState);
-//            }
-//            else {
-//              // Carga el menu principal
-//                State mainMenu = new MainMenuState(_engine);
-//                _engine.reqNewState(mainMenu);
-//            }
+            // Was the last game being played?
+            if (GameDataSystem._data._inGame) {
+                // 1. Last GameState played
+                int currLevel = GameDataSystem._data._currentLevel;
+                GridType currPack = GameDataSystem._data._gridType;
+                State gameState = new GameState(_engine, currPack, false, currLevel);
 
-            // Start MainMenu
-            State mainMenu = new MainMenuState(_engine);
-            _engine.reqNewState(mainMenu);
-
+                _engine.reqNewState(gameState);
+            } else {
+                // 2. Init normal way: MainMenu
+                State mainMenu = new MainMenuState(_engine);
+                _engine.reqNewState(mainMenu);
+            }
         } catch (Exception e) {
             System.out.println("Error en init de LoadState");
             System.err.println(e);

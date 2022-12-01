@@ -3,25 +3,10 @@ package es.ucm.stalos.nonogramas.logic.states;
 
 //TODO: Hacer toda la lógica de los paquetes
 
-// LÓGICA: Crear una interfaz que nos muestre las categorías y niveles disponibles, diferenciando
-// entre bloqueados (no pueden jugarse) y desbloqueados (podemos volver a acceder a ellos en
-// cualquier momento).
-
 // LÓGICA CON DATOS GUARDADOS: Consiste en un conjunto de categorías y niveles en los que
 // únicamente podremos avanzar al siguiente si hemos completado el nivel actual. Los niveles y
 // categorías en este modo son fijos. Para poder tener este modo tenemos que guardar cuantos niveles
 // ha desbloqueado el jugador hasta el momento
-
-// GRAFICOS: En estos niveles del modo historia, deben representarse imágenes pixeladas (una
-//abeja, una casa, un árbol, un faro, etc.)
-
-// CATEGORÍAS POR DIFICULTAD: ada categoría tendrá X niveles de una misma dificultad / tamaño, y
-// según avance el jugador completando los niveles de la categoría actual se desbloquearan nuevas
-// categorías con mayor dificultad / tamaño de los tableros.
-// EJEMPLO: Categoría fácil, 20 con tableros de 5x5. Al completar los 20 niveles se desbloquea la
-// categoría intermedia con 20 niveles de 10x10.
-
-import android.provider.ContactsContract;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,20 +19,19 @@ import es.ucm.stalos.androidengine.Image;
 import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.Assets;
-import es.ucm.stalos.nonogramas.logic.data.DataSystem;
-import es.ucm.stalos.nonogramas.logic.data.LevelData;
+import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 import es.ucm.stalos.nonogramas.logic.objects.SelectButton;
-import es.ucm.stalos.nonogramas.logic.data.PackageData;
 
 public class SelectLevelState extends State {
 
-    protected SelectLevelState(Engine engine, GridType gridType)/*, PackageData packageData)*/ {
+    protected SelectLevelState(Engine engine, GridType gridType) {
         super(engine);
         _gridType = gridType;
-        System.out.println("----------------------------------------- DATA PACKAGE: " + DataSystem._historyData._currentPackage + " LEVEL: " + DataSystem._historyData._currentLevel);
-//        _packageData = packageData;
+        System.out.println("----------------------------------------- DATA PACKAGE: "
+                + GameDataSystem._data._currentPackage + " LEVEL: " +
+                GameDataSystem._data._currentLevel);
     }
 
     @Override
@@ -174,20 +158,20 @@ public class SelectLevelState extends State {
             // TODO: Logica de comprobación de archivos guardados
             // Si vamos por un package superior al seleccionado todoo esta desbloqueado,
             // si no hay que comprobar el boton que se crea con cada nivel
-            boolean unlocked = ((_gridType.getValue() < DataSystem._historyData._currentPackage)
-                    || (i <= DataSystem._historyData._currentLevel));
+            boolean unlocked = _gridType.getValue() < GameDataSystem._data._lastUnlockedPack
+                                || i <= GameDataSystem._data._lastUnlockedLevel;
 
             String text = "" + (i + 1);
             final SelectButton _level = new SelectButton(pos, size, text, font, unlocked);
             // Seleccion de los datos del nivel escogido
             final int aux_i = i;
-//            _levelData = _packageData._levelDataList.get(i);
+
             _level.setCallback(new ButtonCallback() {
                 @Override
                 public void doSomething() {
                     int r = _level.getRows();
                     int c = _level.getCols();
-                    State gameState = new GameState(_engine, _gridType, _isRandom, aux_i);//, _levelData);
+                    State gameState = new GameState(_engine, _gridType, _isRandom, aux_i);
                     _engine.reqNewState(gameState);
                     _audio.playSound(Assets.clickSound, 0);
                     _audio.stopMusic();
@@ -251,7 +235,4 @@ public class SelectLevelState extends State {
     // Colors
     private final int _greyColor = 0x313131FF;
     private final int _blackColor = 0x000000FF;
-
-    LevelData _levelData;
-    PackageData _packageData;
 }
