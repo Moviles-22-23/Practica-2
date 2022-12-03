@@ -17,14 +17,30 @@ import es.ucm.stalos.nonogramas.logic.objects.Board;
 
 // PRACTICA 2: Refactorización de los GameState
 public class GameState extends State {
-    public GameState(Engine engine, GridType gridType, boolean isRandom, int index) {
+    public GameState(Engine engine, GridType gridType, boolean isRandom, int levelIndex) {
         super(engine);
+        // INIT DATA OF THE LEVEL
+        _data = ((GameDataSystem) _serSystem)._data;
+        _data._currGridType = gridType;
+        _data._currentPackage = gridType.getValue();
+        _data._currentLevel = levelIndex;
+        // INIT ATTRIBUTES
         this._gridType = gridType;
         this._isRandom = isRandom;
-        GameDataSystem._data._currentPackage = _gridType.getValue();
-        GameDataSystem._data._currentLevel = index;
-        this._currentLevel = index;
-        System.out.println("MODO: " + _isRandom + " ,INDEX: " + _currentLevel);
+        this._currentLevel = levelIndex;
+    }
+
+    /**
+     * GameState constructor to initialize GameSate from LoadState directly
+     *
+     * @param engine Reference to the Engine
+     */
+    public GameState(Engine engine) {
+        super(engine);
+        _data = ((GameDataSystem) _serSystem)._data;
+        this._gridType = _data._currGridType;
+        this._isRandom = false;
+        this._currentLevel = _data._currentLevel;
     }
 
 //-----------------------------------------OVERRIDE-----------------------------------------------//
@@ -114,10 +130,8 @@ public class GameState extends State {
 
     @Override
     protected void saveData() {
-        GameDataSystem._data._currentLevel = _currentLevel;
-        GameDataSystem._data._gridType = _gridType;
-        GameDataSystem._data._inGame = _playState != PlayingState.Win;
-
+        _data._inGame = _playState != PlayingState.Win;
+        ((GameDataSystem) _serSystem)._data = _data;
         _serSystem.saveData();
     }
 
@@ -323,16 +337,19 @@ public class GameState extends State {
             _playState = PlayingState.GameOver;
     }
 
-    public void updateHistoryData() {
+    /**
+     * Update the data to be save
+     */
+    public void updateSaveData() {
         // 1. Check if the currentPackage is the same as the last unlocked package
         // 2. Check if the currentLevel is the same as the last unlocked level
-        if (GameDataSystem._data._currentPackage == GameDataSystem._data._lastUnlockedPack &&
-                GameDataSystem._data._currentLevel == GameDataSystem._data._lastUnlockedLevel) {
-            GameDataSystem._data._lastUnlockedLevel += 1;
+        if (_data._currentPackage == _data._lastUnlockedPack &&
+                _data._currentLevel == _data._lastUnlockedLevel) {
+            _data._lastUnlockedLevel += 1;
             // Si cambiamos de paquete
-            if (GameDataSystem._data._lastUnlockedLevel == 20) {
-                GameDataSystem._data._lastUnlockedPack += 1;
-                GameDataSystem._data._lastUnlockedLevel = 0;
+            if (_data._lastUnlockedLevel == 20) {
+                _data._lastUnlockedPack += 1;
+                _data._lastUnlockedLevel = 0;
             }
         }
     }
@@ -423,5 +440,7 @@ public class GameState extends State {
     protected float[] _adsButtonSize = new float[2];
     protected ButtonCallback _adsCallback;
 
-    int _currentLevel;
+    private int _currentLevel;
+
+    private GameData _data;
 }

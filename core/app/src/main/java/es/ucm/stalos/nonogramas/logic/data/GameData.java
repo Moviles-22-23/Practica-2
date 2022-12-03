@@ -25,15 +25,15 @@ public class GameData implements Serializable {
      */
     public boolean _inGame = false;
     /**
-     * Index of the package when the app was closed
+     * Index of the package when the app was closed during GameState
      */
     public int _currentPackage = 0;
     /**
-     * Index of the level when the app was closed.
+     * Index of the level when the app was closed during GameState
      */
     public int _currentLevel = 0;
     /**
-     * Board type to be saved
+     * GridType saved when the app was closed during GameState
      */
-    public GridType _gridType = GridType.NONE;
+    public GridType _currGridType = GridType.NONE;
 }

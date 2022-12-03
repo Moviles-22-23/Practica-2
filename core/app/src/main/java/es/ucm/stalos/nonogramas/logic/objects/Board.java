@@ -284,7 +284,7 @@ public class Board {
                         _state.setPlayingState(PlayingState.Win);
 
                         if(!_isRandom)
-                            _state.updateHistoryData();
+                            _state.updateSaveData();
                     }
 
                     return;

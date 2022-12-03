@@ -10,6 +10,7 @@ public class Engine implements Runnable {
     }
 
     public boolean init(State initState, int w, int h, AppCompatActivity activity) {
+        _context = activity;
         _assetsMan = activity.getApplicationContext().getAssets();
 
         //STATE
@@ -96,9 +97,10 @@ public class Engine implements Runnable {
     /**
      * Request a change state. It is used to not change immediately, but
      * to do later.
+     *
      * @param newState New state to change
      */
-    public void reqNewState(State newState){
+    public void reqNewState(State newState) {
         _changeState = true;
         _newState = newState;
     }
@@ -120,7 +122,7 @@ public class Engine implements Runnable {
     /**
      * @return Instace of audio manager
      */
-    public Audio getAudio(){
+    public Audio getAudio() {
         return _audio;
     }
 
@@ -134,9 +136,12 @@ public class Engine implements Runnable {
         _deltaTime = (double) nanoElapsedTime / 1.0E9;
     }
 
-    public AssetManager getAssetManager()
-    {
+    public AssetManager getAssetManager() {
         return _assetsMan;
+    }
+
+    public AppCompatActivity getContext() {
+        return _context;
     }
     //--------------------------------------------------------------------------------------------//
 
@@ -150,6 +155,7 @@ public class Engine implements Runnable {
     private Input _input;
     private Audio _audio;
     private AssetManager _assetsMan;
+    private AppCompatActivity _context;
 
     // DELTA TIME
     private long _lastFrameTime = 0;

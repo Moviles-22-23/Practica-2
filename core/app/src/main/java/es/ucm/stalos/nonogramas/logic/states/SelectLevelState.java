@@ -29,9 +29,7 @@ public class SelectLevelState extends State {
     protected SelectLevelState(Engine engine, GridType gridType) {
         super(engine);
         _gridType = gridType;
-        System.out.println("----------------------------------------- DATA PACKAGE: "
-                + GameDataSystem._data._currentPackage + " LEVEL: " +
-                GameDataSystem._data._currentLevel);
+        ((GameDataSystem) _serSystem)._data._inGame = false;
     }
 
     @Override
@@ -112,7 +110,8 @@ public class SelectLevelState extends State {
             if (currEvent == TouchEvent.touchDown) {
                 int[] clickPos = {currEvent.getX(), currEvent.getY()};
 
-                if (clickInsideSquare(clickPos, _backImagePos, _backButtonSize)) _backCallback.doSomething();
+                if (clickInsideSquare(clickPos, _backImagePos, _backButtonSize))
+                    _backCallback.doSomething();
                 else {
                     for (SelectButton button : _selectButtons) {
                         int[] pos = button.getPos();
@@ -145,21 +144,17 @@ public class SelectLevelState extends State {
 
         int[] pos = new int[2];
         int[] initialPos = new int[2];
-        initialPos[0] = (int)(_graphics.getLogWidth() * 0.125f);
-        initialPos[1] = (int)(_graphics.getLogHeight() * 0.2f);
+        initialPos[0] = (int) (_graphics.getLogWidth() * 0.125f);
+        initialPos[1] = (int) (_graphics.getLogHeight() * 0.2f);
 
         initGridTypesMap();
 
-//        int j = 0;
         for (int i = 0; i < _numLevels; i++) {
-            pos[0] = initialPos[0] + (int)((i % 4) * separation);
-            pos[1] = initialPos[1] + (int)((i / 4) * separation);
+            pos[0] = initialPos[0] + (int) ((i % 4) * separation);
+            pos[1] = initialPos[1] + (int) ((i / 4) * separation);
 
-            // TODO: Logica de comprobación de archivos guardados
-            // Si vamos por un package superior al seleccionado todoo esta desbloqueado,
-            // si no hay que comprobar el boton que se crea con cada nivel
-            boolean unlocked = _gridType.getValue() < GameDataSystem._data._lastUnlockedPack
-                                || i <= GameDataSystem._data._lastUnlockedLevel;
+            boolean unlocked = _gridType.getValue() < ((GameDataSystem) _serSystem)._data._lastUnlockedPack
+                    || i <= ((GameDataSystem) _serSystem)._data._lastUnlockedLevel;
 
             String text = "" + (i + 1);
             final SelectButton _level = new SelectButton(pos, size, text, font, unlocked);

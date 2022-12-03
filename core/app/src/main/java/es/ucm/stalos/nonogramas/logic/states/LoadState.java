@@ -39,19 +39,15 @@ public class LoadState extends State {
             Assets.goodSound = audio.newSound("goodSound.wav");
             Assets.winSound = audio.newSound("winSound.wav");
 
-            _serSystem = new GameDataSystem();
-            GameDataSystem._data = new GameData();
+            _serSystem = new GameDataSystem(_engine.getContext(), _engine.getAssetManager());
 
             // LOAD DATA
             _serSystem.loadData();
-
+            GameData _data = ((GameDataSystem) _serSystem)._data;
             // Was the last game being played?
-            if (GameDataSystem._data._inGame) {
+            if (_data._inGame) {
                 // 1. Last GameState played
-                int currLevel = GameDataSystem._data._currentLevel;
-                GridType currPack = GameDataSystem._data._gridType;
-                State gameState = new GameState(_engine, currPack, false, currLevel);
-
+                State gameState = new GameState(_engine);
                 _engine.reqNewState(gameState);
             } else {
                 // 2. Init normal way: MainMenu

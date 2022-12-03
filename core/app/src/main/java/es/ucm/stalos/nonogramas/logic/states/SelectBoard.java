@@ -31,11 +31,10 @@ public class SelectBoard extends State {
             // Texts
             _textsFont = _graphics.newFont("JosefinSans-Bold.ttf", 25, true);
 
-            if(_isRandom) {
+            if (_isRandom) {
                 _modeText = "JUEGO ALEATORIO";
                 _commentText = "Selecciona el tamaño del puzzle";
-            }
-            else {
+            } else {
                 _modeText = "MODO HISTORIA";
                 _commentText = "Selecciona el paquete";
             }
@@ -167,11 +166,11 @@ public class SelectBoard extends State {
         for (int i = 0; i < GridType.MAX.getValue(); i++) {
             pos[0] = (int) (_graphics.getLogWidth() * 0.1f) * (1 + (3 * j));
             pos[1] = (int) (_graphics.getLogHeight() * 0.143f) * (3 + (i / 3) * 2);
-            int aux_i = i;
 
-            boolean unlocked = GameDataSystem._data._lastUnlockedPack >= i || _isRandom;
+            boolean unlocked = _isRandom ||
+                    ((GameDataSystem) _serSystem)._data._lastUnlockedPack >= i;
 
-            final GridType _this_gridType = _gridTypes.get(aux_i);
+            final GridType _this_gridType = _gridTypes.get(i);
             String text = _gridTypes.get(i).getRows() + " x " + _gridTypes.get(i).getCols();
             final SelectButton _level = new SelectButton(pos, size, text, font, unlocked);
 
@@ -184,7 +183,7 @@ public class SelectBoard extends State {
                     State gameState;
 
                     // Dependiendo de si estamos en modo random o no harán cosas distintas
-                    if(_isRandom) gameState = new GameState(_engine, _this_gridType, true, 0);
+                    if (_isRandom) gameState = new GameState(_engine, _this_gridType, true, 0);
                     else gameState = new SelectLevelState(_engine, _this_gridType);
 
                     _engine.reqNewState(gameState);

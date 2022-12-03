@@ -3,6 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="es.ucm.stalos.nonogramas">
 
+<!--    <uses-permission-->
+<!--        android:name="android.permission.MANAGE_EXTERNAL_STORAGE"-->
+<!--        android:minSdkVersion="30" />-->
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,6 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Nonogramas"
+        android:installLocation="preferExternal"
         tools:targetApi="31">
         <activity
             android:name=".MainActivity"
