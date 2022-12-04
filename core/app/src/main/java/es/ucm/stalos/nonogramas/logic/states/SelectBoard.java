@@ -21,6 +21,7 @@ public class SelectBoard extends State {
     public SelectBoard(Engine engine, boolean isRandom) {
         super(engine);
         this._isRandom = isRandom;
+        ((GameDataSystem) _serSystem)._data._inGame = false;
     }
 
 //-----------------------------------------OVERRIDE-----------------------------------------------//
