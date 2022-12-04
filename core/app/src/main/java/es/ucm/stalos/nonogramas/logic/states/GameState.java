@@ -10,6 +10,7 @@ import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.data.GameData;
 import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
+import es.ucm.stalos.nonogramas.logic.enums.CellType;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
 import es.ucm.stalos.nonogramas.logic.enums.PlayingState;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
@@ -39,8 +40,9 @@ public class GameState extends State {
         super(engine);
         _data = ((GameDataSystem) _serSystem)._data;
         this._gridType = _data._currGridType;
-        this._isRandom = false;
+        this._isRandom = _data._isRandom;
         this._currentLevel = _data._currentLevel;
+        this._lives = _data._currentLives;
     }
 
 //-----------------------------------------OVERRIDE-----------------------------------------------//
@@ -93,7 +95,7 @@ public class GameState extends State {
                 // GIVE-UP BUTTON
                 if (_playState != PlayingState.Win &&
                         clickInsideSquare(clickPos, _giveupImagePos, _giveupButtonSize)) {
-                    _returnCallback.doSomething();
+                    _backCallback.doSomething();
                 }
 
                 // BOARD TOUCH-DOWN
@@ -106,7 +108,7 @@ public class GameState extends State {
                 // BACK BUTTON WIN
                 else if (_playState == PlayingState.Win &&
                         clickInsideSquare(clickPos, _backImagePos, _backButtonSize)) {
-                    _returnCallback.doSomething();
+                    _backCallback.doSomething();
                 }
 
                 // ADS
@@ -130,7 +132,21 @@ public class GameState extends State {
 
     @Override
     protected void saveData() {
-        _data._inGame = _playState != PlayingState.Win;
+        _data._inGame = _playState != PlayingState.Win &&
+                _playState != PlayingState.GameOver;
+
+        // We only want to save the following data in case of we're still playing:
+        // 1. isRandom
+        // 2. Lives
+        // 3. BoardState
+        // 4. Board solution
+        if (_data._inGame) {
+            _data._isRandom = _isRandom;
+            _data._currentLives = _lives;
+            _data._currBoardState = _board.getBoardState();
+            _data._randomSol = _board.getBoardSolution();
+        }
+
         ((GameDataSystem) _serSystem)._data = _data;
         _serSystem.saveData();
     }
@@ -146,12 +162,25 @@ public class GameState extends State {
             case Gaming:
                 System.out.println("GAMING");
                 // GiveUp Button
-                _graphics.drawRect(_giveupImagePos, _giveupButtonSize);
                 _graphics.drawImage(_giveupImage, _giveupImagePos, _giveupImageSize);
                 _graphics.drawCenteredString(_giveupText, _giveupTextPos, _giveupTextSize, _fontButtons);
+
+//                // TODO: debug boton de rendirse - borrar en version final
+//                _graphics.setColor(_redColor);
+//                _graphics.drawRect(_giveupTextPos, _giveupTextSize);
+//                _graphics.setColor(_blackColor);
+//                _graphics.drawRect(_giveupImagePos, _giveupImageSize);
+
                 // Life Image
                 _graphics.drawImage(_lifeImage, _lifeImagePos, _lifeImageSize);
                 _graphics.drawCenteredString(_lifeText, _lifeTextPos, _lifeTextSize, _fontButtons);
+
+//                // TODO: debug vidas - borrar en version final
+//                _graphics.setColor(_redColor);
+//                _graphics.drawRect(_lifeTextPos, _lifeTextSize);
+//                _graphics.setColor(_blackColor);
+//                _graphics.drawRect(_lifeImagePos, _lifeImageSize);
+
                 break;
             case Win: {
                 System.out.println("WIN");
@@ -171,7 +200,7 @@ public class GameState extends State {
                 _graphics.drawImage(_adsImage, _adsImagePos, _adsImageSize);
                 _graphics.drawCenteredString(_adsText, _adsTextPos, _adsTextSize, _fontButtons);
 
-                // TODO: debug borrar
+                // TODO: debug boton de ads - borrar en version final
 //                _graphics.setColor(_redColor);
 //                _graphics.drawRect(_adsTextPos, _adsTextSize);
 //                _graphics.setColor(_blackColor);
@@ -210,8 +239,14 @@ public class GameState extends State {
         _sizeBoard[0] = 360.0f;
         _sizeBoard[1] = 360.0f;
 
-        _board = new Board(this, _gridType, _posBoard, _sizeBoard, _isRandom, _lives, _currentLevel);
-        if (!_board.init(_engine)) throw new Exception("Error al crear el board");
+        if(_data._inGame)
+            _board = new Board(this, _data, _posBoard, _sizeBoard);
+        else
+            _board = new Board(this, _gridType, _posBoard, _sizeBoard,
+                    _isRandom, _lives, _currentLevel);
+
+        if (!_board.init(_engine, _data))
+            throw new Exception("Error al crear el board");
     }
 
     /**
@@ -224,11 +259,11 @@ public class GameState extends State {
 
         // Give Up
         _giveupImageSize[0] = _graphics.getLogWidth() * 0.071f;
-        _giveupImageSize[1] = _graphics.getLogHeight() * 0.04f;
+        _giveupImageSize[1] = _graphics.getLogHeight() * 0.05f;
         _giveupImagePos[0] = 10;
         _giveupImagePos[1] = 31;
 
-        _giveupTextSize[0] = _graphics.getLogWidth() * 0.2f;
+        _giveupTextSize[0] = _graphics.getLogWidth() * 0.3f;
         _giveupTextSize[1] = _giveupImageSize[1];
         _giveupTextPos[0] = (int) (_giveupImagePos[0] + _giveupImageSize[0]);
         _giveupTextPos[1] = _giveupImagePos[1];
@@ -250,7 +285,7 @@ public class GameState extends State {
         _backButtonSize[0] = _backImageSize[0] + _backTextSize[0];
         _backButtonSize[1] = _backImageSize[1];
 
-        _returnCallback = new ButtonCallback() {
+        _backCallback = new ButtonCallback() {
             @Override
             public void doSomething() {
                 State previusState;
@@ -265,21 +300,23 @@ public class GameState extends State {
         };
 
         // Life
-        _lifeImageSize[0] = _giveupImageSize[0] * 1.5f;
-        _lifeImageSize[1] = _giveupImageSize[1] * 1.5f;
-        _lifeTextSize[0] = _graphics.getLogWidth() * 0.3f;
-        _lifeTextSize[1] = _giveupImageSize[1];
+        _lifeImageSize[0] = _graphics.getLogWidth() * 0.1207f;
+        _lifeImageSize[1] = _graphics.getLogHeight() * 0.075f;
 
-        _lifeImagePos[0] = (int) ((_graphics.getLogWidth() * 0.5f) - _lifeImageSize[0]);
-        _lifeImagePos[1] = _giveupImagePos[1];
-        _lifeTextPos[0] = (_lifeImagePos[0]);
-        _lifeTextPos[1] = _giveupTextPos[1];
+        _lifeTextSize[0] = _graphics.getLogWidth() * 0.1f;
+        _lifeTextSize[1] = _lifeImageSize[1];
+
+        _lifeImagePos[0] = (int) ((_graphics.getLogWidth() * 0.75f) - _lifeImageSize[0]);
+        _lifeImagePos[1] = (int) (_giveupImagePos[1] - _giveupImageSize[1] / 2);
+
+        _lifeTextPos[0] = (int) (_lifeImagePos[0] + _lifeImageSize[0]);
+        _lifeTextPos[1] = _lifeImagePos[1];
 
         // ADS - GameOver
         _adsImageSize[0] = _graphics.getLogWidth() * 0.17f;
         _adsImageSize[1] = _graphics.getLogHeight() * 0.1f;
 
-        _adsTextSize[0] = _graphics.getLogWidth() * 0.4f;
+        _adsTextSize[0] = _graphics.getLogWidth() * 0.5f;
         _adsTextSize[1] = _adsImageSize[1];
 
 
@@ -406,7 +443,7 @@ public class GameState extends State {
     protected float[] _backImageSize = new float[2];
 
     protected float[] _backButtonSize = new float[2];
-    protected ButtonCallback _returnCallback;
+    protected ButtonCallback _backCallback;
 
     // Colors
     protected final int _blackColor = 0x000000FF;
