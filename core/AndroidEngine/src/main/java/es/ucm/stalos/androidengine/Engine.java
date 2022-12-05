@@ -1,6 +1,7 @@
 package es.ucm.stalos.androidengine;
 
 import android.content.res.AssetManager;
+import android.view.SurfaceView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,8 +17,12 @@ public class Engine implements Runnable {
         //STATE
         _currState = initState;
 
+        //SCREEN
+        _screen = new Screen(activity, true);
+        activity.setContentView(_screen);
+
         //GRAPHICS
-        _graphics = new Graphics(w, h, activity.getWindowManager(), activity.getWindow());
+        _graphics = new Graphics(w, h, _assetsMan);
 
         // INPUT
         _input = new Input(this);
@@ -25,7 +30,7 @@ public class Engine implements Runnable {
         // AUDIO
         _audio = new Audio(_assetsMan, 10);
 
-        return ((Graphics) _graphics).init((Input) _input, activity) && _currState.init();
+        return (_graphics).init(_input, _screen.getSurfaceView()) && _currState.init();
     }
 
     public void run() {
@@ -127,6 +132,17 @@ public class Engine implements Runnable {
     }
 
     /**
+     * @return Instance of screen manager
+     */
+    public Screen getScreen() {
+        return _screen;
+    }
+
+    public void setScreen(Screen screen) {
+        _screen = screen;
+    }
+
+    /**
      * Update deltaTime value
      */
     protected void updateDeltaTime() {
@@ -156,6 +172,7 @@ public class Engine implements Runnable {
     private Audio _audio;
     private AssetManager _assetsMan;
     private AppCompatActivity _context;
+    private Screen _screen;
 
     // DELTA TIME
     private long _lastFrameTime = 0;

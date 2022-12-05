@@ -15,14 +15,12 @@ import android.view.WindowManager;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class Graphics {
-    protected Graphics(int w, int h, WindowManager windowManager, Window window) {
+    protected Graphics(int w, int h, AssetManager assetManager) {
         _logWidth = w;
         _logHeight = h;
         _logPosX = 0.0f;
         _logPosY = 0.0f;
-        _wManager = windowManager;
-        _window = window;
-        _assetManager = _window.getContext().getAssets();
+        _assetManager = assetManager;
         _paint = new Paint();
     }
 
@@ -142,24 +140,14 @@ public class Graphics {
 
     //--------------------------------------------------------------------------------------------//
 
-    public boolean init(Input input, AppCompatActivity activity) {
+    public boolean init(Input input, SurfaceView view) {
         try {
-            // ADDITIONAL FLAGS
-            _window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            _window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-            SurfaceView surfaceView = new SurfaceView(activity.getApplicationContext());
-            activity.setContentView(surfaceView);
+            _surfaceView = view;
             // INPUT LISTENER
-            surfaceView.setOnTouchListener(input);
-            surfaceView.setOnLongClickListener(input);
+            _surfaceView.setOnTouchListener(input);
+            _surfaceView.setOnLongClickListener(input);
 
-            // WIN SIZE
-            Point winSize = new Point();
-            _wManager.getDefaultDisplay().getSize(winSize);
-            _winSize = winSize;
-
-            _holder = surfaceView.getHolder();
+            _holder = _surfaceView.getHolder();
         } catch (Exception e) {
             return false;
         }
@@ -194,7 +182,7 @@ public class Graphics {
         int b = (color & 0x0000ff00) >> 8;
         int a = color & 0x000000ff;
 
-        this._paint.setColor(Color.argb(a, r, g, b));
+        _paint.setColor(Color.argb(a, r, g, b));
     }
 
 //-----------------------------------------------------------------//
@@ -287,11 +275,11 @@ public class Graphics {
 //----------------------------------------------------------------//
 
     public int getWidth() {
-        return _winSize.x;
+        return _surfaceView.getWidth();
     }
 
     public int getHeight() {
-        return _winSize.y;
+        return _surfaceView.getHeight();
     }
 
 //----------------------------------------------------------------//
@@ -321,16 +309,23 @@ public class Graphics {
         _holder.unlockCanvasAndPost(_canvas);
     }
 
+    public void updateSurfaceView(SurfaceView view, Input input) {
+        _surfaceView = view;
+        // INPUT LISTENER
+        _surfaceView.setOnTouchListener(input);
+        _surfaceView.setOnLongClickListener(input);
+
+        _holder = _surfaceView.getHolder();
+    }
+
 //----------------------------------------------------------------//
 
     //----------------------------------------------------------------//
     // VARIABLES
-    private final WindowManager _wManager;
-    private final Window _window;
     private final Paint _paint;
     private final AssetManager _assetManager;
 
-    private Point _winSize;
+    private SurfaceView _surfaceView;
     private Canvas _canvas;
     private SurfaceHolder _holder;
 

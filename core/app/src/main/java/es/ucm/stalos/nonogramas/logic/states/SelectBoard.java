@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import es.ucm.stalos.androidengine.Screen;
 import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.androidengine.Font;

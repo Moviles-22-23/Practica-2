@@ -7,9 +7,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
+import android.view.SurfaceView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
 import java.io.File;
 
@@ -21,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         getSupportActionBar().hide();
 //
 //        if (ContextCompat.checkSelfPermission(this, Manifest.permission.MANAGE_EXTERNAL_STORAGE) ==
@@ -37,12 +43,20 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //
 //        askForPermissions();
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
         _engine = new Engine();
         LoadState loadAssets = new LoadState(_engine);
 
         if (!_engine.init(loadAssets, 400, 600, this)) {
             System.out.println("Error al inicializar el engine");
         }
+
+
     }
 
     @Override
@@ -75,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected Engine _engine;
+
     public static File dir = new File(new File(Environment.getExternalStorageDirectory(), "bleh"),
             "bleh");
 }
