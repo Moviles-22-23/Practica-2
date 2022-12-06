@@ -43,6 +43,10 @@ public class LoadState extends State {
 
             // LOAD DATA
             _serSystem.loadData();
+            // * loadWrongData will generate fake data in order to
+            // test the Hash System.
+            //((GameDataSystem)_serSystem).loadWrongData();
+
             GameData _data = ((GameDataSystem) _serSystem)._data;
             // Was the last game being played?
             if (_data._inGame) {

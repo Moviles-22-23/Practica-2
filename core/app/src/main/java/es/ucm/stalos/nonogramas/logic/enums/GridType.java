@@ -55,23 +55,21 @@ public enum GridType implements Serializable {
         return value;
     }
 
-    private int value;
 
     public String getText() {
         return _text;
     }
 
-    public int getRows()
-    {
+    public int getRows() {
         return _rows;
     }
 
-    public int getCols()
-    {
+    public int getCols() {
         return _cols;
     }
 
-    private String _text;
+    private int value;
     private int _rows;
     private int _cols;
+    private String _text;
 }
