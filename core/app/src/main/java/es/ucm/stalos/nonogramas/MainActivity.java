@@ -55,8 +55,6 @@ public class MainActivity extends AppCompatActivity {
         if (!_engine.init(loadAssets, 400, 600, this)) {
             System.out.println("Error al inicializar el engine");
         }
-
-
     }
 
     @Override
