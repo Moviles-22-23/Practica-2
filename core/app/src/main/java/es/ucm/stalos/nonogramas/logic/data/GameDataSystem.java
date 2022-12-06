@@ -178,7 +178,7 @@ public class GameDataSystem implements SerializableSystem {
     /**
      * Generate the salt
      */
-    public void createSalt() throws NoSuchAlgorithmException {
+    private void createSalt() throws NoSuchAlgorithmException {
         SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
         byte[] salt = new byte[_saltBytes];
         sr.nextBytes(salt);
