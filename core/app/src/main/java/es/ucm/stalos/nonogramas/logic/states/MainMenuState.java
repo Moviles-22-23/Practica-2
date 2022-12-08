@@ -7,6 +7,7 @@ import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.androidengine.Font;
 import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.Assets;
+import es.ucm.stalos.nonogramas.logic.enums.MyColor;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 
 
@@ -79,7 +80,10 @@ public class MainMenuState extends State {
 
     @Override
     public void render() {
-        _graphics.setColor(_blackColor);
+        // BackgroundColor
+        _graphics.clear(Assets.colorSets.get(Assets.currPalette).getSecond());
+        // Texts Color
+        _graphics.setColor(MyColor.BLACK.getValue());
         // Title
         _graphics.drawCenteredString(_titleText, _titlePos, _titleSize, _titleFont);
         // Play Button
@@ -129,7 +133,4 @@ public class MainMenuState extends State {
     private final String _playRandomButtonText = "Modo Aleatorio";
     private int[] _playRandomButtonPos = new int[2];
     private float[] _playRandomButtonSize = new float[2];
-
-    // Colors
-    private final int _blackColor = 0x000000FF;
 }

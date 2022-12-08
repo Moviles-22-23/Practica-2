@@ -13,6 +13,7 @@ import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
+import es.ucm.stalos.nonogramas.logic.enums.MyColor;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 import es.ucm.stalos.nonogramas.logic.objects.SelectButton;
 
@@ -93,13 +94,16 @@ public class SelectBoardState extends State {
 
     @Override
     public void render() {
+        // BackgroundColor
+        _graphics.clear(Assets.colorSets.get(Assets.currPalette).getSecond());
+
         // Texts
-        _graphics.setColor(_greyColor);
+        _graphics.setColor(MyColor.GREY.getValue());
         _graphics.drawCenteredString(_modeText, _modePos, _modeSize, _textsFont);
         _graphics.drawCenteredString(_commentText, _commentPos, _commentSize, _textsFont);
 
         // Back Button
-        _graphics.setColor(_blackColor);
+        _graphics.setColor(MyColor.BLACK.getValue());
         _graphics.drawImage(_backImage, _backImagePos, _backImageSize);
         _graphics.drawCenteredString(_backText, _backTextPos, _backTextSize, _textsFont);
 
@@ -236,8 +240,4 @@ public class SelectBoardState extends State {
      * different grid level types
      */
     protected Map<Integer, GridType> _gridTypes = new HashMap<>();
-
-    // Colors
-    protected final int _greyColor = 0x313131FF;
-    protected final int _blackColor = 0x000000FF;
 }

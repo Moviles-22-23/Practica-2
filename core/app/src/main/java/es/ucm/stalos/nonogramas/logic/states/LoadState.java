@@ -10,6 +10,7 @@ import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.data.GameData;
 import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
+import es.ucm.stalos.nonogramas.logic.enums.MyColor;
 import es.ucm.stalos.nonogramas.logic.objects.ColorSet;
 
 /**
@@ -44,13 +45,13 @@ public class LoadState extends State {
 
             // Color Sets
             Assets.colorSets = new HashMap<>();
-            Assets.colorSets.put(0, new ColorSet(0x000000FF, 0xFFFFFFFF));
-            Assets.colorSets.put(1, new ColorSet(0x00F0F0FF, 0xF00000FF));
-            Assets.colorSets.put(2, new ColorSet(0xF00000FF, 0x00F0F0FF));
-            Assets.colorSets.put(3, new ColorSet(0xF000F0FF, 0x00F000FF));
-            Assets.colorSets.put(4, new ColorSet(0x00F000FF, 0xF000F0FF));
-            Assets.colorSets.put(5, new ColorSet(0xF0F000FF, 0x0000F0FF));
-            Assets.colorSets.put(6, new ColorSet(0x0000F0FF, 0xF0F000FF));
+            Assets.colorSets.put(0, new ColorSet(MyColor.ORANGE_SET_FIRST.getValue(), MyColor.ORANGE_SET_SECOND.getValue()));
+            Assets.colorSets.put(1, new ColorSet(MyColor.RED.getValue(), MyColor.BLUE.getValue()));
+            Assets.colorSets.put(2, new ColorSet(MyColor.GREEN_SET_FIRST.getValue(), MyColor.GREEN_SET_SECOND.getValue()));
+            Assets.colorSets.put(3, new ColorSet(MyColor.BLUE_SET_FIRST.getValue(), MyColor.BLUE_SET_SECOND.getValue()));
+            Assets.colorSets.put(4, new ColorSet(MyColor.RED_SET_FIRST.getValue(), MyColor.RED_SET_SECOND.getValue()));
+            Assets.colorSets.put(5, new ColorSet(MyColor.PURPLE_SET_FIRST.getValue(), MyColor.PURPLE_SET_SECOND.getValue()));
+            Assets.colorSets.put(6, new ColorSet(MyColor.PURBLUE_SET_FIRST.getValue(), MyColor.PURBLUE_SET_SECOND.getValue()));
 
             _serSystem = new GameDataSystem(_engine.getContext(), _engine.getAssetManager());
 

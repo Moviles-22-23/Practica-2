@@ -23,10 +23,7 @@ public class Assets {
     public static Sound goodSound;
     public static Sound winSound;
 
-    /**
-     * Dictionary of information about
-     * different grid level types
-     */
+    // Colores (TODO pensar como cargarlos de una mejor manera)
     public static Map<Integer, ColorSet> colorSets;
 
     public static int currPalette;

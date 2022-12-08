@@ -11,6 +11,7 @@ import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.data.GameData;
 import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
+import es.ucm.stalos.nonogramas.logic.enums.MyColor;
 import es.ucm.stalos.nonogramas.logic.enums.PlayingState;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 import es.ucm.stalos.nonogramas.logic.objects.Board;
@@ -78,6 +79,8 @@ public class GameState extends State {
 
     @Override
     public void render() {
+        _graphics.clear(Assets.colorSets.get(Assets.currPalette).getSecond());
+
         if (_playState != PlayingState.GameOver) {
             _board.render(_graphics);
         }
@@ -175,7 +178,7 @@ public class GameState extends State {
      * Renders every button of the state
      */
     public void renderButtons() {
-        _graphics.setColor(_blackColor);
+        _graphics.setColor(MyColor.BLACK.getValue());
         switch (_playState) {
             case Gaming:
                 // GiveUp Button
@@ -206,7 +209,7 @@ public class GameState extends State {
                 break;
             }
             case GameOver:
-                _graphics.setColor(_blackColor);
+                _graphics.setColor(MyColor.BLACK.getValue());
                 // GiveUp Button
                 _graphics.drawImage(_giveupImage, _giveupImagePos, _giveupImageSize);
                 _graphics.drawCenteredString(_giveupText, _giveupTextPos, _giveupTextSize, _fontButtons);
@@ -233,7 +236,7 @@ public class GameState extends State {
         switch (_playState) {
             case Win:
                 // TEXT WIN
-                _graphics.setColor(_blackColor);
+                _graphics.setColor(MyColor.BLACK.getValue());
                 _graphics.drawCenteredString(_winText1, _winPos1, _winSize1, _fontText);
                 break;
             case GameOver:
@@ -486,10 +489,6 @@ public class GameState extends State {
 
     protected float[] _backButtonSize = new float[2];
     protected ButtonCallback _backCallback;
-
-    // Colors
-    protected final int _blackColor = 0x000000FF;
-    protected final int _redColor = 0xFF0000FF;
 
     // PRACTICA 2
     // Life management

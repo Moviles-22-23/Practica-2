@@ -173,9 +173,13 @@ public class Graphics {
 
     public void clear(int color) {
         setColor(color);
-        _canvas.drawColor(color);
+        fillCanvas(color);
     }
 
+    /**
+     * Recibe el color en formato RGBA
+     * @param color
+     */
     public void setColor(int color) {
         int r = (color & 0xff000000) >> 24;
         int g = (color & 0x00ff0000) >> 16;
@@ -183,6 +187,15 @@ public class Graphics {
         int a = color & 0x000000ff;
 
         _paint.setColor(Color.argb(a, r, g, b));
+    }
+
+    public void fillCanvas(int color){
+        int r = (color & 0xff000000) >> 24;
+        int g = (color & 0x00ff0000) >> 16;
+        int b = (color & 0x0000ff00) >> 8;
+        int a = color & 0x000000ff;
+
+        _canvas.drawColor(Color.argb(a, r, g, b));
     }
 
 //-----------------------------------------------------------------//

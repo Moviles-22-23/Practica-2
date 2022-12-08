@@ -21,6 +21,7 @@ import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
+import es.ucm.stalos.nonogramas.logic.enums.MyColor;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 import es.ucm.stalos.nonogramas.logic.objects.SelectButton;
 
@@ -87,12 +88,15 @@ public class SelectLevelState extends State {
 
     @Override
     public void render() {
+        // BackgroundColor
+        _graphics.clear(Assets.colorSets.get(Assets.currPalette).getSecond());
+
         // Texts
-        _graphics.setColor(_greyColor);
+        _graphics.setColor(MyColor.GREY.getValue());
         _graphics.drawCenteredString(_modeText, _modePos, _modeSize, _textsFont);
 
         // Back Button
-        _graphics.setColor(_blackColor);
+        _graphics.setColor(MyColor.BLACK.getValue());
         _graphics.drawImage(_backImage, _backImagePos, _backImageSize);
         _graphics.drawCenteredString(_backText, _backTextPos, _backTextSize, _textsFont);
 
@@ -226,8 +230,4 @@ public class SelectLevelState extends State {
      * different grid level types
      */
     Map<Integer, GridType> _gridTypes;
-
-    // Colors
-    private final int _greyColor = 0x313131FF;
-    private final int _blackColor = 0x000000FF;
 }

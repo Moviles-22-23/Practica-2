@@ -1,0 +1,31 @@
+package es.ucm.stalos.nonogramas.logic.enums;
+
+public enum MyColor {
+    // USEFULL COLORS
+    BLACK(0x000000FF),
+    RED(0xFF0000FF),
+    GREEN(0x00FF00FF),
+    BLUE(0x0000FFFF),
+    GREY(0x313131FF),
+    WHITE(0xFFFFFFFF),
+
+    // PALETTE COLORS
+    ORANGE_SET_FIRST(0xF48C06FF),
+    ORANGE_SET_SECOND(0xFFBA08FF),
+    GREEN_SET_FIRST(0x55A630FF),
+    GREEN_SET_SECOND(0xAACC00FF),
+    BLUE_SET_FIRST(0x00B4D8FF),
+    BLUE_SET_SECOND(0x90E0EFFF),
+    PURPLE_SET_FIRST(0x7B2CBFFF),
+    PURPLE_SET_SECOND(0xC77DFFFF),
+    RED_SET_FIRST(0xBA181BFF),
+    RED_SET_SECOND(0xE5383BFF),
+    PURBLUE_SET_FIRST(0x6F2DBDFF),
+    PURBLUE_SET_SECOND(0x00A6FBFF);
+
+    MyColor(int i) { this.value = i; }
+
+    public int getValue () { return value; }
+
+    private int value;
+}

@@ -410,7 +410,7 @@ public class Board {
         // Aqui dibuja solo la solucion cuando hemos ganado
         for (int i = 0; i < _rows; i++) {
             for (int j = 0; j < _cols; j++) {
-                graphics.setColor(0x0000FFFF);
+                graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
 
                 int[] solPos = {_pos[0] + size * j + margin, _pos[1] + size * i + margin};
 
@@ -421,7 +421,7 @@ public class Board {
         }
 
         // Muestra el nombre de la figura
-        graphics.setColor(0x000000FF);
+        graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
         graphics.drawCenteredString(_nameText, _namePos, _nameSize, _nameFont);
     }
 
