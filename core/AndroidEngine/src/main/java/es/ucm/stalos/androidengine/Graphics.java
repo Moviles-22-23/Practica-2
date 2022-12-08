@@ -256,6 +256,10 @@ public class Graphics {
 //        _canvas.drawCircle(pos[0], pos[1], radious, _paint);
 //    }
 
+    public void drawLine(int[] start, int[] end) {
+        _canvas.drawLine(start[0], start[1], end[0], end[1], _paint);
+    }
+
     public void drawRect(int[] pos, float side) {
         _paint.setStyle(Paint.Style.STROKE);
         float[] s = {side, side};
@@ -265,10 +269,6 @@ public class Graphics {
     public void drawRect(int[] pos, float[] size) {
         _paint.setStyle(Paint.Style.STROKE);
         paintRect(pos, size);
-    }
-
-    public void drawLine(int[] start, int[] end) {
-        _canvas.drawLine(start[0], start[1], end[0], end[1], _paint);
     }
 
     public void fillSquare(int[] pos, float side) {
@@ -282,12 +282,31 @@ public class Graphics {
         paintRect(pos, size);
     }
 
+    public void drawCircle(int pos[], float radius) {
+        _paint.setStyle(Paint.Style.STROKE);
+        paintCircle(pos, radius);
+    }
+
+    public void fillCircle(int pos[], float radius) {
+        _paint.setStyle(Paint.Style.FILL);
+        paintCircle(pos, radius);
+    }
+
     /**
      * Support function to drawRect(...)
      */
     private void paintRect(int[] pos, float[] size) {
         _paint.setStrokeWidth(_rectThick);
         _canvas.drawRect(pos[0], pos[1], pos[0] + size[0], pos[1] + size[1], _paint);
+        _paint.reset();
+    }
+
+    /**
+     * Support function to drawCircle(...)
+     */
+    private void paintCircle(int[] pos, float radius) {
+        _paint.setStrokeWidth(_rectThick);
+        _canvas.drawCircle(pos[0], pos[1], radius, _paint);
         _paint.reset();
     }
 //----------------------------------------------------------------//

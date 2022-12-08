@@ -7,24 +7,22 @@ import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 
 public class SelectColorSetButton {
-    public SelectColorSetButton(int[] pos, float[] size, ColorSet colorSet) {
+    public SelectColorSetButton(int[] pos, float[] size, ColorSet colorSet, boolean _isUnlocked) {
         this._buttonPos = pos;
         this._buttonSize = size;
         this._colorSet = colorSet;
 
         int margin = 5;
 
-        this._firstColorPos[0] = _buttonPos[0] + margin;
-        this._firstColorPos[1] = _buttonPos[1] + margin;
-        this._firstColorSize[0] = _buttonSize[0] - 2 * margin;
-        this._firstColorSize[1] = _buttonSize[0] / 2 - margin;
+        this._firstColorPos[0] = (int)(_buttonPos[0] + _buttonSize[0] * 0.5f);
+        this._firstColorPos[1] = (int)(_buttonPos[1] + _buttonSize[1] * 0.25f);
 
-        this._secondColorPos[0] = _buttonPos[0] + margin;
-        this._secondColorPos[1] = (int)(_buttonSize[0] / 2 + _buttonPos[1] + margin);
-        this._secondColorSize[0] = _buttonSize[0] - 2 * margin;
-        this._secondColorSize[1] = _buttonSize[0] / 2 - margin;
+        this._secondColorPos[0] = (int)(_buttonPos[0] + _buttonSize[0] * 0.5f);
+        this._secondColorPos[1] = (int)(_buttonPos[1] + _buttonSize[1] * 0.75f);
 
-        this._isUnlocked = true;
+        this._colorRadius = (_buttonSize[0] / 2) - margin;
+
+        this._isUnlocked = _isUnlocked;
     }
 
     public void render(Graphics gr) {
@@ -41,15 +39,15 @@ public class SelectColorSetButton {
             gr.fillSquare(_buttonPos, _buttonSize);
             // Color Primario
             gr.setColor(_colorSet.getFirst());
-            gr.fillSquare(_firstColorPos, _firstColorSize);
+            gr.fillCircle(_firstColorPos, _colorRadius);
             // Color Secundario
             gr.setColor(_colorSet.getSecond());
-            gr.fillSquare(_secondColorPos, _secondColorSize);
+            gr.fillCircle(_secondColorPos, _colorRadius);
             // Marco
             gr.setColor(0xFFFFFFFF);
-            gr.drawRect(_firstColorPos, _firstColorSize);
+            gr.drawCircle(_firstColorPos, _colorRadius);
             gr.setColor(0xFFFFFFFF);
-            gr.drawRect(_secondColorPos, _secondColorSize);
+            gr.drawCircle(_secondColorPos, _colorRadius);
         }
     }
 
@@ -90,10 +88,9 @@ public class SelectColorSetButton {
     private final ColorSet _colorSet;
 
     private int[] _firstColorPos = new int[2];
-    private float[] _firstColorSize = new float[2];
-
     private int[] _secondColorPos = new int[2];
-    private float[] _secondColorSize = new float[2];
+    private float _colorRadius;
+
 
     /**
      * Determines if the level

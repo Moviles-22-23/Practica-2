@@ -24,10 +24,8 @@ public class LoadState extends State {
     @Override
     public boolean init() {
         try {
-            Graphics graphics = _engine.getGraphics();
-            Audio audio = _engine.getAudio();
-
             //Sprites
+            Graphics graphics = _engine.getGraphics();
             Assets.backArrow = graphics.newImage("backArrow.png");
             Assets.lens = graphics.newImage("lents.png");
             Assets.heart = graphics.newImage("heart.png");
@@ -36,6 +34,7 @@ public class LoadState extends State {
             Assets.ads = graphics.newImage("ads.png");
 
             // Audio
+            Audio audio = _engine.getAudio();
             Assets.menuTheme = audio.newSound("menuTheme.wav");
             Assets.mainTheme = audio.newSound("mainTheme.wav");
             Assets.clickSound = audio.newSound("clickSound.wav");
@@ -45,8 +44,8 @@ public class LoadState extends State {
 
             // Color Sets
             Assets.colorSets = new HashMap<>();
-            Assets.colorSets.put(0, new ColorSet(MyColor.ORANGE_SET_FIRST.getValue(), MyColor.ORANGE_SET_SECOND.getValue()));
-            Assets.colorSets.put(1, new ColorSet(MyColor.RED.getValue(), MyColor.BLUE.getValue()));
+            Assets.colorSets.put(0, new ColorSet(MyColor.BLACK.getValue(), MyColor.WHITE.getValue()));
+            Assets.colorSets.put(1, new ColorSet(MyColor.ORANGE_SET_FIRST.getValue(), MyColor.ORANGE_SET_SECOND.getValue()));
             Assets.colorSets.put(2, new ColorSet(MyColor.GREEN_SET_FIRST.getValue(), MyColor.GREEN_SET_SECOND.getValue()));
             Assets.colorSets.put(3, new ColorSet(MyColor.BLUE_SET_FIRST.getValue(), MyColor.BLUE_SET_SECOND.getValue()));
             Assets.colorSets.put(4, new ColorSet(MyColor.RED_SET_FIRST.getValue(), MyColor.RED_SET_SECOND.getValue()));

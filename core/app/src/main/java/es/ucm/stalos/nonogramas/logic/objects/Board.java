@@ -169,8 +169,8 @@ public class Board {
 
             // Lee la ultima linea para saber le nombre de la figura
             line = br.readLine();
-            if (line != null) _nameText = line;
-            System.out.println("Error con el ultimo getLine: " + _nameText);
+            if (line != null) _state.setNameText(line);
+
         } catch (Exception e) {
             System.out.println("ERROR ANDROID: " + e.getMessage());
             System.out.println("Error reading file");
@@ -419,10 +419,10 @@ public class Board {
                     graphics.fillSquare(solPos, _cellSize);
             }
         }
-
-        // Muestra el nombre de la figura
-        graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
-        graphics.drawCenteredString(_nameText, _namePos, _nameSize, _nameFont);
+//
+//        // Muestra el nombre de la figura
+//        graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
+//        graphics.drawCenteredString(_nameText, _namePos, _nameSize, _nameFont);
     }
 
     /**

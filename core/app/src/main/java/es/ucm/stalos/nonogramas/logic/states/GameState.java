@@ -51,16 +51,9 @@ public class GameState extends State {
     @Override
     public boolean init() {
         try {
-            // Board
             initBoard();
-
-            // Buttons
             initButtons();
-
-            // Texts
             initTexts();
-
-            // Color Palette
             initPalette();
 
             _audio.playMusic(Assets.mainTheme);
@@ -79,6 +72,7 @@ public class GameState extends State {
 
     @Override
     public void render() {
+        // Background Color
         _graphics.clear(Assets.colorSets.get(Assets.currPalette).getSecond());
 
         if (_playState != PlayingState.GameOver) {
@@ -86,13 +80,6 @@ public class GameState extends State {
         }
 
         _colorPalette.render(_graphics);
-
-        // TODO quitar test
-        _graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
-        _graphics.fillSquare(new int[]{50,550}, new float[]{50,50});
-        _graphics.setColor(Assets.colorSets.get(Assets.currPalette).getSecond());
-        _graphics.fillSquare(new int[]{100,550}, new float[]{50,50});
-
 
         renderButtons();
         renderText();
@@ -192,8 +179,10 @@ public class GameState extends State {
 //                _graphics.drawRect(_giveupImagePos, _giveupImageSize);
 
                 // Life Image
-                _graphics.drawImage(_lifeImage, _lifeImagePos, _lifeImageSize);
-                _graphics.drawCenteredString(_lifeText, _lifeTextPos, _lifeTextSize, _fontButtons);
+                for(int i = 0; i < _lives; i++){
+                    int[] pos = new int[] { (int)(_lifeImagePos[0] + (_lifeImageSize[0] + _liveImageMargin) * i), _lifeImagePos[1] };
+                    _graphics.drawImage(_lifeImage, pos, _lifeImageSize);
+                }
 
 //                // TODO: debug vidas - borrar en version final
 //                _graphics.setColor(_redColor);
@@ -238,6 +227,10 @@ public class GameState extends State {
                 // TEXT WIN
                 _graphics.setColor(MyColor.BLACK.getValue());
                 _graphics.drawCenteredString(_winText1, _winPos1, _winSize1, _fontText);
+
+                // NAME TEXT
+                _graphics.setColor(MyColor.BLACK.getValue());
+                _graphics.drawCenteredString(_nameText, _namePos, _nameSize, _fontText);
                 break;
             case GameOver:
                 _graphics.drawImage(_gameOverImage, _gameOverImagePos, _gameOverImageSize);
@@ -253,7 +246,7 @@ public class GameState extends State {
     public void initBoard() throws Exception {
         // Create the board
         _posBoard[0] = 20;
-        _posBoard[1] = 200;
+        _posBoard[1] = 100;
         _sizeBoard[0] = 360.0f;
         _sizeBoard[1] = 360.0f;
 
@@ -275,7 +268,7 @@ public class GameState extends State {
 //            _board = new Board(this, _gridType, _posBoard, _sizeBoard,
 //                    _isRandom, _lives, _currentLevel);
         _posColorPalette[0] = 0;
-        _posColorPalette[1] = 80;
+        _posColorPalette[1] = 520;
         _sizeColorPalette[0] = 400.0f;
         _sizeColorPalette[1] = 100.0f;
 
@@ -314,7 +307,7 @@ public class GameState extends State {
         _backTextSize[1] = _giveupImageSize[1];
 
         _backImagePos[0] = (int) ((_graphics.getLogWidth() - (_backTextSize[0] + _backImageSize[0])) * 0.5f);
-        _backImagePos[1] = (int) (_graphics.getLogHeight() * 0.9f);
+        _backImagePos[1] = (int) (_graphics.getLogHeight() * 0.8f);
         _backTextPos[0] = (int) (_backImagePos[0] + _backImageSize[0]);
         _backTextPos[1] = _backImagePos[1];
 
@@ -338,15 +331,8 @@ public class GameState extends State {
         // Life
         _lifeImageSize[0] = _graphics.getLogWidth() * 0.1207f;
         _lifeImageSize[1] = _graphics.getLogHeight() * 0.075f;
-
-        _lifeTextSize[0] = _graphics.getLogWidth() * 0.1f;
-        _lifeTextSize[1] = _lifeImageSize[1];
-
-        _lifeImagePos[0] = (int) ((_graphics.getLogWidth() * 0.75f) - _lifeImageSize[0]);
+        _lifeImagePos[0] = (int) ((_graphics.getLogWidth() * 0.7f) - _lifeImageSize[0]);
         _lifeImagePos[1] = (int) (_giveupImagePos[1] - _giveupImageSize[1] / 2);
-
-        _lifeTextPos[0] = (int) (_lifeImagePos[0] + _lifeImageSize[0]);
-        _lifeTextPos[1] = _lifeImagePos[1];
 
         // ADS - GameOver
         _adsImageSize[0] = _graphics.getLogWidth() * 0.17f;
@@ -354,7 +340,6 @@ public class GameState extends State {
 
         _adsTextSize[0] = _graphics.getLogWidth() * 0.5f;
         _adsTextSize[1] = _adsImageSize[1];
-
 
         _adsButtonSize[0] = _adsImageSize[0] + _adsTextSize[0];
         _adsButtonSize[1] = _adsImageSize[1];
@@ -386,16 +371,19 @@ public class GameState extends State {
         _winSize1[0] = _graphics.getLogWidth();
         _winSize1[1] = _graphics.getLogHeight() * 0.08f;
         _winPos1[0] = 0;
-        _winPos1[1] = (int) (_graphics.getLogHeight() * 0.1f);
+        _winPos1[1] = (int) (_graphics.getLogHeight() * 0.0f);
+
+        // NAME TEXT
+        _nameSize[0] = _graphics.getLogWidth();
+        _nameSize[1] = _graphics.getLogHeight() * 0.08f;
+        _namePos[0] = 0;
+        _namePos[1] = (int) (_graphics.getLogHeight() * 0.1f);
 
         // GameOver Text
         _gameOverImageSize[0] = _graphics.getLogWidth() * 0.9f;
         _gameOverImageSize[1] = _graphics.getLogHeight() * 0.5f;
         _gameOverImagePos[0] = (int) (_gameOverImageSize[0] * 0.05f);
         _gameOverImagePos[1] = (int) (_gameOverImageSize[1] * 0.5f);
-
-        // LIVES TEXT
-        _lifeText = "x" + _lives;
     }
 
     /**
@@ -405,7 +393,6 @@ public class GameState extends State {
      */
     public void updateLives(int lvs) {
         _lives = lvs;
-        _lifeText = "x" + _lives;
         if (_lives <= 0)
             _playState = PlayingState.GameOver;
     }
@@ -439,6 +426,10 @@ public class GameState extends State {
         return _colorPalette;
     }
 
+    public void setNameText(String n){
+        _nameText = n;
+    }
+
 //----------------------------------------ATTRIBUTES----------------------------------------------//
 
     // Game Mode
@@ -463,6 +454,11 @@ public class GameState extends State {
     protected final String _winText1 = "ENHORABUENA!";
     protected int[] _winPos1 = new int[2];
     protected float[] _winSize1 = new float[2];
+
+    // Name
+    protected String _nameText = "LEVEL";
+    protected int[] _namePos = new int[2];
+    protected float[] _nameSize = new float[2];
 
     // Buttons
     protected Font _fontButtons;
@@ -493,10 +489,7 @@ public class GameState extends State {
     // PRACTICA 2
     // Life management
     protected int _lives = 3;
-    protected String _lifeText = "xX";
-    protected int[] _lifeTextPos = new int[2];
-    protected float[] _lifeTextSize = new float[2];
-
+    private final int _liveImageMargin = 3;
     protected final Image _lifeImage = Assets.heart;
     protected int[] _lifeImagePos = new int[2];
     protected float[] _lifeImageSize = new float[2];

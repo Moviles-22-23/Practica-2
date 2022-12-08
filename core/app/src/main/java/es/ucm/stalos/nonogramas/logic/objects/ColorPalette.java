@@ -10,6 +10,7 @@ import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.data.GameData;
+import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 
 public class ColorPalette {
@@ -21,6 +22,7 @@ public class ColorPalette {
     public boolean init(Engine engine, GameData data) {
         try {
             _engine = engine;
+            _data = data;
 
             // Text
             _font = engine.getGraphics().newFont("JosefinSans-Bold.ttf", _fontSize, true);
@@ -61,8 +63,10 @@ public class ColorPalette {
             int[] bPos = new int[]{ _pos[0] + graphics.getLogWidth() * i / 7, _pos[1] };
             float[] bSize = new float[]{ _size[0] / 7, _size[1] };
 
+            boolean unlocked = _data._lastUnlockedPack >= i;
+
             // Crea el boton
-            final SelectColorSetButton b = new SelectColorSetButton(bPos, bSize, Assets.colorSets.get(i));
+            final SelectColorSetButton b = new SelectColorSetButton(bPos, bSize, Assets.colorSets.get(i), unlocked);
 
             final int auxI = i;
 
@@ -98,6 +102,7 @@ public class ColorPalette {
     // Cositas
     State _state;
     Engine _engine;
+    GameData _data;
 
     // Texto
     private Font _font;
