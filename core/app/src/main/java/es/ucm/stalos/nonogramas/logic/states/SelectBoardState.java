@@ -5,21 +5,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import es.ucm.stalos.androidengine.Screen;
 import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.androidengine.Font;
 import es.ucm.stalos.androidengine.Image;
 import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.Assets;
-import es.ucm.stalos.nonogramas.logic.data.GameData;
 import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 import es.ucm.stalos.nonogramas.logic.objects.SelectButton;
 
-public class SelectBoard extends State {
-    public SelectBoard(Engine engine, boolean isRandom) {
+public class SelectBoardState extends State {
+    public SelectBoardState(Engine engine, boolean isRandom) {
         super(engine);
         this._isRandom = isRandom;
         ((GameDataSystem) _serSystem)._data._inGame = false;

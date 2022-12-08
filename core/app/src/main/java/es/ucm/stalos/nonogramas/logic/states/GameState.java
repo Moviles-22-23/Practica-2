@@ -10,11 +10,11 @@ import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.data.GameData;
 import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
-import es.ucm.stalos.nonogramas.logic.enums.CellType;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
 import es.ucm.stalos.nonogramas.logic.enums.PlayingState;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 import es.ucm.stalos.nonogramas.logic.objects.Board;
+import es.ucm.stalos.nonogramas.logic.objects.ColorPalette;
 
 // PRACTICA 2: Refactorización de los GameState
 public class GameState extends State {
@@ -59,6 +59,9 @@ public class GameState extends State {
             // Texts
             initTexts();
 
+            // Color Palette
+            initPalette();
+
             _audio.playMusic(Assets.mainTheme);
 
         } catch (Exception e) {
@@ -78,6 +81,16 @@ public class GameState extends State {
         if (_playState != PlayingState.GameOver) {
             _board.render(_graphics);
         }
+
+        _colorPalette.render(_graphics);
+
+        // TODO quitar test
+
+        _graphics.setColor(_colorPalette.getPrimaryColor());
+        _graphics.fillSquare(new int[]{50,550}, new float[]{50,50});
+        _graphics.setColor(_colorPalette.getSecundaryColor());
+        _graphics.fillSquare(new int[]{100,550}, new float[]{50,50});
+
 
         renderButtons();
         renderText();
@@ -115,6 +128,12 @@ public class GameState extends State {
                 else if (_playState == PlayingState.GameOver &&
                         clickInsideSquare(clickPos, _adsImagePos, _adsButtonSize))
                     _adsCallback.doSomething();
+
+                // COLOR PALETTE
+                else if (clickInsideSquare(clickPos, _posColorPalette, _sizeColorPalette)) {
+                    System.out.println("Click en Palette");
+                    _colorPalette.handleInput(clickPos, currEvent);
+                }
             }
 
             // longTouch
@@ -160,7 +179,6 @@ public class GameState extends State {
         _graphics.setColor(_blackColor);
         switch (_playState) {
             case Gaming:
-                System.out.println("GAMING");
                 // GiveUp Button
                 _graphics.drawImage(_giveupImage, _giveupImagePos, _giveupImageSize);
                 _graphics.drawCenteredString(_giveupText, _giveupTextPos, _giveupTextSize, _fontButtons);
@@ -183,8 +201,6 @@ public class GameState extends State {
 
                 break;
             case Win: {
-                System.out.println("WIN");
-
                 // Back Button
                 _graphics.drawImage(_backImage, _backImagePos, _backImageSize);
                 _graphics.drawCenteredString(_backText, _backTextPos, _backTextSize, _fontButtons);
@@ -249,6 +265,24 @@ public class GameState extends State {
             throw new Exception("Error al crear el board");
     }
 
+    private void initPalette() throws Exception {
+        // TODO leer data de la palette
+//        if(_data._inGame)
+//            _board = new Board(this, _data, _posBoard, _sizeBoard);
+//        else
+//            _board = new Board(this, _gridType, _posBoard, _sizeBoard,
+//                    _isRandom, _lives, _currentLevel);
+        _posColorPalette[0] = 0;
+        _posColorPalette[1] = 80;
+        _sizeColorPalette[0] = 400.0f;
+        _sizeColorPalette[1] = 100.0f;
+
+        _colorPalette = new ColorPalette(_posColorPalette, _sizeColorPalette);
+
+        if (!_colorPalette.init(_engine, _data))
+            throw new Exception("Error al iniciar palette");
+    }
+
     /**
      * Initializes every button of the state
      *
@@ -290,7 +324,7 @@ public class GameState extends State {
             public void doSomething() {
                 State previusState;
 
-                if (_isRandom) previusState = new SelectBoard(_engine, true);
+                if (_isRandom) previusState = new SelectBoardState(_engine, true);
                 else previusState = new SelectLevelState(_engine, _gridType);
 
                 _engine.reqNewState(previusState);
@@ -399,6 +433,10 @@ public class GameState extends State {
         _playState = newPlayingState;
     }
 
+    public ColorPalette getColorPalette(){
+        return _colorPalette;
+    }
+
 //----------------------------------------ATTRIBUTES----------------------------------------------//
 
     // Game Mode
@@ -410,6 +448,11 @@ public class GameState extends State {
     protected Board _board;
     protected int[] _posBoard = new int[2];
     protected float[] _sizeBoard = new float[2];
+
+    // Color Palette
+    protected ColorPalette _colorPalette;
+    protected int[] _posColorPalette = new int[2];
+    protected float[] _sizeColorPalette = new float[2];
 
     // Texts
     protected Font _fontText;

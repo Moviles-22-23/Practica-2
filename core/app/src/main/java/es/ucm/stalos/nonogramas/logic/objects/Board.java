@@ -336,7 +336,6 @@ public class Board {
                     return;
                 }
             }
-
         }
     }
 

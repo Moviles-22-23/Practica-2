@@ -238,6 +238,11 @@ public class Graphics {
 //        _graphics.setPaintMode();
 //    }
 
+//    public void drawCircle(int[] pos, float radious){
+//        _paint.setStyle(Paint.Style.STROKE);
+//        _canvas.drawCircle(pos[0], pos[1], radious, _paint);
+//    }
+
     public void drawRect(int[] pos, float side) {
         _paint.setStyle(Paint.Style.STROKE);
         float[] s = {side, side};
