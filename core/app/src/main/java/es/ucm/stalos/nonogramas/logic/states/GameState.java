@@ -85,10 +85,9 @@ public class GameState extends State {
         _colorPalette.render(_graphics);
 
         // TODO quitar test
-
-        _graphics.setColor(_colorPalette.getPrimaryColor());
+        _graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
         _graphics.fillSquare(new int[]{50,550}, new float[]{50,50});
-        _graphics.setColor(_colorPalette.getSecundaryColor());
+        _graphics.setColor(Assets.colorSets.get(Assets.currPalette).getSecond());
         _graphics.fillSquare(new int[]{100,550}, new float[]{50,50});
 
 

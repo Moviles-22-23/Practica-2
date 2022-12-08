@@ -22,6 +22,10 @@ public class GameData implements Serializable {
      */
     public int _lastUnlockedLevel = 0;
     /**
+     * Primary Color
+     */
+    public int _currPalette;
+    /**
      * Determine if the game has been quited from GameState
      */
     public boolean _inGame = false;

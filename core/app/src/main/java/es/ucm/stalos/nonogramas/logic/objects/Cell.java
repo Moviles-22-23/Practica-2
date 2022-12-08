@@ -1,13 +1,12 @@
 package es.ucm.stalos.nonogramas.logic.objects;
 
-import static es.ucm.stalos.androidengine.TouchEvent.*;
-import static es.ucm.stalos.androidengine.TouchEvent.longTouch;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import es.ucm.stalos.androidengine.Graphics;
 import es.ucm.stalos.androidengine.TouchEvent;
+import es.ucm.stalos.nonogramas.logic.Assets;
+import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
 import es.ucm.stalos.nonogramas.logic.enums.CellType;
 
 public class Cell {
@@ -26,13 +25,13 @@ public class Cell {
         // FILLED SQUARE SIZE
         this.fsize = cellSize - whiteMargin * 2;
         // TYPE
-        this.cellType = CellType.GREY;
+        this.cellType = CellType.EMPTY;
 
         // COLORS - MAP
         _colors = new HashMap<>();
-        _colors.put(CellType.BLUE, 0x0000FFFF);
-        _colors.put(CellType.GREY, 0xBBBBBBFF);
-        _colors.put(CellType.WHITE, 0xFFFFFFFF);
+        _colors.put(CellType.FILL, 0x0000FFFF);
+        _colors.put(CellType.EMPTY, 0xBBBBBBFF);
+        _colors.put(CellType.NOFILL, 0xFFFFFFFF);
         _colors.put(CellType.RED, 0xFF0000FF);
     }
 
@@ -40,10 +39,14 @@ public class Cell {
         // Filled Square
         int[] fillPos = new int[]{fx, fy};
         graphics.setColor(_colors.get(cellType));
-        graphics.fillSquare(fillPos, fsize);
-        int[] fillPos2 = new int[]{fx + (int) fsize, fy + (int) fsize};
 
-        if (cellType == CellType.WHITE) {
+        if (cellType == CellType.FILL) graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
+//        if (cellType == CellType.EMPTY) graphics.setColor(Assets.secundaryColor);
+
+        graphics.fillSquare(fillPos, fsize);
+
+        int[] fillPos2 = new int[]{fx + (int) fsize, fy + (int) fsize};
+        if (cellType == CellType.NOFILL) {
             graphics.setColor(0x000000FF);
             graphics.drawRect(fillPos, fsize);
             graphics.drawLine(fillPos, fillPos2);
@@ -58,10 +61,10 @@ public class Cell {
     public void handleInput(int[] clickPos, TouchEvent touch) {
         switch (touch) {
             case touchDown:
-                cellType = CellType.BLUE;
+                cellType = CellType.FILL;
                 break;
             case longTouch:
-                cellType = CellType.WHITE;
+                cellType = CellType.NOFILL;
                 break;
         }
     }

@@ -1,5 +1,7 @@
 package es.ucm.stalos.nonogramas.logic.states;
 
+import java.util.HashMap;
+
 import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.Audio;
 import es.ucm.stalos.androidengine.Engine;
@@ -8,6 +10,7 @@ import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.data.GameData;
 import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
+import es.ucm.stalos.nonogramas.logic.objects.ColorSet;
 
 /**
  * This state is created to initialize all the assets of the game before it starts
@@ -39,6 +42,16 @@ public class LoadState extends State {
             Assets.goodSound = audio.newSound("goodSound.wav");
             Assets.winSound = audio.newSound("winSound.wav");
 
+            // Color Sets
+            Assets.colorSets = new HashMap<>();
+            Assets.colorSets.put(0, new ColorSet(0x000000FF, 0xFFFFFFFF));
+            Assets.colorSets.put(1, new ColorSet(0x00F0F0FF, 0xF00000FF));
+            Assets.colorSets.put(2, new ColorSet(0xF00000FF, 0x00F0F0FF));
+            Assets.colorSets.put(3, new ColorSet(0xF000F0FF, 0x00F000FF));
+            Assets.colorSets.put(4, new ColorSet(0x00F000FF, 0xF000F0FF));
+            Assets.colorSets.put(5, new ColorSet(0xF0F000FF, 0x0000F0FF));
+            Assets.colorSets.put(6, new ColorSet(0x0000F0FF, 0xF0F000FF));
+
             _serSystem = new GameDataSystem(_engine.getContext(), _engine.getAssetManager());
 
             // LOAD DATA
@@ -58,6 +71,7 @@ public class LoadState extends State {
                 State mainMenu = new MainMenuState(_engine);
                 _engine.reqNewState(mainMenu);
             }
+            Assets.currPalette = _data._currPalette;
         } catch (Exception e) {
             System.out.println("Error en init de LoadState");
             System.err.println(e);

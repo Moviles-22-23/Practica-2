@@ -6,9 +6,9 @@ import java.io.Serializable;
  * Information about different cell types of the game
  */
 public enum CellType implements Serializable {
-    GREY(0),
-    BLUE(1),
-    WHITE(2),
+    EMPTY(0),
+    FILL(1),
+    NOFILL(2),
     RED(3),
     MAX(4);
 

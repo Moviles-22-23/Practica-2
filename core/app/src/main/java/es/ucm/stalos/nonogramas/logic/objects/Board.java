@@ -11,8 +11,6 @@ package es.ucm.stalos.nonogramas.logic.objects;
 //     1 | - X - - -
 //     3 | X X X - -
 
-import androidx.annotation.NonNull;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -417,7 +415,7 @@ public class Board {
                 int[] solPos = {_pos[0] + size * j + margin, _pos[1] + size * i + margin};
 
                 // Utiliza el estado del tablero por si se ha resuelto con otra solucion
-                if (_boardState[i][j].cellType == CellType.BLUE)
+                if (_boardState[i][j].cellType == CellType.FILL)
                     graphics.fillSquare(solPos, _cellSize);
             }
         }
@@ -444,8 +442,8 @@ public class Board {
     public boolean checkSolution() {
         for (int i = 0; i < _rows; i++) {
             for (int j = 0; j < _cols; j++) {
-                if ((_boardState[i][j].cellType == CellType.BLUE && !_sol[i][j]) ||
-                        (_boardState[i][j].cellType != CellType.BLUE && _sol[i][j])) {
+                if ((_boardState[i][j].cellType == CellType.FILL && !_sol[i][j]) ||
+                        (_boardState[i][j].cellType != CellType.FILL && _sol[i][j])) {
                     return false;
                 }
             }
