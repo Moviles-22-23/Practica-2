@@ -2,24 +2,23 @@ package es.ucm.stalos.androidengine;
 
 import android.content.res.AssetManager;
 import android.view.SurfaceView;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import androidx.constraintlayout.widget.Group;
 
 public class Engine implements Runnable {
     public Engine() {
 
     }
 
-    public boolean init(State initState, int w, int h, AppCompatActivity activity) {
+    public boolean init(State initState, int w, int h, AppCompatActivity activity, SurfaceView view) {
         _context = activity;
         _assetsMan = activity.getApplicationContext().getAssets();
 
         //STATE
         _currState = initState;
-
-        //SCREEN
-        _screen = new Screen(activity, true);
-        activity.setContentView(_screen);
 
         //GRAPHICS
         _graphics = new Graphics(w, h, _assetsMan);
@@ -27,10 +26,16 @@ public class Engine implements Runnable {
         // INPUT
         _input = new Input(this);
 
+        //SCREEN
+        _view = view;
+
+        _view.setOnTouchListener(_input);
+        _view.setOnLongClickListener(_input);
+
         // AUDIO
         _audio = new Audio(_assetsMan, 10);
 
-        return (_graphics).init(_input, _screen.getSurfaceView()) && _currState.init();
+        return (_graphics).init(_input) && _currState.init();
     }
 
     public void run() {
@@ -52,10 +57,10 @@ public class Engine implements Runnable {
             _currState.update(_deltaTime);
 
             // Pintado del estado actual
-            _graphics.prepareFrame();
+            _graphics.prepareFrame(_view);
             _graphics.clear(0xFFFFFFFF);
             _currState.render();
-            _graphics.restore();
+            _graphics.restore(_view);
 
             // Inicializacion del siguiente estado en diferido
             if (_changeState) {
@@ -74,7 +79,7 @@ public class Engine implements Runnable {
             this._renderThread = new Thread(this);
             this._renderThread.start();
 
-            ((Audio) _audio).resumeMusic();
+            _audio.resumeMusic();
         }
     }
 
@@ -132,17 +137,6 @@ public class Engine implements Runnable {
     }
 
     /**
-     * @return Instance of screen manager
-     */
-    public Screen getScreen() {
-        return _screen;
-    }
-
-    public void setScreen(Screen screen) {
-        _screen = screen;
-    }
-
-    /**
      * Update deltaTime value
      */
     protected void updateDeltaTime() {
@@ -159,6 +153,7 @@ public class Engine implements Runnable {
     public AppCompatActivity getContext() {
         return _context;
     }
+
     //--------------------------------------------------------------------------------------------//
 
     private Thread _renderThread;
@@ -172,7 +167,8 @@ public class Engine implements Runnable {
     private Audio _audio;
     private AssetManager _assetsMan;
     private AppCompatActivity _context;
-    private Screen _screen;
+
+    private SurfaceView _view;
 
     // DELTA TIME
     private long _lastFrameTime = 0;

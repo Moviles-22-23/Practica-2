@@ -1,17 +1,18 @@
 package es.ucm.stalos.nonogramas;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
 import android.view.SurfaceView;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
+import androidx.constraintlayout.widget.Group;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
@@ -22,12 +23,15 @@ import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.nonogramas.logic.states.LoadState;
 
 public class MainActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
+
+        SurfaceView gameView = findViewById(R.id.surfaceView);
+        adGroup = findViewById(R.id.adGroup);
+
 //
 //        if (ContextCompat.checkSelfPermission(this, Manifest.permission.MANAGE_EXTERNAL_STORAGE) ==
 //                PackageManager.PERMISSION_GRANTED) {
@@ -49,10 +53,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        AdView adView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
+
         _engine = new Engine();
         LoadState loadAssets = new LoadState(_engine);
 
-        if (!_engine.init(loadAssets, 400, 600, this)) {
+        if (!_engine.init(loadAssets, 400, 600, this, gameView)) {
             System.out.println("Error al inicializar el engine");
         }
     }
@@ -86,8 +94,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    protected Engine _engine;
+    public void swapBannerAdVisibility() {
+        if (adGroup.getVisibility() == View.VISIBLE)
+            adGroup.setVisibility(View.GONE);
+        else
+            adGroup.setVisibility(View.VISIBLE);
+    }
 
+    protected Engine _engine;
     public static File dir = new File(new File(Environment.getExternalStorageDirectory(), "bleh"),
             "bleh");
+    private Group adGroup;
 }

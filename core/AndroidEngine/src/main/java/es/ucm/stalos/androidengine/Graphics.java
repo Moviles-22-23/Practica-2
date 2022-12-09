@@ -140,14 +140,8 @@ public class Graphics {
 
     //--------------------------------------------------------------------------------------------//
 
-    public boolean init(Input input, SurfaceView view) {
+    public boolean init(Input input) {
         try {
-            _surfaceView = view;
-            // INPUT LISTENER
-            _surfaceView.setOnTouchListener(input);
-            _surfaceView.setOnLongClickListener(input);
-
-            _holder = _surfaceView.getHolder();
         } catch (Exception e) {
             return false;
         }
@@ -313,21 +307,21 @@ public class Graphics {
 //----------------------------------------------------------------//
 
     public int getWidth() {
-        return _surfaceView.getWidth();
+        return _canvas.getWidth();
     }
 
     public int getHeight() {
-        return _surfaceView.getHeight();
+        return _canvas.getHeight();
     }
 
 //----------------------------------------------------------------//
 
-    public void prepareFrame() {
-        while (!_holder.getSurface().isValid()) {
+    public void prepareFrame(SurfaceView surface) {
+        while (!surface.getHolder().getSurface().isValid()) {
             System.out.println("PREPARE FRAME: NULL");
         }
 
-        _canvas = _holder.lockCanvas();
+        _canvas = surface.getHolder().lockCanvas();
         // SCALE & TRANSLATE
         _scaleFactor = getScaleFactor();
         int[] newPos = translateWindow();
@@ -343,17 +337,8 @@ public class Graphics {
         _canvas.scale(x, y);
     }
 
-    public void restore() {
-        _holder.unlockCanvasAndPost(_canvas);
-    }
-
-    public void updateSurfaceView(SurfaceView view, Input input) {
-        _surfaceView = view;
-        // INPUT LISTENER
-        _surfaceView.setOnTouchListener(input);
-        _surfaceView.setOnLongClickListener(input);
-
-        _holder = _surfaceView.getHolder();
+    public void restore(SurfaceView surface) {
+        surface.getHolder().unlockCanvasAndPost(_canvas);
     }
 
 //----------------------------------------------------------------//
@@ -363,9 +348,7 @@ public class Graphics {
     private final Paint _paint;
     private final AssetManager _assetManager;
 
-    private SurfaceView _surfaceView;
     private Canvas _canvas;
-    private SurfaceHolder _holder;
 
     /**
      * Thickness of the rect lines

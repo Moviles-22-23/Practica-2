@@ -7,6 +7,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
@@ -39,12 +40,38 @@ public class RewardManager {
                     @Override
                     public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
                         _rewardedAd = rewardedAd;
+                        System.out.println("Rewarded Ad was loaded");
                     }
                 });
     }
 
     public void showAd() {
         if (_rewardedAd != null) {
+
+            _rewardedAd.setFullScreenContentCallback(new FullScreenContentCallback() {
+                @Override
+                public void onAdDismissedFullScreenContent() {
+                    super.onAdDismissedFullScreenContent();
+                    System.out.println("Ad dismissed fullscreen");
+                    _rewardedAd = null;
+                    // Preload next ad
+                    loadAd();
+                }
+
+                @Override
+                public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
+                    super.onAdFailedToShowFullScreenContent(adError);
+                    System.out.println("Ad failed to show fullscreen");
+                    _rewardedAd = null;
+                }
+
+                @Override
+                public void onAdShowedFullScreenContent() {
+                    super.onAdShowedFullScreenContent();
+                    System.out.println("Ad showed fullscreen");
+                }
+            });
+
             _rewardedAd.show(_engine.getContext(), new OnUserEarnedRewardListener() {
                 @Override
                 public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
