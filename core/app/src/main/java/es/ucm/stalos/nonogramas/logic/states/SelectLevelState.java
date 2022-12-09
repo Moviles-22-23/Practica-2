@@ -188,10 +188,10 @@ public class SelectLevelState extends State {
         _gridTypes = new HashMap<>();
         _gridTypes.put(0, GridType._4x4);
         _gridTypes.put(1, GridType._5x5);
-        _gridTypes.put(2, GridType._5x10);
+        _gridTypes.put(2, GridType._10x5);
         _gridTypes.put(3, GridType._8x8);
         _gridTypes.put(4, GridType._10x10);
-        _gridTypes.put(5, GridType._10x15);
+        _gridTypes.put(5, GridType._15x10);
     }
 
     //----------------------------------------ATTRIBUTES----------------------------------------------//
