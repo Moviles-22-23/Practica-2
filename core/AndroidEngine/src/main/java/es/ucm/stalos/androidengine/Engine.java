@@ -5,15 +5,16 @@ import android.view.SurfaceView;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import androidx.constraintlayout.widget.Group;
+
+import com.google.android.gms.ads.AdView;
 
 public class Engine implements Runnable {
     public Engine() {
 
     }
 
-    public boolean init(State initState, int w, int h, AppCompatActivity activity, SurfaceView view) {
+    public boolean init(State initState, int w, int h, AppCompatActivity activity, SurfaceView view, Group adView) {
         _context = activity;
         _assetsMan = activity.getApplicationContext().getAssets();
 
@@ -28,6 +29,7 @@ public class Engine implements Runnable {
 
         //SCREEN
         _view = view;
+        _adView = adView;
 
         _view.setOnTouchListener(_input);
         _view.setOnLongClickListener(_input);
@@ -154,6 +156,24 @@ public class Engine implements Runnable {
         return _context;
     }
 
+    /**
+     * Set the visibility of the Ad Banner depending on the current state
+     *
+     * @param mainMenu if the current state is main menu
+     */
+    public void swapBannerAdVisibility(boolean mainMenu) {
+        // este metodo de activity ejecuta el codigo en el hilo de la interfaz
+        _context.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (_adView.getVisibility() == View.VISIBLE && !mainMenu)
+                    _adView.setVisibility(View.GONE);
+                else if (mainMenu)
+                    _adView.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
     //--------------------------------------------------------------------------------------------//
 
     private Thread _renderThread;
@@ -169,6 +189,7 @@ public class Engine implements Runnable {
     private AppCompatActivity _context;
 
     private SurfaceView _view;
+    private Group _adView;
 
     // DELTA TIME
     private long _lastFrameTime = 0;

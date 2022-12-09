@@ -478,6 +478,10 @@ public class Board {
         return _sol;
     }
 
+    public void restoreLives() {
+        _lives = _state.getLives();
+    }
+
     //----------------------------------------ATTRIBUTES----------------------------------------------//
     private Engine _engine;
 

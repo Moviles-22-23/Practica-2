@@ -29,6 +29,7 @@ public class MainMenuState extends State {
     @Override
     public boolean init() {
         try {
+            _engine.swapBannerAdVisibility(true);
             // TITLE
             _titleFont = _graphics.newFont("Molle-Regular.ttf", 50, true);
             _titleSize[0] = _graphics.getLogWidth() * 0.7f;
@@ -88,12 +89,13 @@ public class MainMenuState extends State {
         _graphics.drawCenteredString(_titleText, _titlePos, _titleSize, _titleFont);
         // Play Button
         _graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
-        if(Assets.currPalette == 0) _graphics.drawRect(_playButtonPos, _playButtonSize);
+        if (Assets.currPalette == 0) _graphics.drawRect(_playButtonPos, _playButtonSize);
         else _graphics.fillSquare(_playButtonPos, _playButtonSize);
         _graphics.drawCenteredString(_playButtonText, _playButtonPos, _playButtonSize, _buttonsFont);
         // Play Random Button
         _graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
-        if(Assets.currPalette == 0) _graphics.drawRect(_playRandomButtonPos, _playRandomButtonSize);
+        if (Assets.currPalette == 0)
+            _graphics.drawRect(_playRandomButtonPos, _playRandomButtonSize);
         else _graphics.fillSquare(_playRandomButtonPos, _playRandomButtonSize);
         _graphics.drawCenteredString(_playRandomButtonText, _playRandomButtonPos, _playRandomButtonSize, _buttonsFont);
     }

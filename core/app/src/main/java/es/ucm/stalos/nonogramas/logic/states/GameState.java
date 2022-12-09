@@ -16,6 +16,7 @@ import es.ucm.stalos.nonogramas.logic.enums.PlayingState;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 import es.ucm.stalos.nonogramas.logic.objects.Board;
 import es.ucm.stalos.nonogramas.logic.objects.ColorPalette;
+import es.ucm.stalos.nonogramas.logic.objects.RewardManager;
 
 // PRACTICA 2: Refactorización de los GameState
 public class GameState extends State {
@@ -30,6 +31,7 @@ public class GameState extends State {
         this._gridType = gridType;
         this._isRandom = isRandom;
         this._currentLevel = levelIndex;
+        _rewardManager = new RewardManager(engine, this);
     }
 
     /**
@@ -44,6 +46,7 @@ public class GameState extends State {
         this._isRandom = _data._isRandom;
         this._currentLevel = _data._currentLevel;
         this._lives = _data._currentLives;
+        _rewardManager = new RewardManager(engine, this);
     }
 
 //-----------------------------------------OVERRIDE-----------------------------------------------//
@@ -51,6 +54,7 @@ public class GameState extends State {
     @Override
     public boolean init() {
         try {
+            _engine.swapBannerAdVisibility(false);
             initBoard();
             initButtons();
             initTexts();
@@ -118,7 +122,7 @@ public class GameState extends State {
                         clickInsideSquare(clickPos, _adsImagePos, _adsButtonSize))
                     _adsCallback.doSomething();
 
-                // COLOR PALETTE
+                    // COLOR PALETTE
                 else if (clickInsideSquare(clickPos, _posColorPalette, _sizeColorPalette)) {
                     System.out.println("Click en Palette");
                     _colorPalette.handleInput(clickPos, currEvent);
@@ -170,8 +174,10 @@ public class GameState extends State {
             case Gaming:
                 // GiveUp Button
                 _graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
-                if(Assets.currPalette == 0) _graphics.drawRect(_giveupImagePos, new float[] { _giveupImageSize[0] + _giveupTextSize[0], _giveupImageSize[1] });
-                else _graphics.fillSquare(_giveupImagePos, new float[] { _giveupImageSize[0] + _giveupTextSize[0], _giveupImageSize[1] });
+                if (Assets.currPalette == 0)
+                    _graphics.drawRect(_giveupImagePos, new float[]{_giveupImageSize[0] + _giveupTextSize[0], _giveupImageSize[1]});
+                else
+                    _graphics.fillSquare(_giveupImagePos, new float[]{_giveupImageSize[0] + _giveupTextSize[0], _giveupImageSize[1]});
                 _graphics.drawImage(_giveupImage, _giveupImagePos, _giveupImageSize);
                 _graphics.drawCenteredString(_giveupText, _giveupTextPos, _giveupTextSize, _fontButtons);
 
@@ -182,8 +188,8 @@ public class GameState extends State {
 //                _graphics.drawRect(_giveupImagePos, _giveupImageSize);
 
                 // Life Image
-                for(int i = 0; i < _lives; i++){
-                    int[] pos = new int[] { (int)(_lifeImagePos[0] + (_lifeImageSize[0] + _liveImageMargin) * i), _lifeImagePos[1] };
+                for (int i = 0; i < _lives; i++) {
+                    int[] pos = new int[]{(int) (_lifeImagePos[0] + (_lifeImageSize[0] + _liveImageMargin) * i), _lifeImagePos[1]};
                     _graphics.drawImage(_lifeImage, pos, _lifeImageSize);
                 }
 
@@ -197,8 +203,10 @@ public class GameState extends State {
             case Win: {
                 // Back Button
                 _graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
-                if(Assets.currPalette == 0) _graphics.drawRect(_backImagePos, new float[] { _backImageSize[0] + _backTextSize[0], _backImageSize[1] });
-                else _graphics.fillSquare(_backImagePos, new float[] { _backImageSize[0] + _backTextSize[0], _backImageSize[1] });
+                if (Assets.currPalette == 0)
+                    _graphics.drawRect(_backImagePos, new float[]{_backImageSize[0] + _backTextSize[0], _backImageSize[1]});
+                else
+                    _graphics.fillSquare(_backImagePos, new float[]{_backImageSize[0] + _backTextSize[0], _backImageSize[1]});
                 _graphics.drawImage(_backImage, _backImagePos, _backImageSize);
                 _graphics.drawCenteredString(_backText, _backTextPos, _backTextSize, _fontButtons);
                 break;
@@ -206,8 +214,10 @@ public class GameState extends State {
             case GameOver:
                 // GiveUp Button
                 _graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
-                if(Assets.currPalette == 0) _graphics.drawRect(_giveupImagePos, new float[] { _giveupImageSize[0] + _giveupTextSize[0], _giveupImageSize[1] });
-                else _graphics.fillSquare(_giveupImagePos, new float[] { _giveupImageSize[0] + _giveupTextSize[0], _giveupImageSize[1] });
+                if (Assets.currPalette == 0)
+                    _graphics.drawRect(_giveupImagePos, new float[]{_giveupImageSize[0] + _giveupTextSize[0], _giveupImageSize[1]});
+                else
+                    _graphics.fillSquare(_giveupImagePos, new float[]{_giveupImageSize[0] + _giveupTextSize[0], _giveupImageSize[1]});
                 _graphics.drawImage(_giveupImage, _giveupImagePos, _giveupImageSize);
                 _graphics.drawCenteredString(_giveupText, _giveupTextPos, _giveupTextSize, _fontButtons);
                 // Ad button
@@ -257,7 +267,7 @@ public class GameState extends State {
         _sizeBoard[0] = 360.0f;
         _sizeBoard[1] = 360.0f;
 
-        if(_data._inGame)
+        if (_data._inGame)
             _board = new Board(this, _data, _posBoard, _sizeBoard);
         else
             _board = new Board(this, _gridType, _posBoard, _sizeBoard,
@@ -354,7 +364,7 @@ public class GameState extends State {
             @Override
             public void doSomething() {
                 // TODO: Callback para los anuncios y recuperar vidas
-
+                _rewardManager.showAd();
             }
         };
 
@@ -405,6 +415,27 @@ public class GameState extends State {
     }
 
     /**
+     * Adds a life to the current level
+     */
+    public void addLife() {
+        if (_lives < MAX_LIVES)
+            _lives++;
+    }
+
+    /**
+     * Restores de lives value to MAX_LIVES value
+     */
+    public void restoreLives() {
+        _lives = MAX_LIVES;
+        _board.restoreLives();
+        _playState = PlayingState.Gaming;
+    }
+
+    public int getLives() {
+        return _lives;
+    }
+
+    /**
      * Update the data to be save
      */
     public void updateSaveData() {
@@ -429,11 +460,11 @@ public class GameState extends State {
         _playState = newPlayingState;
     }
 
-    public ColorPalette getColorPalette(){
+    public ColorPalette getColorPalette() {
         return _colorPalette;
     }
 
-    public void setNameText(String n){
+    public void setNameText(String n) {
         _nameText = n;
     }
 
@@ -495,6 +526,7 @@ public class GameState extends State {
 
     // PRACTICA 2
     // Life management
+    private final int MAX_LIVES = 3;
     protected int _lives = 3;
     private final int _liveImageMargin = 3;
     protected final Image _lifeImage = Assets.heart;
@@ -511,12 +543,13 @@ public class GameState extends State {
     protected int[] _adsImagePos = new int[2];
     protected float[] _adsImageSize = new float[2];
 
-    protected final String _adsText = "Recuperar vidas";
+    protected final String _adsText = "Recuperar vida";
     protected int[] _adsTextPos = new int[2];
     protected float[] _adsTextSize = new float[2];
 
     protected float[] _adsButtonSize = new float[2];
     protected ButtonCallback _adsCallback;
+    protected RewardManager _rewardManager;
 
     private int _currentLevel;
 

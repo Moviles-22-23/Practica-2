@@ -4,15 +4,9 @@ import android.content.res.AssetManager;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.Window;
-import android.view.WindowManager;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 public class Graphics {
     protected Graphics(int w, int h, AssetManager assetManager) {

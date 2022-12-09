@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         _engine = new Engine();
         LoadState loadAssets = new LoadState(_engine);
 
-        if (!_engine.init(loadAssets, 400, 600, this, gameView)) {
+        if (!_engine.init(loadAssets, 400, 600, this, gameView, adGroup)) {
             System.out.println("Error al inicializar el engine");
         }
     }
@@ -92,13 +92,6 @@ public class MainActivity extends AppCompatActivity {
         if (!dir.exists()) {
             dir.mkdirs();
         }
-    }
-
-    public void swapBannerAdVisibility() {
-        if (adGroup.getVisibility() == View.VISIBLE)
-            adGroup.setVisibility(View.GONE);
-        else
-            adGroup.setVisibility(View.VISIBLE);
     }
 
     protected Engine _engine;

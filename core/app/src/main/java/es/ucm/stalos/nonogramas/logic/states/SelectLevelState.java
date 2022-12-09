@@ -36,6 +36,7 @@ public class SelectLevelState extends State {
     @Override
     public boolean init() {
         try {
+            _engine.swapBannerAdVisibility(false);
             // Texts
             _modeText = "Paquete " + _gridType.getText();
             _textsFont = _graphics.newFont("JosefinSans-Bold.ttf", 25, true);

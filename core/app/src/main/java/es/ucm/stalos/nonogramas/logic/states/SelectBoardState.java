@@ -29,6 +29,7 @@ public class SelectBoardState extends State {
     @Override
     public boolean init() {
         try {
+            _engine.swapBannerAdVisibility(false);
             // Texts
             _textsFont = _graphics.newFont("JosefinSans-Bold.ttf", 25, true);
 
