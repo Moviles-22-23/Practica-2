@@ -482,6 +482,10 @@ public class Board {
         _lives = _state.getLives();
     }
 
+    public void addLife() {
+        _lives++;
+    }
+
     //----------------------------------------ATTRIBUTES----------------------------------------------//
     private Engine _engine;
 
@@ -559,4 +563,5 @@ public class Board {
      * Reference to the GameState
      */
     private GameState _state;
+
 }

@@ -15,12 +15,6 @@
         android:layout_height="wrap_content"
         ads:constraint_referenced_ids="adView" />
 
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/surfaceGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        ads:constraint_referenced_ids="surfaceView" />
-
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"
         android:layout_width="match_parent"

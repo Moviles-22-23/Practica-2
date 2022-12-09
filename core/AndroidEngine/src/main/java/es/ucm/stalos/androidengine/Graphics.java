@@ -87,8 +87,8 @@ public class Graphics {
      */
     public int[] logPos(int x, int y) {
         _scaleFactor = getScaleFactor();
-        float offsetX = (_logWidth - (getWidth() / _scaleFactor)) / 2;
-        float offsetY = (_logHeight - (getHeight() / _scaleFactor)) / 2;
+        float offsetX = (_logWidth - (getWidth() / _scaleFactor)) / 2.0f;
+        float offsetY = (_logHeight - (getHeight() / _scaleFactor)) / 2.0f;
 
         int newPosX = (int) ((x / _scaleFactor) + offsetX);
         int newPosY = (int) ((y / _scaleFactor) + offsetY);
@@ -166,6 +166,7 @@ public class Graphics {
 
     /**
      * Recibe el color en formato RGBA
+     *
      * @param color
      */
     public void setColor(int color) {
@@ -177,7 +178,7 @@ public class Graphics {
         _paint.setColor(Color.argb(a, r, g, b));
     }
 
-    public void fillCanvas(int color){
+    public void fillCanvas(int color) {
         int r = (color & 0xff000000) >> 24;
         int g = (color & 0x00ff0000) >> 16;
         int b = (color & 0x0000ff00) >> 8;
@@ -211,8 +212,8 @@ public class Graphics {
         _paint.setTextSize(font.getSize());
         _paint.setTextAlign(Paint.Align.CENTER);
 
-        int xPos = (int) (pos[0] + size[0]/ 2);
-        int yPos = (int) ((pos[1] + size[1] / 2) - ((_paint.descent() + _paint.ascent()) / 2)) ;
+        int xPos = (int) (pos[0] + size[0] / 2);
+        int yPos = (int) ((pos[1] + size[1] / 2) - ((_paint.descent() + _paint.ascent()) / 2));
         _canvas.drawText(text, xPos, yPos, _paint);
 
         _paint.reset();

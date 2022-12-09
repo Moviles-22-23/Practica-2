@@ -118,7 +118,7 @@ public class GameState extends State {
                 }
 
                 // ADS
-                else if (_playState == PlayingState.GameOver &&
+                else if ((_playState == PlayingState.GameOver || _playState == PlayingState.Gaming) &&
                         clickInsideSquare(clickPos, _adsImagePos, _adsButtonSize))
                     _adsCallback.doSomething();
 
@@ -192,6 +192,10 @@ public class GameState extends State {
                     int[] pos = new int[]{(int) (_lifeImagePos[0] + (_lifeImageSize[0] + _liveImageMargin) * i), _lifeImagePos[1]};
                     _graphics.drawImage(_lifeImage, pos, _lifeImageSize);
                 }
+
+                // Ad button
+                _graphics.drawImage(_adsImage, _adsImagePos, _adsImageSize);
+                _graphics.drawCenteredString(_adsText, _adsTextPos, _adsTextSize, _fontButtons);
 
 //                // TODO: debug vidas - borrar en version final
 //                _graphics.setColor(_redColor);
@@ -352,8 +356,8 @@ public class GameState extends State {
         _lifeImagePos[1] = (int) (_giveupImagePos[1] - _giveupImageSize[1] / 2);
 
         // ADS - GameOver
-        _adsImageSize[0] = _graphics.getLogWidth() * 0.17f;
-        _adsImageSize[1] = _graphics.getLogHeight() * 0.1f;
+        _adsImageSize[0] = _graphics.getLogWidth() * 0.13f;
+        _adsImageSize[1] = _graphics.getLogHeight() * 0.07f;
 
         _adsTextSize[0] = _graphics.getLogWidth() * 0.5f;
         _adsTextSize[1] = _adsImageSize[1];
@@ -369,7 +373,7 @@ public class GameState extends State {
         };
 
         _adsImagePos[0] = (int) (_graphics.getLogWidth() * 0.5f - _adsButtonSize[0] * 0.5f);
-        _adsImagePos[1] = (int) (_graphics.getLogHeight() * 0.8f);
+        _adsImagePos[1] = (int) (_graphics.getLogHeight() * 0.77f);
 
         _adsTextPos[0] = (int) (_adsImagePos[0] + _adsImageSize[0]);
         _adsTextPos[1] = _adsImagePos[1];
@@ -418,17 +422,27 @@ public class GameState extends State {
      * Adds a life to the current level
      */
     public void addLife() {
-        if (_lives < MAX_LIVES)
+        if (_lives < MAX_LIVES) {
             _lives++;
+            _board.addLife();
+        }
     }
 
     /**
      * Restores de lives value to MAX_LIVES value
      */
     public void restoreLives() {
-        _lives = MAX_LIVES;
-        _board.restoreLives();
-        _playState = PlayingState.Gaming;
+        switch (_playState) {
+            case Gaming:
+                addLife();
+                break;
+            case GameOver:
+                _lives = MAX_LIVES;
+                _board.restoreLives();
+                _playState = PlayingState.Gaming;
+                //TODO: Resetear el tablero
+                break;
+        }
     }
 
     public int getLives() {

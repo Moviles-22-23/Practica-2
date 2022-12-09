@@ -29,7 +29,7 @@ public class MainMenuState extends State {
     @Override
     public boolean init() {
         try {
-            _engine.swapBannerAdVisibility(true);
+            _engine.swapBannerAdVisibility(false);
             // TITLE
             _titleFont = _graphics.newFont("Molle-Regular.ttf", 50, true);
             _titleSize[0] = _graphics.getLogWidth() * 0.7f;

@@ -40,10 +40,13 @@ public class Input implements View.OnTouchListener, View.OnLongClickListener {
         currEvent.setX(eventPos[0]);
         currEvent.setY(eventPos[1]);
 
+        System.out.println("Touch UP pos: X: " + eventPos[0] + " Y: " + eventPos[1]);
+
         _events.add(currEvent);
     }
 
     // PRACTICA 2: Cambios metodo para añadir un evento de longTouch a la cola de eventos
+
     /**
      * Process input's coordinates to transform them into
      * x and y logical positions.
