@@ -4,6 +4,7 @@ import es.ucm.stalos.androidengine.Font;
 import es.ucm.stalos.androidengine.Graphics;
 import es.ucm.stalos.androidengine.Image;
 import es.ucm.stalos.nonogramas.logic.Assets;
+import es.ucm.stalos.nonogramas.logic.enums.MyColor;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 
 public class SelectColorSetButton {
@@ -12,7 +13,7 @@ public class SelectColorSetButton {
         this._buttonSize = size;
         this._colorSet = colorSet;
 
-        int margin = 5;
+        int margin = 10;
 
         this._firstColorPos[0] = (int)(_buttonPos[0] + _buttonSize[0] * 0.5f);
         this._firstColorPos[1] = (int)(_buttonPos[1] + _buttonSize[1] * 0.25f);
@@ -26,29 +27,25 @@ public class SelectColorSetButton {
     }
 
     public void render(Graphics gr) {
-        gr.drawRect(_buttonPos, _buttonSize);
-        if(!_isUnlocked)
-        {
-            gr.setColor(0x9B9B9BFF);
-            gr.fillSquare(_buttonPos, _buttonSize);
-            gr.drawImage(_lockImage, _buttonPos, _buttonSize);
-        }
-        else {
-            // Fondo negro
-            gr.setColor(0x000000FF);
-            gr.fillSquare(_buttonPos, _buttonSize);
-            // Color Primario
-            gr.setColor(_colorSet.getFirst());
-            gr.fillCircle(_firstColorPos, _colorRadius);
-            // Color Secundario
-            gr.setColor(_colorSet.getSecond());
-            gr.fillCircle(_secondColorPos, _colorRadius);
-            // Marco
-            gr.setColor(0xFFFFFFFF);
-            gr.drawCircle(_firstColorPos, _colorRadius);
-            gr.setColor(0xFFFFFFFF);
-            gr.drawCircle(_secondColorPos, _colorRadius);
-        }
+//        gr.drawRect(_buttonPos, _buttonSize);
+
+        // Fondo negro
+        gr.setColor(MyColor.BLACK.getValue());
+        gr.fillSquare(_buttonPos, _buttonSize);
+        // Color Primario
+        gr.setColor(_colorSet.getFirst());
+        gr.fillCircle(_firstColorPos, _colorRadius);
+        // Color Secundario
+        gr.setColor(_colorSet.getSecond());
+        gr.fillCircle(_secondColorPos, _colorRadius);
+        // Marco
+        gr.setColor(MyColor.WHITE.getValue());
+        gr.drawCircle(_firstColorPos, _colorRadius);
+        gr.setColor(MyColor.WHITE.getValue());
+        gr.drawCircle(_secondColorPos, _colorRadius);
+
+
+        if(!_isUnlocked) gr.drawImage(_lockImage, _buttonPos, _buttonSize);
     }
 
     public void setCallback(ButtonCallback cb) {

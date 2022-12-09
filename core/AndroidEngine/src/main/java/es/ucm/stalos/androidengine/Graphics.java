@@ -208,25 +208,26 @@ public class Graphics {
 
     public void drawText(String text, int[] pos, Font font) {
         Typeface currFont = font.getAndroidFont();
-
         _paint.setTypeface(currFont);
         _paint.setTextSize(font.getSize());
         _paint.setTextAlign(Paint.Align.LEFT);
+
         _canvas.drawText(text, pos[0], pos[1], _paint);
+
         _paint.reset();
     }
 
     public void drawCenteredString(String text, int[] pos, float[] size, Font font) {
         Typeface currFont = font.getAndroidFont();
-
         _paint.setTypeface(currFont);
         _paint.setTextSize(font.getSize());
         _paint.setTextAlign(Paint.Align.CENTER);
-        _canvas.drawText(text, pos[0] + size[0] / 2, pos[1] + size[1] / 2, _paint);
+
+        int xPos = (int) (pos[0] + size[0]/ 2);
+        int yPos = (int) ((pos[1] + size[1] / 2) - ((_paint.descent() + _paint.ascent()) / 2)) ;
+        _canvas.drawText(text, xPos, yPos, _paint);
+
         _paint.reset();
-        // TODO esto no centra bien
-
-
     }
 
     // EN PC LO HACIAMOS ASI

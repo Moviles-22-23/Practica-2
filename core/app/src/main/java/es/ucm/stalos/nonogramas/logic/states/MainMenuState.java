@@ -57,13 +57,13 @@ public class MainMenuState extends State {
             };
 
             // PLAY BUTTON
-            _playButtonSize[0] = _graphics.getLogWidth() * 0.3f;
+            _playButtonSize[0] = _graphics.getLogWidth() * 0.7f;
             _playButtonSize[1] = _graphics.getLogHeight() * 0.1f;
             _playButtonPos[0] = (int) ((_graphics.getLogWidth() - _playButtonSize[0]) * 0.5f);
             _playButtonPos[1] = (int) ((_graphics.getLogHeight() - _playButtonSize[1]) * 0.40f);
 
             // PLAY RANDOM BUTTON
-            _playRandomButtonSize[0] = _graphics.getLogWidth() * 0.8f;
+            _playRandomButtonSize[0] = _graphics.getLogWidth() * 0.7f;
             _playRandomButtonSize[1] = _graphics.getLogHeight() * 0.1f;
             _playRandomButtonPos[0] = (int) ((_graphics.getLogWidth() - _playRandomButtonSize[0]) * 0.5f);
             _playRandomButtonPos[1] = (int) ((_graphics.getLogHeight() - _playRandomButtonSize[1]) * 0.60f);
@@ -87,8 +87,14 @@ public class MainMenuState extends State {
         // Title
         _graphics.drawCenteredString(_titleText, _titlePos, _titleSize, _titleFont);
         // Play Button
+        _graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
+        if(Assets.currPalette == 0) _graphics.drawRect(_playButtonPos, _playButtonSize);
+        else _graphics.fillSquare(_playButtonPos, _playButtonSize);
         _graphics.drawCenteredString(_playButtonText, _playButtonPos, _playButtonSize, _buttonsFont);
         // Play Random Button
+        _graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
+        if(Assets.currPalette == 0) _graphics.drawRect(_playRandomButtonPos, _playRandomButtonSize);
+        else _graphics.fillSquare(_playRandomButtonPos, _playRandomButtonSize);
         _graphics.drawCenteredString(_playRandomButtonText, _playRandomButtonPos, _playRandomButtonSize, _buttonsFont);
     }
 

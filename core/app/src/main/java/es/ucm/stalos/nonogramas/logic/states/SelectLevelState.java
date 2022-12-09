@@ -92,7 +92,7 @@ public class SelectLevelState extends State {
         _graphics.clear(Assets.colorSets.get(Assets.currPalette).getSecond());
 
         // Texts
-        _graphics.setColor(MyColor.GREY.getValue());
+        _graphics.setColor(MyColor.GREY_SOFT.getValue());
         _graphics.drawCenteredString(_modeText, _modePos, _modeSize, _textsFont);
 
         // Back Button

@@ -5,6 +5,7 @@ import es.ucm.stalos.androidengine.Graphics;
 import es.ucm.stalos.androidengine.Image;
 import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
+import es.ucm.stalos.nonogramas.logic.enums.MyColor;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 
 public class SelectButton {
@@ -35,15 +36,21 @@ public class SelectButton {
 //    }
 
     public void render(Graphics gr) {
-        gr.drawRect(_buttonPos, _buttonSize);
+        gr.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
+
+        // Si el color es negro solo pinta el borde
+        if(Assets.currPalette == 0) gr.drawRect(_buttonPos, _buttonSize);
+        // Si no rellena el boton entero
+        else gr.fillSquare(_buttonPos, _buttonSize);
+
         if(!_isUnlocked)
         {
-            gr.setColor(0x9B9B9BFF);
+            gr.setColor(MyColor.GREY_HARD.getValue());
             gr.fillSquare(_buttonPos, _buttonSize);
             gr.drawImage(_lockImage, _buttonPos, _buttonSize);
         }
         else {
-            gr.setColor(0x000000FF);
+            gr.setColor(MyColor.BLACK.getValue());
             gr.drawCenteredString(_text, _buttonPos, _buttonSize, _font);
         }
     }
