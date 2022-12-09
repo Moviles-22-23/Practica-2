@@ -8,6 +8,7 @@ import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
 import es.ucm.stalos.nonogramas.logic.enums.CellType;
+import es.ucm.stalos.nonogramas.logic.enums.MyColor;
 
 public class Cell {
     Cell(int row, int col, int[] pos, float cellSize) {
@@ -28,26 +29,26 @@ public class Cell {
         this.cellType = CellType.EMPTY;
 
         // COLORS - MAP
-        _colors = new HashMap<>();
-        _colors.put(CellType.FILL, 0x0000FFFF);
-        _colors.put(CellType.EMPTY, 0xBBBBBBFF);
-        _colors.put(CellType.NOFILL, 0xFFFFFFFF);
-        _colors.put(CellType.RED, 0xFF0000FF);
+//        _colors = new HashMap<>();
+//        _colors.put(CellType.FILL, 0x0000FFFF);
+//        _colors.put(CellType.EMPTY, 0xBBBBBBFF);
+//        _colors.put(CellType.NOFILL, 0xFFFFFFFF);
+//        _colors.put(CellType.RED, 0xFF0000FF);
     }
 
     public void render(Graphics graphics) {
         // Filled Square
         int[] fillPos = new int[]{fx, fy};
-        graphics.setColor(_colors.get(cellType));
 
-        if (cellType == CellType.FILL) graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
-//        if (cellType == CellType.EMPTY) graphics.setColor(Assets.secundaryColor);
+        if (cellType == CellType.EMPTY) graphics.setColor(MyColor.GREY_HARD.getValue());
+        else if (cellType == CellType.FILL) graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
+        else graphics.setColor(MyColor.WHITE.getValue());
 
         graphics.fillSquare(fillPos, fsize);
 
         int[] fillPos2 = new int[]{fx + (int) fsize, fy + (int) fsize};
         if (cellType == CellType.NOFILL) {
-            graphics.setColor(0x000000FF);
+            graphics.setColor(MyColor.BLACK.getValue());
             graphics.drawRect(fillPos, fsize);
             graphics.drawLine(fillPos, fillPos2);
         }
@@ -114,7 +115,7 @@ public class Cell {
     /**
      * Different colors of the cel
      */
-    private Map<CellType, Integer> _colors;
+//    private Map<CellType, Integer> _colors;
     /**
      *
      */

@@ -60,15 +60,16 @@ public class ColorPalette {
         float[] size = new float[2];
 
         for(int i = 0; i < 7; i++){
+            final int auxI = i;
+
             int[] bPos = new int[]{ _pos[0] + graphics.getLogWidth() * i / 7, _pos[1] };
             float[] bSize = new float[]{ _size[0] / 7, _size[1] };
 
             boolean unlocked = _data._lastUnlockedPack >= i;
 
             // Crea el boton
-            final SelectColorSetButton b = new SelectColorSetButton(bPos, bSize, Assets.colorSets.get(i), unlocked);
+            final SelectColorSetButton b = new SelectColorSetButton(bPos, bSize, Assets.colorSets.get(i), unlocked, auxI);
 
-            final int auxI = i;
 
             // Cambia el callBack
             b.setCallback(new ButtonCallback() {

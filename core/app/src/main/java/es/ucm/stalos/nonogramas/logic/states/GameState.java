@@ -169,6 +169,9 @@ public class GameState extends State {
         switch (_playState) {
             case Gaming:
                 // GiveUp Button
+                _graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
+                if(Assets.currPalette == 0) _graphics.drawRect(_giveupImagePos, new float[] { _giveupImageSize[0] + _giveupTextSize[0], _giveupImageSize[1] });
+                else _graphics.fillSquare(_giveupImagePos, new float[] { _giveupImageSize[0] + _giveupTextSize[0], _giveupImageSize[1] });
                 _graphics.drawImage(_giveupImage, _giveupImagePos, _giveupImageSize);
                 _graphics.drawCenteredString(_giveupText, _giveupTextPos, _giveupTextSize, _fontButtons);
 
@@ -193,16 +196,20 @@ public class GameState extends State {
                 break;
             case Win: {
                 // Back Button
+                _graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
+                if(Assets.currPalette == 0) _graphics.drawRect(_backImagePos, new float[] { _backImageSize[0] + _backTextSize[0], _backImageSize[1] });
+                else _graphics.fillSquare(_backImagePos, new float[] { _backImageSize[0] + _backTextSize[0], _backImageSize[1] });
                 _graphics.drawImage(_backImage, _backImagePos, _backImageSize);
                 _graphics.drawCenteredString(_backText, _backTextPos, _backTextSize, _fontButtons);
                 break;
             }
             case GameOver:
-                _graphics.setColor(MyColor.BLACK.getValue());
                 // GiveUp Button
+                _graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
+                if(Assets.currPalette == 0) _graphics.drawRect(_giveupImagePos, new float[] { _giveupImageSize[0] + _giveupTextSize[0], _giveupImageSize[1] });
+                else _graphics.fillSquare(_giveupImagePos, new float[] { _giveupImageSize[0] + _giveupTextSize[0], _giveupImageSize[1] });
                 _graphics.drawImage(_giveupImage, _giveupImagePos, _giveupImageSize);
                 _graphics.drawCenteredString(_giveupText, _giveupTextPos, _giveupTextSize, _fontButtons);
-
                 // Ad button
                 _graphics.drawImage(_adsImage, _adsImagePos, _adsImageSize);
                 _graphics.drawCenteredString(_adsText, _adsTextPos, _adsTextSize, _fontButtons);
@@ -456,7 +463,7 @@ public class GameState extends State {
     protected float[] _winSize1 = new float[2];
 
     // Name
-    protected String _nameText = "LEVEL";
+    protected String _nameText = "RANDOM";  // Random por defecto, si tiene nombre se cambiara
     protected int[] _namePos = new int[2];
     protected float[] _nameSize = new float[2];
 

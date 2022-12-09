@@ -8,7 +8,7 @@ import es.ucm.stalos.nonogramas.logic.enums.MyColor;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 
 public class SelectColorSetButton {
-    public SelectColorSetButton(int[] pos, float[] size, ColorSet colorSet, boolean _isUnlocked) {
+    public SelectColorSetButton(int[] pos, float[] size, ColorSet colorSet, boolean _isUnlocked, int index) {
         this._buttonPos = pos;
         this._buttonSize = size;
         this._colorSet = colorSet;
@@ -24,26 +24,29 @@ public class SelectColorSetButton {
         this._colorRadius = (_buttonSize[0] / 2) - margin;
 
         this._isUnlocked = _isUnlocked;
+        this._index = index;
     }
 
     public void render(Graphics gr) {
-//        gr.drawRect(_buttonPos, _buttonSize);
-
         // Fondo negro
-        gr.setColor(MyColor.BLACK.getValue());
+        if(Assets.currPalette == _index) gr.setColor(_colorSet.getSecond());
+        else gr.setColor(MyColor.BLACK.getValue());
         gr.fillSquare(_buttonPos, _buttonSize);
         // Color Primario
         gr.setColor(_colorSet.getFirst());
         gr.fillCircle(_firstColorPos, _colorRadius);
+        // Marco color primario (Si es negro pone borde blanco)
+        if(_index == 0) gr.setColor(MyColor.WHITE.getValue());
+        else gr.setColor(MyColor.BLACK.getValue());
+        gr.drawCircle(_firstColorPos, _colorRadius);
         // Color Secundario
         gr.setColor(_colorSet.getSecond());
         gr.fillCircle(_secondColorPos, _colorRadius);
-        // Marco
-        gr.setColor(MyColor.WHITE.getValue());
-        gr.drawCircle(_firstColorPos, _colorRadius);
-        gr.setColor(MyColor.WHITE.getValue());
+        gr.setColor(MyColor.BLACK.getValue());
         gr.drawCircle(_secondColorPos, _colorRadius);
-
+        // Marco
+//        gr.setColor(MyColor.WHITE.getValue());
+//        gr.setColor(MyColor.WHITE.getValue());
 
         if(!_isUnlocked) gr.drawImage(_lockImage, _buttonPos, _buttonSize);
     }
@@ -87,13 +90,14 @@ public class SelectColorSetButton {
     private int[] _firstColorPos = new int[2];
     private int[] _secondColorPos = new int[2];
     private float _colorRadius;
-
-
     /**
      * Determines if the level
      * is unlocked or not
      */
     private boolean _isUnlocked;
+
+    private final int _index;
+
     /**
      * Locked image
      */
