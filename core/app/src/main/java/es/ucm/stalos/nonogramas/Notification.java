@@ -12,6 +12,8 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.TaskStackBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Notification {
@@ -22,6 +24,7 @@ public class Notification {
         _channelID = newChannel;
         _notificationID = notificationID;
         _name = notificationName;
+        _msgs = new ArrayList<>();
 
         // 1. Set intent to open the activity whe the app is foreground
         Intent startGameIntent = new Intent(context, context.getClass());
@@ -70,26 +73,27 @@ public class Notification {
      * Displays the notification
      */
     public void showNotification() {
-        int rnd = ThreadLocalRandom.current().nextInt(0, _msgs.length);
+        String msg = "";
+
+        if(_msgs.size() > 0)
+        {
+            int rnd = ThreadLocalRandom.current().nextInt(0, _msgs.size());
+            msg = _msgs.get(rnd);
+        }
+
         _builder.setStyle(new NotificationCompat.BigTextStyle()
-                .bigText(_msgs[rnd]));
+                .bigText(msg));
         notificationManager.notify(_notificationID, _builder.build());
     }
 
-    NotificationCompat.Builder _builder;
-    NotificationManagerCompat notificationManager;
-    String _channelID;
-    String _name;
-    int _notificationID;
+    private NotificationCompat.Builder _builder;
+    private NotificationManagerCompat notificationManager;
+    private String _channelID;
+    private String _name;
+    private int _notificationID;
 
     /**
      * Contains different messages for the push-notification
      */
-    private String[] _msgs =
-            {
-                    "Te echamos de menos. Nuevos retos te esperan \uD83D\uDE0A",
-                    "No pierdas más el tiempo. Enfréntate a la aventura \uD83D\uDE00",
-                    "Parece que llevas un tiempo sin jugar. " +
-                            "Es hora de ejercitar un poco el coco \uD83D\uDE00",
-            };
+    public List<String> _msgs;
 }

@@ -14,6 +14,8 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
+import java.util.Arrays;
+
 import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.nonogramas.logic.states.LoadState;
 
@@ -39,8 +41,10 @@ public class MainActivity extends AppCompatActivity {
         adView.loadAd(adRequest);
 
         _engine = new Engine();
-        _notif = new Notification(this, "unique_channel",
+        // NOTIFICATIONS
+        _pushNotification = new Notification(this, "unique_channel",
                 0, "reminder");
+        _pushNotification._msgs.addAll(Arrays.asList(msgs));
 
         LoadState loadAssets = new LoadState(_engine);
 
@@ -61,10 +65,17 @@ public class MainActivity extends AppCompatActivity {
         _engine.pause();
 
         // TODO: Crear un sistema de alarma para lanzar la notificacion cada cierto tiempo
-        _notif.showNotification();
+        _pushNotification.showNotification();
     }
 
     protected Engine _engine;
     private Group adGroup;
-    private Notification _notif;
+    private Notification _pushNotification;
+    private String[] msgs =
+            {
+                    "Te echamos de menos. Nuevos retos te esperan \uD83D\uDE0A",
+                    "No pierdas más el tiempo. Enfréntate a la aventura \uD83D\uDE00",
+                    "Parece que llevas un tiempo sin jugar. " +
+                            "Es hora de ejercitar un poco el coco \uD83D\uDE00"
+            };
 }
