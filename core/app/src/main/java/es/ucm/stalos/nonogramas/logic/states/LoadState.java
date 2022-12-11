@@ -56,6 +56,7 @@ public class LoadState extends State {
             // Audio
             _audio = _engine.getAudio();
             _audio.newSound(SoundName.MainTheme.getName(), SoundName.MainTheme.getFileName());
+            _audio.newSound(SoundName.MenuTheme.getName(), SoundName.MenuTheme.getFileName());
             _audio.newSound(SoundName.ClickSound.getName(), SoundName.ClickSound.getFileName());
             _audio.newSound(SoundName.FailSound.getName(), SoundName.FailSound.getFileName());
             _audio.newSound(SoundName.GoodSound.getName(), SoundName.GoodSound.getFileName());
