@@ -6,11 +6,13 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Build;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.TaskStackBuilder;
+import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,9 +41,10 @@ public class Notification {
 
         // 3. Setting up the notification
         _builder = new NotificationCompat.Builder(context, _channelID)
-                .setSmallIcon(R.mipmap.ic_launcher_round)
+                .setSmallIcon(R.drawable.ic_notification_icon)
                 .setContentTitle(context.getString(R.string.app_name))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setColor(ContextCompat.getColor(context, R.color.purple_200))
                 .setContentIntent(launchGame);
 
         notificationManager = NotificationManagerCompat.from(context);
