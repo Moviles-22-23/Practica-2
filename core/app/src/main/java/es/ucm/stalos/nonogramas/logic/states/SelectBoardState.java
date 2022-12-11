@@ -7,13 +7,14 @@ import java.util.Map;
 
 import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.Engine;
-import es.ucm.stalos.androidengine.Font;
-import es.ucm.stalos.androidengine.Image;
 import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
+import es.ucm.stalos.nonogramas.logic.enums.FontName;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
+import es.ucm.stalos.nonogramas.logic.enums.ImageName;
 import es.ucm.stalos.nonogramas.logic.enums.MyColor;
+import es.ucm.stalos.nonogramas.logic.enums.SoundName;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 import es.ucm.stalos.nonogramas.logic.objects.SelectButton;
 
@@ -30,8 +31,6 @@ public class SelectBoardState extends State {
     public boolean init() {
         try {
             _engine.swapBannerAdVisibility(false);
-            // Texts
-            _textsFont = _graphics.newFont("JosefinSans-Bold.ttf", 25, true);
 
             if (_isRandom) {
                 _modeText = "JUEGO ALEATORIO";
@@ -74,7 +73,7 @@ public class SelectBoardState extends State {
                 public void doSomething() {
                     State mainMenuState = new MainMenuState(_engine);
                     _engine.reqNewState(mainMenuState);
-                    _audio.playSound(Assets.clickSound, 0);
+                    _audio.playSound(SoundName.ClickSound.getName(), 0);
                 }
             };
 
@@ -82,7 +81,7 @@ public class SelectBoardState extends State {
             initSelectButtons();
 
             // AUDIO
-            _audio.playMusic(Assets.menuTheme);
+            _audio.playMusic(SoundName.MenuTheme.getName());
 
         } catch (Exception e) {
             System.out.println("Error init Select Level");
@@ -100,13 +99,16 @@ public class SelectBoardState extends State {
 
         // Texts
         _graphics.setColor(MyColor.GREY_SOFT.getValue());
-        _graphics.drawCenteredString(_modeText, _modePos, _modeSize, _textsFont);
-        _graphics.drawCenteredString(_commentText, _commentPos, _commentSize, _textsFont);
+        _graphics.drawCenteredString(_modeText, FontName.DefaultFont.getName(),
+                _modePos, _modeSize);
+        _graphics.drawCenteredString(_commentText, FontName.DefaultFont.getName(),
+                _commentPos, _commentSize);
 
         // Back Button
         _graphics.setColor(MyColor.BLACK.getValue());
-        _graphics.drawImage(_backImage, _backImagePos, _backImageSize);
-        _graphics.drawCenteredString(_backText, _backTextPos, _backTextSize, _textsFont);
+        _graphics.drawImage(ImageName.BackArrow.getName(), _backImagePos, _backImageSize);
+        _graphics.drawCenteredString(_backText, FontName.DefaultFont.getName(),
+                _backTextPos, _backTextSize);
 
         // SelectLevel buttons
         for (SelectButton button : _selectButtons) {
@@ -153,16 +155,12 @@ public class SelectBoardState extends State {
 
     /**
      * Initialize the buttons to select the levels
-     *
-     * @throws Exception in case of font creation fails
      */
-    private void initSelectButtons() throws Exception {
+    private void initSelectButtons() {
         // Calculate buttons dimensions
         float min = Math.min((_graphics.getLogWidth() * 0.2f), (_graphics.getLogHeight() * 0.2f));
         float[] size = new float[]{min, min};
 
-        // Buttons text font
-        Font font = _graphics.newFont("Molle-Regular.ttf", 20, true);
         int[] pos = new int[2];
 
         initGridTypesMap();
@@ -177,7 +175,8 @@ public class SelectBoardState extends State {
 
             final GridType _this_gridType = _gridTypes.get(i);
             String text = _gridTypes.get(i).getRows() + " x " + _gridTypes.get(i).getCols();
-            final SelectButton _level = new SelectButton(pos, size, text, font, unlocked);
+            final SelectButton _level = new SelectButton(pos, size, text,
+                    FontName.RowColNumber.getName(), unlocked);
 
             _level.setCallback(new ButtonCallback() {
                 @Override
@@ -188,11 +187,12 @@ public class SelectBoardState extends State {
                     State gameState;
 
                     // Dependiendo de si estamos en modo random o no harán cosas distintas
-                    if (_isRandom) gameState = new GameState(_engine, _this_gridType, true, 0);
+                    if (_isRandom) gameState = new GameState(_engine, _this_gridType,
+                            true, 0);
                     else gameState = new SelectLevelState(_engine, _this_gridType);
 
                     _engine.reqNewState(gameState);
-                    _audio.playSound(Assets.clickSound, 0);
+                    _audio.playSound(SoundName.ClickSound.getName(), 0);
                     _audio.stopMusic();
                 }
             });
@@ -205,9 +205,6 @@ public class SelectBoardState extends State {
     //----------------------------------------ATTRIBUTES----------------------------------------------//
     // GameMode
     private boolean _isRandom;
-
-    // Texts
-    protected Font _textsFont;
 
     // Mode Text
     protected String _modeText = "JUEGO ALEATORIO";
@@ -224,7 +221,6 @@ public class SelectBoardState extends State {
     protected int[] _backTextPos = new int[2];
     protected float[] _backTextSize = new float[2];
 
-    protected final Image _backImage = Assets.backArrow;
     protected int[] _backImagePos = new int[2];
     protected float[] _backImageSize = new float[2];
 

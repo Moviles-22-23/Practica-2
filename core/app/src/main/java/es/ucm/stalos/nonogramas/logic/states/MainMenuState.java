@@ -7,7 +7,9 @@ import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.androidengine.Font;
 import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.Assets;
+import es.ucm.stalos.nonogramas.logic.enums.FontName;
 import es.ucm.stalos.nonogramas.logic.enums.MyColor;
+import es.ucm.stalos.nonogramas.logic.enums.SoundName;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 
 
@@ -31,20 +33,18 @@ public class MainMenuState extends State {
         try {
             _engine.swapBannerAdVisibility(false);
             // TITLE
-            _titleFont = _graphics.newFont("Molle-Regular.ttf", 50, true);
             _titleSize[0] = _graphics.getLogWidth() * 0.7f;
             _titleSize[1] = _graphics.getLogHeight() * 0.1f;
             _titlePos[0] = (int) ((_graphics.getLogWidth() - _titleSize[0]) * 0.5f);
             _titlePos[1] = (int) ((_graphics.getLogHeight() - _titleSize[1]) * 0.1f);
 
             // BUTTONS
-            _buttonsFont = _graphics.newFont("JosefinSans-Bold.ttf", 35, true);
             _randCallback = new ButtonCallback() {
                 @Override
                 public void doSomething() {
                     State selectLevelState = new SelectBoardState(_engine, true);
                     _engine.reqNewState(selectLevelState);
-                    _audio.playSound(Assets.clickSound, 0);
+                    _audio.playSound(SoundName.ClickSound.getName(), 0);
                 }
             };
 
@@ -53,7 +53,7 @@ public class MainMenuState extends State {
                 public void doSomething() {
                     State selectLevelState = new SelectBoardState(_engine, false);
                     _engine.reqNewState(selectLevelState);
-                    _audio.playSound(Assets.clickSound, 0);
+                    _audio.playSound(SoundName.ClickSound.getName(), 0);
                 }
             };
 
@@ -70,7 +70,7 @@ public class MainMenuState extends State {
             _playRandomButtonPos[1] = (int) ((_graphics.getLogHeight() - _playRandomButtonSize[1]) * 0.60f);
 
             // Audio
-            _audio.playMusic(Assets.menuTheme);
+            _audio.playMusic(SoundName.MenuTheme.getName());
         } catch (Exception e) {
             System.out.println("Error init Main Menu");
             System.out.println(e);
@@ -83,21 +83,28 @@ public class MainMenuState extends State {
     public void render() {
         // BackgroundColor
         _graphics.clear(Assets.colorSets.get(Assets.currPalette).getSecond());
+
         // Texts Color
         _graphics.setColor(MyColor.BLACK.getValue());
+
         // Title
-        _graphics.drawCenteredString(_titleText, _titlePos, _titleSize, _titleFont);
+        _graphics.drawCenteredString(_titleText, FontName.TitleMainMenu.getName(),
+                _titlePos, _titleSize);
+
         // Play Button
         _graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
         if (Assets.currPalette == 0) _graphics.drawRect(_playButtonPos, _playButtonSize);
         else _graphics.fillSquare(_playButtonPos, _playButtonSize);
-        _graphics.drawCenteredString(_playButtonText, _playButtonPos, _playButtonSize, _buttonsFont);
+        _graphics.drawCenteredString(_playButtonText, FontName.ButtonMainMenu.getName(),
+                _playButtonPos, _playButtonSize);
+
         // Play Random Button
         _graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
         if (Assets.currPalette == 0)
             _graphics.drawRect(_playRandomButtonPos, _playRandomButtonSize);
         else _graphics.fillSquare(_playRandomButtonPos, _playRandomButtonSize);
-        _graphics.drawCenteredString(_playRandomButtonText, _playRandomButtonPos, _playRandomButtonSize, _buttonsFont);
+        _graphics.drawCenteredString(_playRandomButtonText, FontName.ButtonMainMenu.getName(),
+                _playRandomButtonPos, _playRandomButtonSize);
     }
 
     @Override
@@ -123,12 +130,10 @@ public class MainMenuState extends State {
     //----------------------------------------ATTRIBUTES----------------------------------------------//
     // Title
     private final String _titleText = "Nonogramas";
-    private Font _titleFont;
     private int[] _titlePos = new int[2];
     private float[] _titleSize = new float[2];
 
     // Buttons
-    private Font _buttonsFont;
     private ButtonCallback _randCallback;
     private ButtonCallback _storyCallback;
 

@@ -3,16 +3,17 @@ package es.ucm.stalos.nonogramas.logic.states;
 import java.util.List;
 
 import es.ucm.stalos.androidengine.Engine;
-import es.ucm.stalos.androidengine.Font;
-import es.ucm.stalos.androidengine.Image;
 import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.data.GameData;
 import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
+import es.ucm.stalos.nonogramas.logic.enums.FontName;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
+import es.ucm.stalos.nonogramas.logic.enums.ImageName;
 import es.ucm.stalos.nonogramas.logic.enums.MyColor;
 import es.ucm.stalos.nonogramas.logic.enums.PlayingState;
+import es.ucm.stalos.nonogramas.logic.enums.SoundName;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 import es.ucm.stalos.nonogramas.logic.objects.Board;
 import es.ucm.stalos.nonogramas.logic.objects.ColorPalette;
@@ -60,7 +61,7 @@ public class GameState extends State {
             initTexts();
             initPalette();
 
-            _audio.playMusic(Assets.mainTheme);
+            _audio.playMusic(SoundName.MainTheme.getName());
 
         } catch (Exception e) {
             System.out.println("Error init Game State");
@@ -108,7 +109,7 @@ public class GameState extends State {
                 else if (_playState == PlayingState.Gaming &&
                         clickInsideSquare(clickPos, _posBoard, _sizeBoard)) {
                     _board.handleInput(clickPos, currEvent);
-                    _audio.playSound(Assets.clickSound, 0);
+                    _audio.playSound(SoundName.ClickSound.getName(), 0);
                 }
 
                 // BACK BUTTON WIN
@@ -163,108 +164,12 @@ public class GameState extends State {
         _serSystem.saveData();
     }
 
-//-------------------------------------------MISC-------------------------------------------------//
-
-    /**
-     * Renders every button of the state
-     */
-    public void renderButtons() {
-        _graphics.setColor(MyColor.BLACK.getValue());
-        switch (_playState) {
-            case Gaming:
-                // GiveUp Button
-                _graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
-                if (Assets.currPalette == 0)
-                    _graphics.drawRect(_giveupImagePos, new float[]{_giveupImageSize[0] + _giveupTextSize[0], _giveupImageSize[1]});
-                else
-                    _graphics.fillSquare(_giveupImagePos, new float[]{_giveupImageSize[0] + _giveupTextSize[0], _giveupImageSize[1]});
-                _graphics.drawImage(_giveupImage, _giveupImagePos, _giveupImageSize);
-                _graphics.drawCenteredString(_giveupText, _giveupTextPos, _giveupTextSize, _fontButtons);
-
-//                // TODO: debug boton de rendirse - borrar en version final
-//                _graphics.setColor(_redColor);
-//                _graphics.drawRect(_giveupTextPos, _giveupTextSize);
-//                _graphics.setColor(_blackColor);
-//                _graphics.drawRect(_giveupImagePos, _giveupImageSize);
-
-                // Life Image
-                for (int i = 0; i < _lives; i++) {
-                    int[] pos = new int[]{(int) (_lifeImagePos[0] + (_lifeImageSize[0] + _liveImageMargin) * i), _lifeImagePos[1]};
-                    _graphics.drawImage(_lifeImage, pos, _lifeImageSize);
-                }
-
-                // Ad button
-                _graphics.drawImage(_adsImage, _adsImagePos, _adsImageSize);
-                _graphics.drawCenteredString(_adsText, _adsTextPos, _adsTextSize, _fontButtons);
-
-//                // TODO: debug vidas - borrar en version final
-//                _graphics.setColor(_redColor);
-//                _graphics.drawRect(_lifeTextPos, _lifeTextSize);
-//                _graphics.setColor(_blackColor);
-//                _graphics.drawRect(_lifeImagePos, _lifeImageSize);
-
-                break;
-            case Win: {
-                // Back Button
-                _graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
-                if (Assets.currPalette == 0)
-                    _graphics.drawRect(_backImagePos, new float[]{_backImageSize[0] + _backTextSize[0], _backImageSize[1]});
-                else
-                    _graphics.fillSquare(_backImagePos, new float[]{_backImageSize[0] + _backTextSize[0], _backImageSize[1]});
-                _graphics.drawImage(_backImage, _backImagePos, _backImageSize);
-                _graphics.drawCenteredString(_backText, _backTextPos, _backTextSize, _fontButtons);
-                break;
-            }
-            case GameOver:
-                // GiveUp Button
-                _graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
-                if (Assets.currPalette == 0)
-                    _graphics.drawRect(_giveupImagePos, new float[]{_giveupImageSize[0] + _giveupTextSize[0], _giveupImageSize[1]});
-                else
-                    _graphics.fillSquare(_giveupImagePos, new float[]{_giveupImageSize[0] + _giveupTextSize[0], _giveupImageSize[1]});
-                _graphics.drawImage(_giveupImage, _giveupImagePos, _giveupImageSize);
-                _graphics.drawCenteredString(_giveupText, _giveupTextPos, _giveupTextSize, _fontButtons);
-                // Ad button
-                _graphics.drawImage(_adsImage, _adsImagePos, _adsImageSize);
-                _graphics.drawCenteredString(_adsText, _adsTextPos, _adsTextSize, _fontButtons);
-
-                // TODO: debug boton de ads - borrar en version final
-//                _graphics.setColor(_redColor);
-//                _graphics.drawRect(_adsTextPos, _adsTextSize);
-//                _graphics.setColor(_blackColor);
-//                _graphics.drawRect(_adsImagePos, _adsButtonSize);
-                break;
-            default:
-                break;
-        }
-    }
-
-    /**
-     * Renders every text of the state
-     */
-    public void renderText() {
-        switch (_playState) {
-            case Win:
-                // TEXT WIN
-                _graphics.setColor(MyColor.BLACK.getValue());
-                _graphics.drawCenteredString(_winText1, _winPos1, _winSize1, _fontText);
-
-                // NAME TEXT
-                _graphics.setColor(MyColor.BLACK.getValue());
-                _graphics.drawCenteredString(_nameText, _namePos, _nameSize, _fontText);
-                break;
-            case GameOver:
-                _graphics.drawImage(_gameOverImage, _gameOverImagePos, _gameOverImageSize);
-                break;
-            default:
-                break;
-        }
-    }
+//-------------------------------------------INIT-------------------------------------------------//
 
     /**
      * Initializes the board
      */
-    public void initBoard() throws Exception {
+    private void initBoard() throws Exception {
         // Create the board
         _posBoard[0] = 20;
         _posBoard[1] = 100;
@@ -277,36 +182,15 @@ public class GameState extends State {
             _board = new Board(this, _gridType, _posBoard, _sizeBoard,
                     _isRandom, _lives, _currentLevel);
 
-        if (!_board.init(_engine, _data))
+        if (!_board.init(_data, _graphics.getLogWidth(),
+                _graphics.getLogHeight(), _engine.getAssetManager()))
             throw new Exception("Error al crear el board");
-    }
-
-    private void initPalette() throws Exception {
-        // TODO leer data de la palette
-//        if(_data._inGame)
-//            _board = new Board(this, _data, _posBoard, _sizeBoard);
-//        else
-//            _board = new Board(this, _gridType, _posBoard, _sizeBoard,
-//                    _isRandom, _lives, _currentLevel);
-        _posColorPalette[0] = 0;
-        _posColorPalette[1] = 520;
-        _sizeColorPalette[0] = 400.0f;
-        _sizeColorPalette[1] = 100.0f;
-
-        _colorPalette = new ColorPalette(_posColorPalette, _sizeColorPalette);
-
-        if (!_colorPalette.init(_engine, _data))
-            throw new Exception("Error al iniciar palette");
     }
 
     /**
      * Initializes every button of the state
-     *
-     * @throws Exception if the initialization fails
      */
-    protected void initButtons() throws Exception {
-        _fontButtons = _graphics.newFont("JosefinSans-Bold.ttf", 20, true);
-
+    private void initButtons() {
         // Give Up
         _giveupImageSize[0] = _graphics.getLogWidth() * 0.071f;
         _giveupImageSize[1] = _graphics.getLogHeight() * 0.05f;
@@ -345,7 +229,7 @@ public class GameState extends State {
 
                 _engine.reqNewState(previusState);
                 _audio.stopMusic();
-                _audio.playSound(Assets.clickSound, 0);
+                _audio.playSound(SoundName.ClickSound.getName(), 0);
             }
         };
 
@@ -381,13 +265,8 @@ public class GameState extends State {
 
     /**
      * Initializes every text of the state
-     *
-     * @throws Exception if the initialization fails
      */
-    protected void initTexts() throws Exception {
-        _fontText = _graphics.newFont("JosefinSans-Bold.ttf", 30, true);
-        _fontButtons = _graphics.newFont("JosefinSans-Bold.ttf", 30, true);
-
+    private void initTexts() {
         // WIN TEXT
         _winSize1[0] = _graphics.getLogWidth();
         _winSize1[1] = _graphics.getLogHeight() * 0.08f;
@@ -405,6 +284,151 @@ public class GameState extends State {
         _gameOverImageSize[1] = _graphics.getLogHeight() * 0.5f;
         _gameOverImagePos[0] = (int) (_gameOverImageSize[0] * 0.05f);
         _gameOverImagePos[1] = (int) (_gameOverImageSize[1] * 0.5f);
+    }
+
+    /**
+     * Initializes the palette's selector
+     *
+     * @throws Exception
+     */
+    private void initPalette() throws Exception {
+        // TODO leer data de la palette
+//        if(_data._inGame)
+//            _board = new Board(this, _data, _posBoard, _sizeBoard);
+//        else
+//            _board = new Board(this, _gridType, _posBoard, _sizeBoard,
+//                    _isRandom, _lives, _currentLevel);
+        _posColorPalette[0] = 0;
+        _posColorPalette[1] = 520;
+        _sizeColorPalette[0] = 400.0f;
+        _sizeColorPalette[1] = 100.0f;
+
+        _colorPalette = new ColorPalette(_posColorPalette, _sizeColorPalette);
+
+        if (!_colorPalette.init(_engine, _data))
+            throw new Exception("Error al iniciar palette");
+    }
+
+//----------------------------------------MAIN-LOOP-----------------------------------------------//
+
+    /**
+     * Renders every button of the state
+     */
+    private void renderButtons() {
+        _graphics.setColor(MyColor.BLACK.getValue());
+        switch (_playState) {
+            case Gaming: {
+                // GiveUp Button
+                _graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
+                float[] aux = {_giveupImageSize[0] + _giveupTextSize[0], _giveupImageSize[1]};
+                if (Assets.currPalette == 0) {
+                    _graphics.drawRect(_giveupImagePos, aux);
+                } else {
+                    _graphics.fillSquare(_giveupImagePos, aux);
+                }
+
+                _graphics.drawImage(ImageName.BackArrow.getName(), _giveupImagePos, _giveupImageSize);
+                _graphics.drawCenteredString(_giveupText, FontName.GameStateButton.getName(),
+                        _giveupTextPos, _giveupTextSize);
+
+//                // TODO: debug boton de rendirse - borrar en version final
+//                _graphics.setColor(_redColor);
+//                _graphics.drawRect(_giveupTextPos, _giveupTextSize);
+//                _graphics.setColor(_blackColor);
+//                _graphics.drawRect(_giveupImagePos, _giveupImageSize);
+
+                // Life Image
+                for (int i = 0; i < _lives; i++) {
+                    int[] pos = new int[]{(int) (_lifeImagePos[0] + (_lifeImageSize[0] + _liveImageMargin) * i), _lifeImagePos[1]};
+                    _graphics.drawImage(ImageName.Heart.getName(), pos, _lifeImageSize);
+                }
+
+                // Ad button
+                _graphics.drawImage(ImageName.Ads.getName(), _adsImagePos, _adsImageSize);
+                _graphics.drawCenteredString(_adsText, FontName.GameStateButton.getName(),
+                        _adsTextPos, _adsTextSize);
+
+//                // TODO: debug vidas - borrar en version final
+//                _graphics.setColor(_redColor);
+//                _graphics.drawRect(_lifeTextPos, _lifeTextSize);
+//                _graphics.setColor(_blackColor);
+//                _graphics.drawRect(_lifeImagePos, _lifeImageSize);
+
+                break;
+            }
+            case Win: {
+                // Back Button
+                _graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
+                if (Assets.currPalette == 0)
+                    _graphics.drawRect(_backImagePos, new float[]{_backImageSize[0] + _backTextSize[0], _backImageSize[1]});
+                else
+                    _graphics.fillSquare(_backImagePos, new float[]{_backImageSize[0] + _backTextSize[0], _backImageSize[1]});
+                _graphics.drawImage(ImageName.BackArrow.getName(), _backImagePos, _backImageSize);
+                _graphics.drawCenteredString(_backText, FontName.GameStateButton.getName(),
+                        _backTextPos, _backTextSize);
+                break;
+            }
+            case GameOver:
+                // GiveUp Button
+                _graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
+                if (Assets.currPalette == 0)
+                    _graphics.drawRect(_giveupImagePos, new float[]{_giveupImageSize[0] + _giveupTextSize[0], _giveupImageSize[1]});
+                else
+                    _graphics.fillSquare(_giveupImagePos, new float[]{_giveupImageSize[0] + _giveupTextSize[0], _giveupImageSize[1]});
+                _graphics.drawImage(ImageName.BackArrow.getName(), _giveupImagePos, _giveupImageSize);
+                _graphics.drawCenteredString(_giveupText, FontName.GameStateButton.getName(),
+                        _giveupTextPos, _giveupTextSize);
+                // Ad button
+                _graphics.drawImage(ImageName.Ads.getName(), _adsImagePos, _adsImageSize);
+                _graphics.drawCenteredString(_adsText, FontName.GameStateButton.getName(),
+                        _adsTextPos, _adsTextSize);
+
+                // TODO: debug boton de ads - borrar en version final
+//                _graphics.setColor(_redColor);
+//                _graphics.drawRect(_adsTextPos, _adsTextSize);
+//                _graphics.setColor(_blackColor);
+//                _graphics.drawRect(_adsImagePos, _adsButtonSize);
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Renders every text of the state
+     */
+    private void renderText() {
+        switch (_playState) {
+            case Win:
+                // TEXT WIN
+                _graphics.setColor(MyColor.BLACK.getValue());
+                _graphics.drawCenteredString(_winText1, FontName.GameStateText.getName(),
+                        _winPos1, _winSize1);
+
+                // NAME TEXT
+                _graphics.setColor(MyColor.BLACK.getValue());
+                _graphics.drawCenteredString(_nameText, FontName.GameStateText.getName(),
+                        _namePos, _nameSize);
+                break;
+            case GameOver:
+                _graphics.drawImage(ImageName.GameOver.getName(), _gameOverImagePos, _gameOverImageSize);
+                break;
+            default:
+                break;
+        }
+    }
+
+//-------------------------------------------MISC-------------------------------------------------//
+
+    /**
+     * Creates the hint's font in order to have different
+     * sizes of this font every time a board is created.
+     * Not all boards have the same hint's font size.
+     * @param size Size of the font
+     */
+    public void createHintFont(int size) throws Exception {
+        _graphics.newFont(FontName.HintFont.getName(),
+                FontName.HintFont.getFileName(), size, true);
     }
 
     /**
@@ -445,10 +469,6 @@ public class GameState extends State {
         }
     }
 
-    public int getLives() {
-        return _lives;
-    }
-
     /**
      * Update the data to be save
      */
@@ -466,16 +486,26 @@ public class GameState extends State {
         }
     }
 
+    public void playSound(SoundName sound)
+    {
+        _engine.getAudio().playSound(sound.getName(), 0);
+    }
+//------------------------------------------GET-SET-----------------------------------------------//
+
+    public int getLives() {
+        return _lives;
+    }
+
+    public ColorPalette getColorPalette() {
+        return _colorPalette;
+    }
+
     public PlayingState getPlayingState() {
         return _playState;
     }
 
     public void setPlayingState(PlayingState newPlayingState) {
         _playState = newPlayingState;
-    }
-
-    public ColorPalette getColorPalette() {
-        return _colorPalette;
     }
 
     public void setNameText(String n) {
@@ -499,9 +529,6 @@ public class GameState extends State {
     protected int[] _posColorPalette = new int[2];
     protected float[] _sizeColorPalette = new float[2];
 
-    // Texts
-    protected Font _fontText;
-
     // Win
     protected final String _winText1 = "ENHORABUENA!";
     protected int[] _winPos1 = new int[2];
@@ -512,15 +539,11 @@ public class GameState extends State {
     protected int[] _namePos = new int[2];
     protected float[] _nameSize = new float[2];
 
-    // Buttons
-    protected Font _fontButtons;
-
     // Give Up Button
     protected final String _giveupText = "Rendirse";
     protected int[] _giveupTextPos = new int[2];
     protected float[] _giveupTextSize = new float[2];
 
-    protected final Image _giveupImage = Assets.backArrow;
     protected int[] _giveupImagePos = new int[2];
     protected float[] _giveupImageSize = new float[2];
 
@@ -531,7 +554,6 @@ public class GameState extends State {
     protected int[] _backTextPos = new int[2];
     protected float[] _backTextSize = new float[2];
 
-    protected final Image _backImage = Assets.backArrow;
     protected int[] _backImagePos = new int[2];
     protected float[] _backImageSize = new float[2];
 
@@ -543,17 +565,15 @@ public class GameState extends State {
     private final int MAX_LIVES = 3;
     protected int _lives = 3;
     private final int _liveImageMargin = 3;
-    protected final Image _lifeImage = Assets.heart;
+    //protected final Image _lifeImage = Assets.heart;
     protected int[] _lifeImagePos = new int[2];
     protected float[] _lifeImageSize = new float[2];
 
     // GameOver stuff
-    protected final Image _gameOverImage = Assets.gameOver;
     protected int[] _gameOverImagePos = new int[2];
     protected float[] _gameOverImageSize = new float[2];
 
     // Ads
-    protected final Image _adsImage = Assets.ads;
     protected int[] _adsImagePos = new int[2];
     protected float[] _adsImageSize = new float[2];
 

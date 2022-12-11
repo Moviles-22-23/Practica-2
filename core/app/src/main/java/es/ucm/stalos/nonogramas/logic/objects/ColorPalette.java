@@ -14,7 +14,7 @@ import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 
 public class ColorPalette {
-    public ColorPalette(int [] pos, float [] size) {
+    public ColorPalette(int[] pos, float[] size) {
         this._pos = pos;
         this._size = size;
     }
@@ -24,8 +24,6 @@ public class ColorPalette {
             _engine = engine;
             _data = data;
 
-            // Text
-            _font = engine.getGraphics().newFont("JosefinSans-Bold.ttf", _fontSize, true);
             _textSize[0] = engine.getGraphics().getLogWidth() * 0.7f;
             _textSize[1] = engine.getGraphics().getLogHeight() * 0.1f;
             _textPos[0] = (int) ((engine.getGraphics().getLogWidth() - _textSize[0]) * 0.5f);
@@ -59,16 +57,17 @@ public class ColorPalette {
         int[] pos = new int[2];
         float[] size = new float[2];
 
-        for(int i = 0; i < 7; i++){
+        for (int i = 0; i < 7; i++) {
             final int auxI = i;
 
-            int[] bPos = new int[]{ _pos[0] + graphics.getLogWidth() * i / 7, _pos[1] };
-            float[] bSize = new float[]{ _size[0] / 7, _size[1] };
+            int[] bPos = new int[]{_pos[0] + graphics.getLogWidth() * i / 7, _pos[1]};
+            float[] bSize = new float[]{_size[0] / 7, _size[1]};
 
             boolean unlocked = _data._lastUnlockedPack >= i;
 
             // Crea el boton
-            final SelectColorSetButton b = new SelectColorSetButton(bPos, bSize, Assets.colorSets.get(i), unlocked, auxI);
+            final SelectColorSetButton b = new SelectColorSetButton(bPos, bSize,
+                    Assets.colorSets.get(i), unlocked, auxI);
 
 
             // Cambia el callBack
@@ -104,10 +103,6 @@ public class ColorPalette {
     State _state;
     Engine _engine;
     GameData _data;
-
-    // Texto
-    private Font _font;
-    private int _fontSize = 10;
 
     private String _text = "COLOR PALETTE";
     private int[] _textPos = new int[2];

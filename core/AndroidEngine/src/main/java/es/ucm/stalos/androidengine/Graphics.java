@@ -8,6 +8,8 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.view.SurfaceView;
 
+import java.util.HashMap;
+
 public class Graphics {
     protected Graphics(int w, int h, AssetManager assetManager) {
         _logWidth = w;
@@ -16,6 +18,8 @@ public class Graphics {
         _logPosY = 0.0f;
         _assetManager = assetManager;
         _paint = new Paint();
+        _images = new HashMap<>();
+        _fonts = new HashMap<>();
     }
 
     //---------------------------ABSTRACT-GRAPHICS-VIEJO------------------------------------------//
@@ -122,16 +126,6 @@ public class Graphics {
         return (int) _logHeight;
     }
 
-
-    // Logic position
-    private float _logPosX, _logPosY;
-
-    // Logic scale
-    private float _logWidth, _logHeight;
-
-    // Scale factor
-    private float _scaleFactor;
-
     //--------------------------------------------------------------------------------------------//
 
     public boolean init(Input input) {
@@ -144,17 +138,36 @@ public class Graphics {
 
 //-----------------------------------------------------------------//
 
-    public Image newImage(String name) throws Exception {
-        Image img = new Image("images/" + name, _assetManager);
-        if (!img.init()) throw new Exception();
+    /**
+     * Creates and stores a new image ready to be used
+     *
+     * @param name     Image's name-key to store
+     * @param fileName File name of the image with extension
+     * @throws Exception if the creation fails
+     */
+    public void newImage(String name, String fileName) throws Exception {
+        Image img = new Image("images/" + fileName, _assetManager);
+        if (!img.init())
+            throw new Exception();
 
-        return img;
+        _images.put(name, img);
     }
 
-    public Font newFont(String filename, int size, boolean isBold) throws Exception {
-        Font font = new Font("fonts/" + filename, size, isBold, _assetManager);
-        if (!font.init()) throw new Exception();
-        return font;
+    /**
+     * Creates and stores a new font ready to be used
+     *
+     * @param name     Font's name-key to store
+     * @param fileName File name of the font with extension
+     * @param size     Size of the font
+     * @param isBold   Determines if the font will be bold
+     * @throws Exception if the creation fails
+     */
+    public void newFont(String name, String fileName, int size, boolean isBold) throws Exception {
+        Font font = new Font("fonts/" + fileName, size, isBold, _assetManager);
+        if (!font.init())
+            throw new Exception();
+
+        _fonts.put(name, font);
     }
 
 //-----------------------------------------------------------------//
@@ -189,27 +202,44 @@ public class Graphics {
 
 //-----------------------------------------------------------------//
 
-    public void drawImage(Image image, int[] pos, float[] size) {
-        Rect source = new Rect(0, 0, image.getWidth(), image.getHeight());
+    public void drawImage(String imageName, int[] pos, float[] size) {
+        if (!_images.containsKey(imageName)) {
+            System.err.println("La imagen '" + imageName + "' no existe...");
+            return;
+        }
+
+        Image im = _images.get(imageName);
+        Rect source = new Rect(0, 0, im.getWidth(), im.getHeight());
         Rect destiny = new Rect(pos[0], pos[1], (int) (pos[0] + size[0]), (int) (pos[1] + size[1]));
-        _canvas.drawBitmap(((Image) image).getBitmap(), source, destiny, null);
+        _canvas.drawBitmap(im.getBitmap(), source, destiny, null);
     }
 
-    public void drawText(String text, int[] pos, Font font) {
-        Typeface currFont = font.getAndroidFont();
-        _paint.setTypeface(currFont);
-        _paint.setTextSize(font.getSize());
-        _paint.setTextAlign(Paint.Align.LEFT);
+    public void drawText(String text, int[] pos, String fontName) {
+        if (!_fonts.containsKey(fontName)) {
+            System.err.println("La fuente '" + fontName + "' no existe...");
+            return;
+        }
 
+        Font fo = _fonts.get(fontName);
+        Typeface currFont = fo.getAndroidFont();
+        _paint.setTypeface(currFont);
+        _paint.setTextSize(fo.getSize());
+        _paint.setTextAlign(Paint.Align.LEFT);
         _canvas.drawText(text, pos[0], pos[1], _paint);
 
         _paint.reset();
     }
 
-    public void drawCenteredString(String text, int[] pos, float[] size, Font font) {
-        Typeface currFont = font.getAndroidFont();
+    public void drawCenteredString(String text, String fontName, int[] pos, float[] size) {
+        if (!_fonts.containsKey(fontName)) {
+            System.err.println("La fuente '" + fontName + "' no existe...");
+            return;
+        }
+
+        Font fo = _fonts.get(fontName);
+        Typeface currFont = fo.getAndroidFont();
         _paint.setTypeface(currFont);
-        _paint.setTextSize(font.getSize());
+        _paint.setTextSize(fo.getSize());
         _paint.setTextAlign(Paint.Align.CENTER);
 
         int xPos = (int) (pos[0] + size[0] / 2);
@@ -219,6 +249,7 @@ public class Graphics {
         _paint.reset();
     }
 
+    // TODO: Borrar esto
     // EN PC LO HACIAMOS ASI
 //    @Override
 //    public void drawCenteredString(String text, int[] pos, float[] size, Font font) {
@@ -336,17 +367,34 @@ public class Graphics {
         surface.getHolder().unlockCanvasAndPost(_canvas);
     }
 
-//----------------------------------------------------------------//
-
     //----------------------------------------------------------------//
     // VARIABLES
     private final Paint _paint;
     private final AssetManager _assetManager;
-
     private Canvas _canvas;
 
     /**
      * Thickness of the rect lines
      */
     private final float _rectThick = 2.5f;
+    /**
+     * Logic position
+     */
+    private float _logPosX, _logPosY;
+    /**
+     * Logic scale
+     */
+    private float _logWidth, _logHeight;
+    /**
+     * Scale factor
+     */
+    private float _scaleFactor;
+    /**
+     * Dictionary which contains the images
+     */
+    private HashMap<String, Image> _images;
+    /**
+     * Dictionary which contains the fonts
+     */
+    private HashMap<String, Font> _fonts;
 }

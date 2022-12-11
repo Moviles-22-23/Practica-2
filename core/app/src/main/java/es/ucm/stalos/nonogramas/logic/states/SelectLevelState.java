@@ -20,8 +20,11 @@ import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
+import es.ucm.stalos.nonogramas.logic.enums.FontName;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
+import es.ucm.stalos.nonogramas.logic.enums.ImageName;
 import es.ucm.stalos.nonogramas.logic.enums.MyColor;
+import es.ucm.stalos.nonogramas.logic.enums.SoundName;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 import es.ucm.stalos.nonogramas.logic.objects.SelectButton;
 
@@ -39,7 +42,6 @@ public class SelectLevelState extends State {
             _engine.swapBannerAdVisibility(false);
             // Texts
             _modeText = "Paquete " + _gridType.getText();
-            _textsFont = _graphics.newFont("JosefinSans-Bold.ttf", 25, true);
 
             // MODE TEXT
             _modeSize[0] = _graphics.getLogWidth();
@@ -68,7 +70,7 @@ public class SelectLevelState extends State {
                 public void doSomething() {
                     State selectPackage = new SelectBoardState(_engine, false);
                     _engine.reqNewState(selectPackage);
-                    _audio.playSound(Assets.clickSound, 0);
+                    _audio.playSound(SoundName.ClickSound.getName(), 0);
                 }
             };
 
@@ -76,7 +78,7 @@ public class SelectLevelState extends State {
             initSelectLevelButtons();
 
             // AUDIO
-            _audio.playMusic(Assets.menuTheme);
+            _audio.playMusic(SoundName.MenuTheme.getName());
 
         } catch (Exception e) {
             System.out.println("Error init Select Level");
@@ -94,12 +96,14 @@ public class SelectLevelState extends State {
 
         // Texts
         _graphics.setColor(MyColor.GREY_SOFT.getValue());
-        _graphics.drawCenteredString(_modeText, _modePos, _modeSize, _textsFont);
+        _graphics.drawCenteredString(_modeText, FontName.DefaultFont.getName(),
+                _modePos, _modeSize);
 
         // Back Button
         _graphics.setColor(MyColor.BLACK.getValue());
-        _graphics.drawImage(_backImage, _backImagePos, _backImageSize);
-        _graphics.drawCenteredString(_backText, _backTextPos, _backTextSize, _textsFont);
+        _graphics.drawImage(ImageName.BackArrow.getName(), _backImagePos, _backImageSize);
+        _graphics.drawCenteredString(_backText, FontName.DefaultFont.getName(),
+                _backTextPos, _backTextSize);
 
         // SelectLevel buttons
         for (SelectButton button : _selectButtons) {
@@ -135,11 +139,8 @@ public class SelectLevelState extends State {
 
     /**
      * Initialize the buttons to select the levels
-     *
-     * @throws Exception in case of font creation fails
      */
-    private void initSelectLevelButtons() throws Exception {
-        Font font = _graphics.newFont("Molle-Regular.ttf", 20, true);
+    private void initSelectLevelButtons() {
         _selectButtons = new ArrayList<>();
 
         float minSize = Math.min((_graphics.getLogWidth() * 0.15f), (_graphics.getLogHeight() * 0.15f));
@@ -162,7 +163,9 @@ public class SelectLevelState extends State {
                     || i <= ((GameDataSystem) _serSystem)._data._lastUnlockedLevel;
 
             String text = "" + (i + 1);
-            final SelectButton _level = new SelectButton(pos, size, text, font, unlocked);
+            final SelectButton _level = new SelectButton(pos, size, text,
+                    FontName.LevelNumber.getName(), unlocked);
+
             // Seleccion de los datos del nivel escogido
             final int aux_i = i;
 
@@ -173,7 +176,7 @@ public class SelectLevelState extends State {
                     int c = _level.getCols();
                     State gameState = new GameState(_engine, _gridType, _isRandom, aux_i);
                     _engine.reqNewState(gameState);
-                    _audio.playSound(Assets.clickSound, 0);
+                    _audio.playSound(SoundName.ClickSound.getName(), 0);
                     _audio.stopMusic();
                 }
             });
@@ -199,10 +202,7 @@ public class SelectLevelState extends State {
     private final int _numLevels = 20;
 
     // Mode
-    private boolean _isRandom = false; // Siempre que vayamos a elegir un nivel va a ser false
-
-    // Texts
-    private Font _textsFont;
+    private boolean _isRandom = false;
 
     // Mode Text
     private String _modeText = "Paquete NxM";
@@ -214,7 +214,6 @@ public class SelectLevelState extends State {
     private int[] _backTextPos = new int[2];
     private float[] _backTextSize = new float[2];
 
-    private final Image _backImage = Assets.backArrow;
     private int[] _backImagePos = new int[2];
     private float[] _backImageSize = new float[2];
 

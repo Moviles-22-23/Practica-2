@@ -11,20 +11,23 @@ package es.ucm.stalos.nonogramas.logic.objects;
 //     1 | - X - - -
 //     3 | X X X - -
 
+import android.content.res.AssetManager;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Random;
 
-import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.androidengine.Font;
 import es.ucm.stalos.androidengine.Graphics;
 import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.data.GameData;
 import es.ucm.stalos.nonogramas.logic.enums.CellType;
+import es.ucm.stalos.nonogramas.logic.enums.FontName;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
 import es.ucm.stalos.nonogramas.logic.enums.PlayingState;
+import es.ucm.stalos.nonogramas.logic.enums.SoundName;
 import es.ucm.stalos.nonogramas.logic.states.GameState;
 
 public class Board {
@@ -64,7 +67,8 @@ public class Board {
         _hintSize = _cellSize / 2;
 
         // Solo tiene offset si el tablero tiene mas filas que columnas
-        if(_rows > _cols) _offset = (int)(_size[0] - (_cellSize * _cols + _hintSize * (int) Math.ceil(_rows / 2.0f))) / 2;
+        if (_rows > _cols)
+            _offset = (int) (_size[0] - (_cellSize * _cols + _hintSize * (int) Math.ceil(_rows / 2.0f))) / 2;
         else _offset = 0;
     }
 
@@ -104,30 +108,29 @@ public class Board {
         _hintSize = _cellSize / 2;
 
         // Solo tiene offset si el tablero tiene mas filas que columnas
-        if(_rows > _cols) _offset = (int)(_size[0] - (_cellSize * _cols + _hintSize * (int) Math.ceil(_rows / 2.0f))) / 2;
+        if (_rows > _cols)
+            _offset = (int) (_size[0] - (_cellSize * _cols + _hintSize * (int) Math.ceil(_rows / 2.0f))) / 2;
         else _offset = 0;
     }
 
     //-------------------------------------------INIT-------------------------------------------------//
-    public boolean init(Engine engine, GameData data) {
+    public boolean init(GameData data, int logW, int logH, AssetManager assetManager) {
         try {
-            _engine = engine;
             _fontSize = (int) (_hintSize * 0.9f);
-            _hintFont = engine.getGraphics().newFont("JosefinSans-Bold.ttf", _fontSize, true);
+            _state.createHintFont(_fontSize);
 
             if (!data._inGame) {
                 if (_isRandom)
                     createRandomSolution();
                 else {
-                    readSolution();
+                    readSolution(assetManager);
                 }
             }
 
-            _nameFont = engine.getGraphics().newFont("JosefinSans-Bold.ttf", 50, true);
-            _nameSize[0] = engine.getGraphics().getLogWidth() * 0.7f;
-            _nameSize[1] = engine.getGraphics().getLogHeight() * 0.1f;
-            _namePos[0] = (int) ((engine.getGraphics().getLogWidth() - _nameSize[0]) * 0.5f);
-            _namePos[1] = (int) ((engine.getGraphics().getLogHeight() - _nameSize[1]) * 0.2f);
+            _figNameSize[0] = logW * 0.7f;
+            _figNameSize[1] = logH * 0.1f;
+            _figNamePos[0] = (int) ((logW - _figNameSize[0]) * 0.5f);
+            _figNamePos[1] = (int) ((logH - _figNameSize[1]) * 0.2f);
 
             loadLevel(data);
         } catch (Exception e) {
@@ -141,12 +144,12 @@ public class Board {
      * Read a levelPack from the assets to
      * make a new gridLevel
      */
-    private void readSolution() {
+    private void readSolution(AssetManager assetManager) {
         try {
             // LevelPack Name
             String name = "levels/levelPack" + _rows + "x" + _cols + ".txt";
             // IFile from the current platform
-            InputStream is = _engine.getAssetManager().open(name);
+            InputStream is = assetManager.open(name);
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
             //
             String line;
@@ -323,11 +326,11 @@ public class Board {
                 if (clickInside(clickPos, c.x, c.y, c.size)) {
                     if (touch == TouchEvent.touchDown && !_sol[i][j] ||
                             touch == TouchEvent.longTouch && _sol[i][j]) {
-                        _engine.getAudio().playSound(Assets.failSound, 0);
+                        _state.playSound(SoundName.FailSound);
                         _lives--;
                         _state.updateLives(_lives);
                         return;
-                    } else _engine.getAudio().playSound(Assets.goodSound, 0);
+                    } else _state.playSound(SoundName.GoodSound);
 
                     _boardState[i][j].handleInput(clickPos, touch);
 
@@ -364,11 +367,13 @@ public class Board {
                         // Los 0 no hace falta ponerlos
                         if (_hintRows[i - _hintCols.length][j] != 0) {
                             pos[0] = _pos[0] + (int) (j * _hintSize) + _offset;
-                            pos[1] = _pos[1] + (int) ((_hintCols.length * _hintSize) + ((i - _hintCols.length) * _cellSize));
+                            pos[1] = _pos[1] + (int) ((_hintCols.length * _hintSize)
+                                    + ((i - _hintCols.length) * _cellSize));
                             size[0] = _hintSize;
                             size[1] = _cellSize;
                             numText = Integer.toString(_hintRows[i - _hintCols.length][j]);
-                            graphics.drawCenteredString(numText, pos, size, _hintFont);
+                            graphics.drawCenteredString(numText, FontName.HintFont.getName(),
+                                    pos, size);
                         }
                     }
                     // Range of hints cols
@@ -379,7 +384,8 @@ public class Board {
                             size[0] = _cellSize;
                             size[1] = _hintSize;
                             numText = Integer.toString(_hintCols[i][j - _hintRows[0].length]);
-                            graphics.drawCenteredString(numText, pos, size, _hintFont);
+                            graphics.drawCenteredString(numText, FontName.HintFont.getName(),
+                                    pos, size);
                         }
                     }
                     // Range of board
@@ -427,10 +433,11 @@ public class Board {
                     graphics.fillSquare(solPos, _cellSize);
             }
         }
-//
-//        // Muestra el nombre de la figura
-//        graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
-//        graphics.drawCenteredString(_nameText, _namePos, _nameSize, _nameFont);
+
+        // Muestra el nombre de la figura
+        graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
+        graphics.drawCenteredString(_figNameText, FontName.FigureName.getName(),
+                _figNamePos, _figNameSize);
     }
 
     /**
@@ -495,14 +502,25 @@ public class Board {
     }
 
     //----------------------------------------ATTRIBUTES----------------------------------------------//
-    private Engine _engine;
-
-    // Nombre de la figura
-    private String _nameText = "Figura aleatoria";
-    private Font _nameFont;
-    private int[] _namePos = new int[2];
-    private float[] _nameSize = new float[2];
-
+    /**
+     * Name of the figure of the board
+     */
+    private String _figNameText = "Figura aleatoria";
+    /**
+     * Figure's name position
+     */
+    private int[] _figNamePos = new int[2];
+    /**
+     * Size of the box of the name text
+     */
+    private float[] _figNameSize = new float[2];
+    /**
+     * Reference to the GameState
+     */
+    private GameState _state;
+    /**
+     * Current grid type
+     */
     GridType _gridType;
     /**
      * Number of rows of the grid
@@ -571,9 +589,4 @@ public class Board {
      * Index of current level
      */
     private int _levelIndex;
-    /**
-     * Reference to the GameState
-     */
-    private GameState _state;
-
 }

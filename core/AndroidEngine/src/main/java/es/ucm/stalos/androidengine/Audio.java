@@ -6,6 +6,7 @@ import android.media.MediaPlayer;
 import android.media.SoundPool;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 public class Audio {
     public Audio(AssetManager assetManager, int numStreams) {
@@ -13,36 +14,46 @@ public class Audio {
         _mediaPlayer = new MediaPlayer();
         _mediaPlayer.reset();
         _soundPool = new SoundPool.Builder().setMaxStreams(numStreams).build();
+        _sounds = new HashMap<>();
     }
 
     //------------------------------------------SOUNDS--------------------------------------------//
 
     /**
-     * Create a new sound from assets
+     * Creates and stores a new sound ready to be used
      *
-     * @param file filename
-     * @return Sound
+     * @param name     Sound's name-key to store
+     * @param fileName File name of the sound with extension
+     * @throws Exception if the creation fails
      */
-    public Sound newSound(String file) throws Exception {
-        Sound sound = new Sound("sounds/" + file, _assetManager);
-        if (!sound.init()) throw new Exception();
+    public void newSound(String name, String fileName) throws Exception {
+        Sound sound = new Sound("sounds/" + fileName, _assetManager);
+        if (!sound.init())
+            throw new Exception();
 
+        _sounds.put(name, sound);
         AssetFileDescriptor afd = sound.getAssetDescriptor();
         sound.setId(_soundPool.load(afd, 1));
 
-        return sound;
     }
 
     /**
      * Play an specified sound indicating the number of looping
      *
-     * @param sound       Sound to be played
+     * @param soundName   Name-Key of the sound to be played
      * @param numberLoops Indicate number of extra-repetitions: -1 -> Infinite
      */
-    public void playSound(Sound sound, int numberLoops) {
-        int id = ((Sound) sound).getId();
+    public void playSound(String soundName, int numberLoops) {
+        if (!_sounds.containsKey(soundName)) {
+            System.err.println("El sonido '" + soundName + "' no existe...");
+            return;
+        }
+
+        Sound so = _sounds.get(soundName);
+
+        int id = so.getId();
         int playId = _soundPool.play(id, 100, 100, 1, numberLoops, 1);
-        ((Sound) sound).setPlayId(playId);
+        so.setPlayId(playId);
     }
 
     /**
@@ -80,10 +91,18 @@ public class Audio {
     /**
      * Play a looped specified sound
      *
-     * @param sound Sound to be played
+     * @param soundName Sound to be played
      */
-    public void playMusic(Sound sound) {
-        AssetFileDescriptor afd = sound.getAssetDescriptor();
+    public void playMusic(String soundName) {
+        if (!_sounds.containsKey(soundName)) {
+            System.err.println("La música '" + soundName + "' no existe...");
+            return;
+        }
+
+        Sound so = _sounds.get(soundName);
+
+
+        AssetFileDescriptor afd = so.getAssetDescriptor();
         if (!_mediaPlayer.isPlaying()) {
             try {
                 _mediaPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
@@ -94,13 +113,11 @@ public class Audio {
             }
 
             _mediaPlayer.start();
-            //System.out.println("playmusic");
         }
     }
 
     /**
      * Resume the background music
-     *
      */
     public void resumeMusic() {
         _mediaPlayer.start();
@@ -108,7 +125,6 @@ public class Audio {
 
     /**
      * Pause current background music
-     *
      */
     public void pauseBackMusic() {
         _mediaPlayer.pause();
@@ -116,7 +132,6 @@ public class Audio {
 
     /**
      * Stop the background music
-     *
      */
     public void stopMusic() {
         _mediaPlayer.stop();
@@ -128,14 +143,16 @@ public class Audio {
      * Reference to the AssetManager of Android
      */
     private AssetManager _assetManager;
-
     /**
      * Reference to the audio library of Android
      */
     private MediaPlayer _mediaPlayer;
-
     /**
      * Sounds' bank
      */
     private SoundPool _soundPool;
+    /**
+     * Dictionary which contains the fonts
+     */
+    private HashMap<String, Sound> _sounds;
 }
