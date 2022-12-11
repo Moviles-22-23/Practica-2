@@ -305,7 +305,7 @@ public class GameState extends State {
 
         _colorPalette = new ColorPalette(_posColorPalette, _sizeColorPalette);
 
-        if (!_colorPalette.init(_engine, _data))
+        if (!_colorPalette.init(_data, _graphics.getLogWidth(), _graphics.getLogHeight()))
             throw new Exception("Error al iniciar palette");
     }
 
@@ -424,6 +424,7 @@ public class GameState extends State {
      * Creates the hint's font in order to have different
      * sizes of this font every time a board is created.
      * Not all boards have the same hint's font size.
+     *
      * @param size Size of the font
      */
     public void createHintFont(int size) throws Exception {
@@ -486,8 +487,7 @@ public class GameState extends State {
         }
     }
 
-    public void playSound(SoundName sound)
-    {
+    public void playSound(SoundName sound) {
         _engine.getAudio().playSound(sound.getName(), 0);
     }
 //------------------------------------------GET-SET-----------------------------------------------//
