@@ -1,5 +1,7 @@
 package es.ucm.stalos.nonogramas.logic.states;
 
+import android.content.Intent;
+
 import java.util.List;
 
 import es.ucm.stalos.androidengine.Engine;
@@ -121,10 +123,16 @@ public class GameState extends State {
                         clickInsideSquare(clickPos, _adsImagePos, _adsButtonSize))
                     _adsCallback.doSomething();
 
-                    // COLOR PALETTE
+                // COLOR PALETTE
                 else if (clickInsideSquare(clickPos, _posColorPalette, _sizeColorPalette)) {
                     System.out.println("Click en Palette");
                     _colorPalette.handleInput(clickPos, currEvent);
+                }
+
+                else if(_playState == PlayingState.Win &&
+                        clickInsideSquare(clickPos, _shareImagePos, _shareImageSize))
+                {
+                    _shareCallback.doSomething();
                 }
             }
 
@@ -273,6 +281,27 @@ public class GameState extends State {
 
         _shareImagePos[0] = (int) ((_graphics.getLogWidth() - _shareImageSize[0]) * 0.75f);
         _shareImagePos[1] = (int) (_graphics.getLogHeight() * 0.8f);
+        _shareCallback = new ButtonCallback() {
+            @Override
+            public void doSomething() {
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "PRUEBA DEL INTENT");
+                sendIntent.setType("text/plain");
+
+                // Always use string resources for UI text.
+                // This says something like "Share this photo with"
+                String title = "TITULO";
+                // Create intent to show the chooser dialog
+                Intent chooser = Intent.createChooser(sendIntent, title);
+
+                // Verify the original intent will resolve to at least one activity
+                if (sendIntent.resolveActivity(_engine.getContext().getPackageManager())
+                        != null) {
+                    _engine.getContext().startActivity(sendIntent);
+                }
+            }
+        };
     }
 
     /**
@@ -580,4 +609,5 @@ public class GameState extends State {
     // Share Button
     private int[] _shareImagePos = new int[2];
     private float[] _shareImageSize = new float[2];
+    private ButtonCallback _shareCallback;
 }
