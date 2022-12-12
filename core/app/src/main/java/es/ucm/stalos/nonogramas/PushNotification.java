@@ -6,7 +6,6 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Build;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
@@ -18,11 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Notification {
+public class PushNotification {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public Notification(AppCompatActivity context, String newChannel, int notificationID,
-                        String notificationName) {
+    public PushNotification(AppCompatActivity context, String newChannel, int notificationID,
+                            String notificationName) {
         _channelID = newChannel;
         _notificationID = notificationID;
         _name = notificationName;

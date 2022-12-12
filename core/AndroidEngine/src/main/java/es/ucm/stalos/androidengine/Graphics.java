@@ -214,7 +214,7 @@ public class Graphics {
         _canvas.drawBitmap(im.getBitmap(), source, destiny, null);
     }
 
-    public void drawText(String text, int[] pos, String fontName) {
+    public void drawText(String text, String fontName, int[] pos) {
         if (!_fonts.containsKey(fontName)) {
             System.err.println("La fuente '" + fontName + "' no existe...");
             return;

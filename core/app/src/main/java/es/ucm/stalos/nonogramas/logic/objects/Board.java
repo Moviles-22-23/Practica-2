@@ -26,6 +26,7 @@ import es.ucm.stalos.nonogramas.logic.data.GameData;
 import es.ucm.stalos.nonogramas.logic.enums.CellType;
 import es.ucm.stalos.nonogramas.logic.enums.FontName;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
+import es.ucm.stalos.nonogramas.logic.enums.MyColor;
 import es.ucm.stalos.nonogramas.logic.enums.PlayingState;
 import es.ucm.stalos.nonogramas.logic.enums.SoundName;
 import es.ucm.stalos.nonogramas.logic.states.GameState;
@@ -130,7 +131,7 @@ public class Board {
             _figNameSize[0] = logW * 0.7f;
             _figNameSize[1] = logH * 0.1f;
             _figNamePos[0] = (int) ((logW - _figNameSize[0]) * 0.5f);
-            _figNamePos[1] = (int) ((logH - _figNameSize[1]) * 0.2f);
+            _figNamePos[1] = (int) ((logH - _figNameSize[1]) * 0.05f);
 
             loadLevel(data);
         } catch (Exception e) {
@@ -180,7 +181,10 @@ public class Board {
 
             // Lee la ultima linea para saber le nombre de la figura
             line = br.readLine();
-            if (line != null) _state.setNameText(line);
+            if (line != null) {
+                _state.setNameText(line);
+                _figNameText = line;
+            }
 
         } catch (Exception e) {
             System.out.println("ERROR ANDROID: " + e.getMessage());
@@ -435,7 +439,7 @@ public class Board {
         }
 
         // Muestra el nombre de la figura
-        graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
+        graphics.setColor(MyColor.BLACK.getValue());
         graphics.drawCenteredString(_figNameText, FontName.FigureName.getName(),
                 _figNamePos, _figNameSize);
     }
@@ -493,8 +497,8 @@ public class Board {
         return _sol;
     }
 
-    public void restoreLives() {
-        _lives = _state.getLives();
+    public void restoreLives(int lives) {
+        _lives = lives;
     }
 
     public void addLife() {

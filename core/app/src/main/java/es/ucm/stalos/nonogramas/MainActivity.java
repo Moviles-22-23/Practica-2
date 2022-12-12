@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         _engine = new Engine();
         // NOTIFICATIONS
-        _pushNotification = new Notification(this, "unique_channel",
+        _pushNotification = new PushNotification(this, "unique_channel",
                 0, "reminder");
         _pushNotification._msgs.addAll(Arrays.asList(msgs));
 
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
     protected Engine _engine;
     private Group adGroup;
-    private Notification _pushNotification;
+    private PushNotification _pushNotification;
     private String[] msgs =
             {
                     "Te echamos de menos. Nuevos retos te esperan \uD83D\uDE0A",

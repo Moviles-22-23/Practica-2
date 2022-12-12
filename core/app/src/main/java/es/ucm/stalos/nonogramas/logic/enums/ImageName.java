@@ -11,7 +11,9 @@ public enum ImageName {
     Heart(2),
     Lock(3),
     GameOver(4),
-    Ads(5);
+    Ads(5),
+    HeartDisable(6),
+    Share(7);
 
     ImageName(int i) {
         this._value = i;
@@ -40,6 +42,14 @@ public enum ImageName {
                 _name = "ads";
                 _fileName = "ads.png";
                 break;
+            case 6:
+                _name = "heartDisable";
+                _fileName = "heartDisable.png";
+                break;
+            case 7:
+                _name = "share";
+                _fileName = "share.png";
+                break;
         }
     }
 
@@ -55,7 +65,7 @@ public enum ImageName {
         return _fileName;
     }
 
-    private int _value;
+    private final int _value;
     private String _name;
     private String _fileName;
 }

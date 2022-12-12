@@ -26,14 +26,25 @@ public class LoadState extends State {
     @Override
     public boolean init() {
         try {
-            //Sprites
             _graphics = _engine.getGraphics();
-            _graphics.newImage(ImageName.BackArrow.getName(), ImageName.BackArrow.getFileName());
-            _graphics.newImage(ImageName.Lens.getName(), ImageName.Lens.getFileName());
-            _graphics.newImage(ImageName.Heart.getName(), ImageName.Heart.getFileName());
-            _graphics.newImage(ImageName.Lock.getName(), ImageName.Lock.getFileName());
-            _graphics.newImage(ImageName.GameOver.getName(), ImageName.GameOver.getFileName());
-            _graphics.newImage(ImageName.Ads.getName(), ImageName.Ads.getFileName());
+
+            //Sprites
+            _graphics.newImage(ImageName.BackArrow.getName(),
+                    ImageName.BackArrow.getFileName());
+            _graphics.newImage(ImageName.Lens.getName(),
+                    ImageName.Lens.getFileName());
+            _graphics.newImage(ImageName.Heart.getName(),
+                    ImageName.Heart.getFileName());
+            _graphics.newImage(ImageName.Lock.getName(),
+                    ImageName.Lock.getFileName());
+            _graphics.newImage(ImageName.GameOver.getName(),
+                    ImageName.GameOver.getFileName());
+            _graphics.newImage(ImageName.Ads.getName(),
+                    ImageName.Ads.getFileName());
+            _graphics.newImage(ImageName.HeartDisable.getName(),
+                    ImageName.HeartDisable.getFileName());
+            _graphics.newImage(ImageName.Share.getName(),
+                    ImageName.Share.getFileName());
 
             // Fonts
             _graphics.newFont(FontName.TitleMainMenu.getName(),
