@@ -1,6 +1,7 @@
 package es.ucm.stalos.nonogramas.logic.states;
 
 import android.content.Intent;
+import android.view.View;
 
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class GameState extends State {
         this._gridType = gridType;
         this._isRandom = isRandom;
         this._currentLevel = levelIndex;
-        _rewardManager = new RewardManager(engine, this);
+        _rewardManager = new RewardManager(this);
     }
 
     /**
@@ -49,7 +50,7 @@ public class GameState extends State {
         this._isRandom = _data._isRandom;
         this._currentLevel = _data._currentLevel;
         this._lives = _data._currentLives;
-        _rewardManager = new RewardManager(engine, this);
+        _rewardManager = new RewardManager(this);
     }
 
 //-----------------------------------------OVERRIDE-----------------------------------------------//
@@ -62,6 +63,13 @@ public class GameState extends State {
             initButtons();
             initTexts();
             initPalette();
+
+            _engine.getContext().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    _rewardManager.loadAd(_engine.getContext());
+                }
+            });
 
             _audio.playMusic(SoundName.MainTheme.getName());
 
@@ -123,15 +131,12 @@ public class GameState extends State {
                         clickInsideSquare(clickPos, _adsImagePos, _adsButtonSize))
                     _adsCallback.doSomething();
 
-                // COLOR PALETTE
+                    // COLOR PALETTE
                 else if (clickInsideSquare(clickPos, _posColorPalette, _sizeColorPalette)) {
                     System.out.println("Click en Palette");
                     _colorPalette.handleInput(clickPos, currEvent);
-                }
-
-                else if(_playState == PlayingState.Win &&
-                        clickInsideSquare(clickPos, _shareImagePos, _shareImageSize))
-                {
+                } else if (_playState == PlayingState.Win &&
+                        clickInsideSquare(clickPos, _shareImagePos, _shareImageSize)) {
                     _shareCallback.doSomething();
                 }
             }
@@ -261,8 +266,12 @@ public class GameState extends State {
         _adsCallback = new ButtonCallback() {
             @Override
             public void doSomething() {
-                // TODO: Callback para los anuncios y recuperar vidas
-                _rewardManager.showAd();
+                _engine.getContext().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        _rewardManager.showAd(_engine.getContext());
+                    }
+                });
             }
         };
 

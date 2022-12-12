@@ -22,22 +22,21 @@ public class Engine implements Runnable {
         _currState = initState;
 
         //GRAPHICS
-        _graphics = new Graphics(w, h, _assetsMan);
+        _graphics = new Graphics(w, h, _assetsMan, view);
 
         // INPUT
         _input = new Input(this);
 
         //SCREEN
-        _view = view;
         _adView = adView;
 
-        _view.setOnTouchListener(_input);
-        _view.setOnLongClickListener(_input);
+        view.setOnTouchListener(_input);
+        view.setOnLongClickListener(_input);
 
         // AUDIO
         _audio = new Audio(_assetsMan, 10);
 
-        return (_graphics).init(_input) && _currState.init();
+        return _currState.init();
     }
 
     public void run() {
@@ -59,10 +58,10 @@ public class Engine implements Runnable {
             _currState.update(_deltaTime);
 
             // Pintado del estado actual
-            _graphics.prepareFrame(_view);
+            _graphics.prepareFrame();
             _graphics.clear(0xFFFFFFFF);
             _currState.render();
-            _graphics.restore(_view);
+            _graphics.restore();
 
             // Inicializacion del siguiente estado en diferido
             if (_changeState) {
@@ -148,10 +147,16 @@ public class Engine implements Runnable {
         _deltaTime = (double) nanoElapsedTime / 1.0E9;
     }
 
+    /**
+     * @return the Android Asset Manager
+     */
     public AssetManager getAssetManager() {
         return _assetsMan;
     }
 
+    /**
+     * @return the app context
+     */
     public AppCompatActivity getContext() {
         return _context;
     }
@@ -162,7 +167,7 @@ public class Engine implements Runnable {
      * @param mainMenu if the current state is main menu
      */
     public void swapBannerAdVisibility(boolean mainMenu) {
-        // este metodo de activity ejecuta el codigo en el hilo de la interfaz
+        // este metodo de activity ejecuta el codigo en el hilo de la UI
         _context.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -188,7 +193,6 @@ public class Engine implements Runnable {
     private AssetManager _assetsMan;
     private AppCompatActivity _context;
 
-    private SurfaceView _view;
     private Group _adView;
 
     // DELTA TIME

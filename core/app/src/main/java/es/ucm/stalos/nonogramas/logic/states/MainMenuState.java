@@ -31,7 +31,7 @@ public class MainMenuState extends State {
     @Override
     public boolean init() {
         try {
-            _engine.swapBannerAdVisibility(false);
+            _engine.swapBannerAdVisibility(true);
             // TITLE
             _titleSize[0] = _graphics.getLogWidth() * 0.7f;
             _titleSize[1] = _graphics.getLogHeight() * 0.1f;

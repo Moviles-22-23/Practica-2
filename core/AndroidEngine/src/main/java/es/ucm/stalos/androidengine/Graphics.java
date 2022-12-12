@@ -11,7 +11,8 @@ import android.view.SurfaceView;
 import java.util.HashMap;
 
 public class Graphics {
-    protected Graphics(int w, int h, AssetManager assetManager) {
+
+    protected Graphics(int w, int h, AssetManager assetManager, SurfaceView view) {
         _logWidth = w;
         _logHeight = h;
         _logPosX = 0.0f;
@@ -20,6 +21,7 @@ public class Graphics {
         _paint = new Paint();
         _images = new HashMap<>();
         _fonts = new HashMap<>();
+        _surfaceView = view;
     }
 
     //---------------------------ABSTRACT-GRAPHICS-VIEJO------------------------------------------//
@@ -35,51 +37,6 @@ public class Graphics {
 
         // Nos interesa el tamaño más pequeño
         return Math.min(widthScale, heightScale);
-    }
-
-    /**
-     * Calculate the physic position applying the scale factor
-     *
-     * @param x X-axis position
-     * @param y Y-axis position
-     * @return the real position [x, y]
-     */
-    protected int[] finalPosition(float x, float y) {
-        _scaleFactor = getScaleFactor();
-        float offsetX = (getWidth() - (_logWidth * _scaleFactor)) / 2.0f;
-        float offsetY = (getHeight() - (_logHeight) * _scaleFactor) / 2.0f;
-
-        return new int[]{
-                (int) ((x * _scaleFactor) + offsetX),
-                (int) ((y * _scaleFactor) + offsetY)
-        };
-    }
-
-    /**
-     * Calculate the physic size applying the scale factor
-     *
-     * @param w width value
-     * @param h height value
-     * @return the real size [width, height]
-     */
-    protected int[] finalSize(float w, float h) {
-        _scaleFactor = getScaleFactor();
-
-        return new int[]{
-                (int) (w * _scaleFactor),
-                (int) (h * _scaleFactor)
-        };
-    }
-
-    /**
-     * Calculate the physic size applying the scale factor
-     *
-     * @param size size value
-     * @return the real size
-     */
-    protected int finalSize(float size) {
-        _scaleFactor = getScaleFactor();
-        return (int) (size * _scaleFactor);
     }
 
     /**
@@ -127,14 +84,6 @@ public class Graphics {
     }
 
     //--------------------------------------------------------------------------------------------//
-
-    public boolean init(Input input) {
-        try {
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
-    }
 
 //-----------------------------------------------------------------//
 
@@ -333,21 +282,21 @@ public class Graphics {
 //----------------------------------------------------------------//
 
     public int getWidth() {
-        return _canvas.getWidth();
+        return _surfaceView.getWidth();
     }
 
     public int getHeight() {
-        return _canvas.getHeight();
+        return _surfaceView.getHeight();
     }
 
 //----------------------------------------------------------------//
 
-    public void prepareFrame(SurfaceView surface) {
-        while (!surface.getHolder().getSurface().isValid()) {
+    public void prepareFrame() {
+        while (!_surfaceView.getHolder().getSurface().isValid()) {
             System.out.println("PREPARE FRAME: NULL");
         }
 
-        _canvas = surface.getHolder().lockCanvas();
+        _canvas = _surfaceView.getHolder().lockCanvas();
         // SCALE & TRANSLATE
         _scaleFactor = getScaleFactor();
         int[] newPos = translateWindow();
@@ -363,16 +312,21 @@ public class Graphics {
         _canvas.scale(x, y);
     }
 
-    public void restore(SurfaceView surface) {
-        surface.getHolder().unlockCanvasAndPost(_canvas);
+    public void restore() {
+        _surfaceView.getHolder().unlockCanvasAndPost(_canvas);
     }
 
     //----------------------------------------------------------------//
     // VARIABLES
     private final Paint _paint;
     private final AssetManager _assetManager;
+    private SurfaceView _surfaceView;
     private Canvas _canvas;
 
+    /**
+     * Physic scale
+     */
+    private int _width, _height;
     /**
      * Thickness of the rect lines
      */

@@ -6,7 +6,7 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
-// PRACTICA 2: Cambios ahora la clase Input hererda de OnLongClickListener para dar soporte a LongClick
+// PRACTICA 2: Cambios ahora la clase Input hereda de OnLongClickListener para dar soporte a LongClick
 public class Input implements View.OnTouchListener, View.OnLongClickListener {
     public Input(Engine e) {
         _engine = e;
@@ -39,8 +39,6 @@ public class Input implements View.OnTouchListener, View.OnLongClickListener {
         int[] eventPos = g.logPos(x, y);
         currEvent.setX(eventPos[0]);
         currEvent.setY(eventPos[1]);
-
-        System.out.println("Touch UP pos: X: " + eventPos[0] + " Y: " + eventPos[1]);
 
         _events.add(currEvent);
     }
@@ -75,14 +73,11 @@ public class Input implements View.OnTouchListener, View.OnLongClickListener {
         if (e.getAction() == MotionEvent.ACTION_UP) {
             v.performClick();
             if (!_longTouching) {
-                System.out.println("Touch UP pos: X: " + e.getX() + " Y: " + e.getY());
                 onTouchDownEvent((int) e.getX(), (int) e.getY());
             } else if (e.getX() == lastTouchX && e.getY() == lastTouchY) {
-                System.out.println("Long Touch UP pos: X: " + e.getX() + " Y: " + e.getY());
                 onLongTouchEvent((int) e.getX(), (int) e.getY());
                 _longTouching = false;
             } else _longTouching = false;
-            System.out.println("INPUT: --Fin del touch--");
         }
         return false;
     }
