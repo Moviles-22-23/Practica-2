@@ -61,6 +61,9 @@ public abstract class State {
         _serSystem.saveData();
     }
 
+    protected void manageSensorEvent() {
+    }
+
     protected Engine _engine;
     protected Graphics _graphics;
     protected Audio _audio;
@@ -71,5 +74,6 @@ public abstract class State {
     protected int _timeDelay;
 
     protected static SerializableSystem _serSystem;
+
 }
 

@@ -1,7 +1,6 @@
 package es.ucm.stalos.nonogramas.logic.states;
 
 import android.content.Intent;
-import android.view.View;
 
 import java.util.List;
 
@@ -20,7 +19,7 @@ import es.ucm.stalos.nonogramas.logic.enums.SoundName;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 import es.ucm.stalos.nonogramas.logic.objects.Board;
 import es.ucm.stalos.nonogramas.logic.objects.ColorPalette;
-import es.ucm.stalos.nonogramas.logic.objects.RewardManager;
+import es.ucm.stalos.nonogramas.android.RewardManager;
 
 // PRACTICA 2: Refactorización de los GameState
 public class GameState extends State {
@@ -174,6 +173,16 @@ public class GameState extends State {
 
         ((GameDataSystem) _serSystem)._data = _data;
         _serSystem.saveData();
+    }
+
+    @Override
+    protected void manageSensorEvent() {
+        if (_isRandom)
+            try {
+                rerollBoard();
+            } catch (Exception e) {
+                System.err.println(e.getStackTrace());
+            }
     }
 
 //-------------------------------------------INIT-------------------------------------------------//
@@ -518,6 +527,18 @@ public class GameState extends State {
 
     public void playSound(SoundName sound) {
         _engine.getAudio().playSound(sound.getName(), 0);
+    }
+
+    private void rerollBoard() throws Exception {
+        System.out.println("Board re-roll");
+        _lives = MAX_LIVES;
+        _board = new Board(this, _gridType, _posBoard, _sizeBoard,
+                _isRandom, _lives, _currentLevel);
+
+        if (!_board.init(_data, _graphics.getLogWidth(),
+                _graphics.getLogHeight(), _engine.getAssetManager()))
+            throw new Exception("Error al crear el board");
+
     }
 //------------------------------------------GET-SET-----------------------------------------------//
 

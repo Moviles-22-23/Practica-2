@@ -1,5 +1,7 @@
 package es.ucm.stalos.nonogramas.android;
 
+import android.content.Context;
+import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.SurfaceView;
@@ -47,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
                 0, "reminder");
         _pushNotification._msgs.addAll(Arrays.asList(msgs));
 
+        // SENSOR
+        _sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        _sensor = new AndroidSensor(_sensorManager, _engine);
+
         LoadState loadAssets = new LoadState(_engine);
 
         if (!_engine.init(loadAssets, 400, 600, this, gameView, adGroup)) {
@@ -58,13 +64,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         _engine.resume();
+        _sensor.resume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         _engine.pause();
-
+        _sensor.pause();
         // TODO: Crear un sistema de alarma para lanzar la notificacion cada cierto tiempo
         _pushNotification.showNotification();
     }
@@ -72,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
     protected Engine _engine;
     private Group adGroup;
     private PushNotification _pushNotification;
+    private SensorManager _sensorManager;
+    private AndroidSensor _sensor;
     private String[] msgs =
             {
                     "Te echamos de menos. Nuevos retos te esperan \uD83D\uDE0A",

@@ -1,6 +1,9 @@
 package es.ucm.stalos.androidengine;
 
+import android.app.GameManager;
 import android.content.res.AssetManager;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.view.SurfaceView;
 import android.view.View;
 
@@ -177,6 +180,18 @@ public class Engine implements Runnable {
                     _adView.setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    public void manageSensorEvent(int type) {
+        switch (type) {
+            case Sensor.TYPE_ACCELEROMETER:
+                // Callback al state
+                _currState.manageSensorEvent();
+                break;
+
+            case Sensor.TYPE_GYROSCOPE:
+                break;
+        }
     }
 
     //--------------------------------------------------------------------------------------------//

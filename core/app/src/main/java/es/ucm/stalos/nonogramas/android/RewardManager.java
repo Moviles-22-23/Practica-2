@@ -1,4 +1,4 @@
-package es.ucm.stalos.nonogramas.logic.objects;
+package es.ucm.stalos.nonogramas.android;
 
 import android.app.Activity;
 import android.content.Context;
@@ -91,7 +91,7 @@ public class RewardManager {
             });
         } else {
             System.out.println("Recompensa no disponible");
-            //_gameState.restoreLives();
+            _gameState.restoreLives();
         }
     }
 
