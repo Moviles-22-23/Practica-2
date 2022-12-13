@@ -1,12 +1,13 @@
 package es.ucm.stalos.nonogramas.logic.states;
 
-import android.content.Intent;
+import android.net.Uri;
 
 import java.util.List;
 
 import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.TouchEvent;
+import es.ucm.stalos.nonogramas.android.ShareIntent;
 import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.data.GameData;
 import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
@@ -15,6 +16,7 @@ import es.ucm.stalos.nonogramas.logic.enums.GridType;
 import es.ucm.stalos.nonogramas.logic.enums.ImageName;
 import es.ucm.stalos.nonogramas.logic.enums.MyColor;
 import es.ucm.stalos.nonogramas.logic.enums.PlayingState;
+import es.ucm.stalos.nonogramas.logic.enums.ShareType;
 import es.ucm.stalos.nonogramas.logic.enums.SoundName;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 import es.ucm.stalos.nonogramas.logic.objects.Board;
@@ -87,7 +89,7 @@ public class GameState extends State {
     @Override
     public void render() {
         // Background Color
-        _graphics.clear(Assets.colorSets.get(Assets.currPalette).getSecond());
+        _graphics.clear(Assets.colorSets.get(Assets.currPalette).y);
 
         if (_playState != PlayingState.GameOver) {
             _board.render(_graphics);
@@ -155,7 +157,6 @@ public class GameState extends State {
 
     @Override
     protected void saveData() {
-        _data._currPalette = Assets.currPalette;
         _data._inGame = _playState != PlayingState.Win &&
                 _playState != PlayingState.GameOver;
 
@@ -302,22 +303,9 @@ public class GameState extends State {
         _shareCallback = new ButtonCallback() {
             @Override
             public void doSomething() {
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, "PRUEBA DEL INTENT");
-                sendIntent.setType("text/plain");
-
-                // Always use string resources for UI text.
-                // This says something like "Share this photo with"
-                String title = "TITULO";
-                // Create intent to show the chooser dialog
-                Intent chooser = Intent.createChooser(sendIntent, title);
-
-                // Verify the original intent will resolve to at least one activity
-                if (sendIntent.resolveActivity(_engine.getContext().getPackageManager())
-                        != null) {
-                    _engine.getContext().startActivity(sendIntent);
-                }
+                ShareIntent intent = new ShareIntent("Paquete " + _gridType.getText() +
+                        " - Nivel " + _currentLevel + " completado");
+                intent.shareContent(_engine.getContext(), ShareType.TELEGRAM);
             }
         };
     }
@@ -364,7 +352,7 @@ public class GameState extends State {
 
         _colorPalette = new ColorPalette(_posColorPalette, _sizeColorPalette);
 
-        if (!_colorPalette.init(_data, _graphics.getLogWidth(), _graphics.getLogHeight()))
+        if (!_colorPalette.init(_data._lastUnlockedPack, _graphics.getLogWidth(), _graphics.getLogHeight()))
             throw new Exception("Error al iniciar palette");
     }
 
@@ -378,7 +366,7 @@ public class GameState extends State {
         switch (_playState) {
             case Gaming: {
                 // GiveUp Button
-                _graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
+                _graphics.setColor(Assets.colorSets.get(Assets.currPalette).x);
                 float[] aux = {_giveupImageSize[0] + _giveupTextSize[0], _giveupImageSize[1]};
 
                 _graphics.setColor(0xFF0);
@@ -523,6 +511,10 @@ public class GameState extends State {
             }
             saveData();
         }
+    }
+
+    public void updateColorPalette() {
+        _data._currPalette = Assets.currPalette;
     }
 
     public void playSound(SoundName sound) {

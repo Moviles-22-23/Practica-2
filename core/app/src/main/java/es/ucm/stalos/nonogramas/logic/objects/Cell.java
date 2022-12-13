@@ -1,12 +1,8 @@
 package es.ucm.stalos.nonogramas.logic.objects;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import es.ucm.stalos.androidengine.Graphics;
 import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.Assets;
-import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
 import es.ucm.stalos.nonogramas.logic.enums.CellType;
 import es.ucm.stalos.nonogramas.logic.enums.MyColor;
 
@@ -40,8 +36,8 @@ public class Cell {
         // Filled Square
         int[] fillPos = new int[]{fx, fy};
 
-        if (cellType == CellType.EMPTY) graphics.setColor(MyColor.GREY_HARD.getValue());
-        else if (cellType == CellType.FILL) graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
+        if (cellType == CellType.EMPTY) graphics.setColor(MyColor.DARK_GREY.getValue());
+        else if (cellType == CellType.FILL) graphics.setColor(Assets.colorSets.get(Assets.currPalette).x);
         else graphics.setColor(MyColor.WHITE.getValue());
 
         graphics.fillSquare(fillPos, fsize);

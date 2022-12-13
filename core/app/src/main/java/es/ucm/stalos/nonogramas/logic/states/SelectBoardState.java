@@ -95,10 +95,10 @@ public class SelectBoardState extends State {
     @Override
     public void render() {
         // BackgroundColor
-        _graphics.clear(Assets.colorSets.get(Assets.currPalette).getSecond());
+        _graphics.clear(Assets.colorSets.get(Assets.currPalette).y);
 
         // Texts
-        _graphics.setColor(MyColor.GREY_SOFT.getValue());
+        _graphics.setColor(MyColor.LIGHT_GREY.getValue());
         _graphics.drawCenteredString(_modeText, FontName.DefaultFont.getName(),
                 _modePos, _modeSize);
         _graphics.drawCenteredString(_commentText, FontName.DefaultFont.getName(),

@@ -1,14 +1,12 @@
 package es.ucm.stalos.nonogramas.logic;
 
-import java.util.Map;
+import android.graphics.Point;
 
-import es.ucm.stalos.androidengine.Image;
-import es.ucm.stalos.androidengine.Sound;
-import es.ucm.stalos.nonogramas.logic.objects.ColorSet;
+import java.util.Map;
 
 public class Assets {
     // Colores (TODO pensar como cargarlos de una mejor manera)
-    public static Map<Integer, ColorSet> colorSets;
+    public static Map<Integer, Point> colorSets;
 
     public static int currPalette;
 }

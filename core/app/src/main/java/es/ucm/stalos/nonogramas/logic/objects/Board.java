@@ -428,7 +428,7 @@ public class Board {
         // Aqui dibuja solo la solucion cuando hemos ganado
         for (int i = 0; i < _rows; i++) {
             for (int j = 0; j < _cols; j++) {
-                graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
+                graphics.setColor(Assets.colorSets.get(Assets.currPalette).x);
 
                 int[] solPos = {_pos[0] + size * j + margin + _offset, _pos[1] + size * i + margin};
 

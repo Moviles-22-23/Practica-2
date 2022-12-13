@@ -82,7 +82,7 @@ public class MainMenuState extends State {
     @Override
     public void render() {
         // BackgroundColor
-        _graphics.clear(Assets.colorSets.get(Assets.currPalette).getSecond());
+        _graphics.clear(Assets.colorSets.get(Assets.currPalette).y);
 
         // Texts Color
         _graphics.setColor(MyColor.BLACK.getValue());
@@ -92,14 +92,14 @@ public class MainMenuState extends State {
                 _titlePos, _titleSize);
 
         // Play Button
-        _graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
+        _graphics.setColor(Assets.colorSets.get(Assets.currPalette).x);
         if (Assets.currPalette == 0) _graphics.drawRect(_playButtonPos, _playButtonSize);
         else _graphics.fillSquare(_playButtonPos, _playButtonSize);
         _graphics.drawCenteredString(_playButtonText, FontName.ButtonMainMenu.getName(),
                 _playButtonPos, _playButtonSize);
 
         // Play Random Button
-        _graphics.setColor(Assets.colorSets.get(Assets.currPalette).getFirst());
+        _graphics.setColor(Assets.colorSets.get(Assets.currPalette).x);
         if (Assets.currPalette == 0)
             _graphics.drawRect(_playRandomButtonPos, _playRandomButtonSize);
         else _graphics.fillSquare(_playRandomButtonPos, _playRandomButtonSize);

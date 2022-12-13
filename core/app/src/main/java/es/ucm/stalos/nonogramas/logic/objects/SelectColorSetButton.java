@@ -1,5 +1,7 @@
 package es.ucm.stalos.nonogramas.logic.objects;
 
+import android.graphics.Point;
+
 import es.ucm.stalos.androidengine.Graphics;
 import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.enums.ImageName;
@@ -7,7 +9,7 @@ import es.ucm.stalos.nonogramas.logic.enums.MyColor;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 
 public class SelectColorSetButton {
-    public SelectColorSetButton(int[] pos, float[] size, ColorSet colorSet, boolean _isUnlocked, int index) {
+    public SelectColorSetButton(int[] pos, float[] size, Point colorSet, boolean _isUnlocked, int index) {
         this._buttonPos = pos;
         this._buttonSize = size;
         this._colorSet = colorSet;
@@ -28,18 +30,18 @@ public class SelectColorSetButton {
 
     public void render(Graphics graphics) {
         // Fondo negro
-        if (Assets.currPalette == _index) graphics.setColor(_colorSet.getSecond());
+        if (Assets.currPalette == _index) graphics.setColor(_colorSet.y);
         else graphics.setColor(MyColor.BLACK.getValue());
         graphics.fillSquare(_buttonPos, _buttonSize);
         // Color Primario
-        graphics.setColor(_colorSet.getFirst());
+        graphics.setColor(_colorSet.x);
         graphics.fillCircle(_firstColorPos, _colorRadius);
         // Marco color primario (Si es negro pone borde blanco)
         if (_index == 0) graphics.setColor(MyColor.WHITE.getValue());
         else graphics.setColor(MyColor.BLACK.getValue());
         graphics.drawCircle(_firstColorPos, _colorRadius);
         // Color Secundario
-        graphics.setColor(_colorSet.getSecond());
+        graphics.setColor(_colorSet.y);
         graphics.fillCircle(_secondColorPos, _colorRadius);
         graphics.setColor(MyColor.BLACK.getValue());
         graphics.drawCircle(_secondColorPos, _colorRadius);
@@ -87,7 +89,7 @@ public class SelectColorSetButton {
     /**
      * Font of the text
      */
-    private final ColorSet _colorSet;
+    private final Point _colorSet;
 
     private int[] _firstColorPos = new int[2];
     private int[] _secondColorPos = new int[2];

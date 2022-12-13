@@ -1,11 +1,11 @@
 package es.ucm.stalos.nonogramas.logic.states;
 
+import android.graphics.Point;
+
 import java.util.HashMap;
 
 import es.ucm.stalos.androidengine.State;
-import es.ucm.stalos.androidengine.Audio;
 import es.ucm.stalos.androidengine.Engine;
-import es.ucm.stalos.androidengine.Graphics;
 import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.data.GameData;
 import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
@@ -13,7 +13,6 @@ import es.ucm.stalos.nonogramas.logic.enums.FontName;
 import es.ucm.stalos.nonogramas.logic.enums.SoundName;
 import es.ucm.stalos.nonogramas.logic.enums.ImageName;
 import es.ucm.stalos.nonogramas.logic.enums.MyColor;
-import es.ucm.stalos.nonogramas.logic.objects.ColorSet;
 
 /**
  * This state is created to initialize all the assets of the game before it starts
@@ -75,20 +74,20 @@ public class LoadState extends State {
 
             // Color Sets
             Assets.colorSets = new HashMap<>();
-            Assets.colorSets.put(0, new ColorSet(MyColor.BLACK.getValue(),
+            Assets.colorSets.put(0, new Point(MyColor.BLACK.getValue(),
                     MyColor.WHITE.getValue()));
-            Assets.colorSets.put(1, new ColorSet(MyColor.ORANGE_SET_FIRST.getValue(),
-                    MyColor.ORANGE_SET_SECOND.getValue()));
-            Assets.colorSets.put(2, new ColorSet(MyColor.GREEN_SET_FIRST.getValue(),
-                    MyColor.GREEN_SET_SECOND.getValue()));
-            Assets.colorSets.put(3, new ColorSet(MyColor.BLUE_SET_FIRST.getValue(),
-                    MyColor.BLUE_SET_SECOND.getValue()));
-            Assets.colorSets.put(4, new ColorSet(MyColor.RED_SET_FIRST.getValue(),
-                    MyColor.RED_SET_SECOND.getValue()));
-            Assets.colorSets.put(5, new ColorSet(MyColor.PURPLE_SET_FIRST.getValue(),
-                    MyColor.PURPLE_SET_SECOND.getValue()));
-            Assets.colorSets.put(6, new ColorSet(MyColor.PURBLUE_SET_FIRST.getValue(),
-                    MyColor.PURBLUE_SET_SECOND.getValue()));
+            Assets.colorSets.put(1, new Point(MyColor.ORANGE.getValue(),
+                    MyColor.LIGHT_ORANGE.getValue()));
+            Assets.colorSets.put(2, new Point(MyColor.DARK_GREEN.getValue(),
+                    MyColor.LIGHT_GREEN.getValue()));
+            Assets.colorSets.put(3, new Point(MyColor.SOFT_BLUE.getValue(),
+                    MyColor.LIGHT_BLUE.getValue()));
+            Assets.colorSets.put(4,new Point(MyColor.DARK_RED.getValue(),
+                    MyColor.LIGHT_RED.getValue()));
+            Assets.colorSets.put(5, new Point(MyColor.PURPLE.getValue(),
+                    MyColor.LIGHT_PURPLE.getValue()));
+            Assets.colorSets.put(6, new Point(MyColor.DARK_PURPLE.getValue(),
+                    MyColor.SKY_BLUE.getValue()));
 
             // LOAD DATA
             _serSystem = new GameDataSystem(_engine.getContext(), _engine.getAssetManager());

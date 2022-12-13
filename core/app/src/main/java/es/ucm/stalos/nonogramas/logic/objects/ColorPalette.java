@@ -8,7 +8,9 @@ import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.data.GameData;
+import es.ucm.stalos.nonogramas.logic.enums.MyColor;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
+import es.ucm.stalos.nonogramas.logic.states.GameState;
 
 public class ColorPalette {
     public ColorPalette(int[] pos, float[] size) {
@@ -16,17 +18,10 @@ public class ColorPalette {
         this._size = size;
     }
 
-    public boolean init(GameData data, int logW, int logH) {
+    public boolean init(int lastUnlockedPack, int logW, int logH) {
         try {
-            _data = data;
-
-            _textSize[0] = logW * 0.7f;
-            _textSize[1] = logH * 0.1f;
-            _textPos[0] = (int) ((logW - _textSize[0]) * 0.5f);
-            _textPos[1] = (int) ((logH - _textSize[1]) * 0.2f);
-
 //            initColorSets();
-            initSelectColorSetButtons(logW);
+            initSelectColorSetButtons(logW, lastUnlockedPack);
 
         } catch (Exception e) {
             System.out.println("Error iniciando color palette");
@@ -37,7 +32,7 @@ public class ColorPalette {
 
     public void render(Graphics graphics) {
         // Black Background
-        graphics.setColor(0x000000FF);
+        graphics.setColor(MyColor.BLACK.getValue());
         graphics.fillSquare(_pos, _size);
 
         // Buttons
@@ -46,7 +41,7 @@ public class ColorPalette {
         }
     }
 
-    private void initSelectColorSetButtons(int logW) {
+    private void initSelectColorSetButtons(int logW, int lastUnlockedPack) {
 
         int[] pos = new int[2];
         float[] size = new float[2];
@@ -57,7 +52,7 @@ public class ColorPalette {
             int[] bPos = new int[]{_pos[0] + logW * i / 7, _pos[1]};
             float[] bSize = new float[]{_size[0] / 7, _size[1]};
 
-            boolean unlocked = _data._lastUnlockedPack >= i;
+            boolean unlocked = lastUnlockedPack >= i;
 
             // Crea el boton
             final SelectColorSetButton b = new SelectColorSetButton(bPos, bSize,
@@ -70,7 +65,7 @@ public class ColorPalette {
                 public void doSomething() {
                     Assets.currPalette = auxI;
                     _paletteSelected = auxI;
-                    System.out.println("Pulsado el boton: " + auxI);
+                    _state.updateColorPalette();
                 }
             });
 
@@ -94,12 +89,7 @@ public class ColorPalette {
     private float[] _size;
 
     // Cositas
-    State _state;
-    GameData _data;
-
-    private String _text = "COLOR PALETTE";
-    private int[] _textPos = new int[2];
-    private float[] _textSize = new float[2];
+    GameState _state;
 
     /**
      * List of all select level buttons
