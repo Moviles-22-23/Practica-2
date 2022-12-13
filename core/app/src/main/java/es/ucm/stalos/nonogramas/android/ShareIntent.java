@@ -33,10 +33,10 @@ public class ShareIntent {
                 url = "https://twitter.com/intent/tweet";
                 break;
             case WHATSAPP:
-                url = "https://api.whatsapp.com/send?phone=%s&text=%s";
+                url = "https://api.whatsapp.com/send";
                 break;
             case TELEGRAM:
-                url = "a";
+                url = "http://telegram.me/shes_ir";
                 break;
         }
 

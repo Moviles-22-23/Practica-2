@@ -295,7 +295,7 @@ public class GameState extends State {
             public void doSomething() {
                 ShareIntent intent = new ShareIntent("Paquete " + _gridType.getText() +
                         " - Nivel " + _currentLevel + " completado");
-                intent.shareContent(_engine.getContext(), ShareType.WHATSAPP);
+                intent.shareContent(_engine.getContext(), ShareType.TELEGRAM);
             }
         };
     }
