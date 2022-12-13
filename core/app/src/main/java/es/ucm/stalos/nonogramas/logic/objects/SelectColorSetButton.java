@@ -3,7 +3,6 @@ package es.ucm.stalos.nonogramas.logic.objects;
 import android.graphics.Point;
 
 import es.ucm.stalos.androidengine.Graphics;
-import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.enums.ImageName;
 import es.ucm.stalos.nonogramas.logic.enums.MyColor;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
@@ -30,7 +29,7 @@ public class SelectColorSetButton {
 
     public void render(Graphics graphics) {
         // Fondo negro
-        if (Assets.currPalette == _index) graphics.setColor(_colorSet.y);
+        if (ColorPalette._currPalette == _index) graphics.setColor(_colorSet.y);
         else graphics.setColor(MyColor.BLACK.getValue());
         graphics.fillSquare(_buttonPos, _buttonSize);
         // Color Primario

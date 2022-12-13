@@ -1,21 +1,22 @@
 package es.ucm.stalos.nonogramas.logic.objects;
 
+import android.graphics.Point;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import es.ucm.stalos.androidengine.Graphics;
-import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.TouchEvent;
-import es.ucm.stalos.nonogramas.logic.Assets;
-import es.ucm.stalos.nonogramas.logic.data.GameData;
 import es.ucm.stalos.nonogramas.logic.enums.MyColor;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 import es.ucm.stalos.nonogramas.logic.states.GameState;
 
 public class ColorPalette {
-    public ColorPalette(int[] pos, float[] size) {
+    public ColorPalette(int[] pos, float[] size, GameState state) {
         this._pos = pos;
         this._size = size;
+        this._state = state;
     }
 
     public boolean init(int lastUnlockedPack, int logW, int logH) {
@@ -56,15 +57,14 @@ public class ColorPalette {
 
             // Crea el boton
             final SelectColorSetButton b = new SelectColorSetButton(bPos, bSize,
-                    Assets.colorSets.get(i), unlocked, auxI);
+                    _colorSets.get(i), unlocked, auxI);
 
 
             // Cambia el callBack
             b.setCallback(new ButtonCallback() {
                 @Override
                 public void doSomething() {
-                    Assets.currPalette = auxI;
-                    _paletteSelected = auxI;
+                    _currPalette = auxI;
                     _state.updateColorPalette();
                 }
             });
@@ -80,10 +80,11 @@ public class ColorPalette {
             }
         }
 
-        System.out.println("Seleccionada la palette: " + _paletteSelected);
+        System.out.println("Seleccionada la palette: " + _currPalette);
     }
 
-    private int _paletteSelected = 0;
+    public static Map<Integer, Point> _colorSets;
+    public static int _currPalette;
 
     private int[] _pos;
     private float[] _size;

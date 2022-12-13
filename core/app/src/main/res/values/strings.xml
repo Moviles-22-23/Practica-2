@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Nonogramas</string>
+    <string name="msg_1">Te echamos de menos. Nuevos retos te esperan \uD83D\uDE0A</string>
+    <string name="msg_2">No pierdas más el tiempo. Enfréntate a la aventura \uD83D\uDE00</string>
+    <string name="msg_3">Parece que llevas un tiempo sin jugar.
+        Es hora de ejercitar un poco el coco \uD83D\uDE00</string>
 </resources>

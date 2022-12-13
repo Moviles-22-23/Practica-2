@@ -198,34 +198,6 @@ public class Graphics {
         _paint.reset();
     }
 
-    // TODO: Borrar esto
-    // EN PC LO HACIAMOS ASI
-//    @Override
-//    public void drawCenteredString(String text, int[] pos, float[] size, Font font) {
-//        java.awt.Font javaFont = initFont(font);
-//
-//        // Calculates de logic pos and size
-//        int[] logicPos = finalPosition(pos[0], pos[1]);
-//        int[] logicSize = finalSize(size[0], size[1]);
-//
-//        // Get the FontMetrics
-//        FontMetrics metrics = _graphics.getFontMetrics(javaFont);
-//
-//        // Determine the X coordinate for the text
-//        int x = logicPos[0] + ((int) logicSize[0] - metrics.stringWidth(text)) / 2;
-//        // Determine the Y coordinate for the text (note we add the ascent, as in java_2D 0 is top of the screen)
-//        int y = logicPos[1] + (((int) logicSize[1] - metrics.getHeight()) / 2) + metrics.getAscent();
-//
-//        // Drawing
-//        _graphics.drawString(text, x, y);
-//        _graphics.setPaintMode();
-//    }
-
-//    public void drawCircle(int[] pos, float radious){
-//        _paint.setStyle(Paint.Style.STROKE);
-//        _canvas.drawCircle(pos[0], pos[1], radious, _paint);
-//    }
-
     public void drawLine(int[] start, int[] end) {
         _canvas.drawLine(start[0], start[1], end[0], end[1], _paint);
     }

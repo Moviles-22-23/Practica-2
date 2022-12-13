@@ -48,7 +48,6 @@ public class Engine implements Runnable {
             // Programación defensiva
             throw new RuntimeException("run() should not be called directly");
         }
-        //TODO: Bucle principal en android
         _lastFrameTime = System.nanoTime();
         _running = true;
 

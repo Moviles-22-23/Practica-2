@@ -1,7 +1,6 @@
 package es.ucm.stalos.nonogramas.logic.objects;
 
 import es.ucm.stalos.androidengine.Graphics;
-import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.enums.ImageName;
 import es.ucm.stalos.nonogramas.logic.enums.MyColor;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
@@ -20,10 +19,10 @@ public class SelectButton {
     }
 
     public void render(Graphics gr) {
-        gr.setColor(Assets.colorSets.get(Assets.currPalette).x);
+        gr.setColor(ColorPalette._colorSets.get(ColorPalette._currPalette).x);
 
         // Si el color es negro solo pinta el borde
-        if (Assets.currPalette == 0) gr.drawRect(_buttonPos, _buttonSize);
+        if (ColorPalette._currPalette == 0) gr.drawRect(_buttonPos, _buttonSize);
         else gr.fillSquare(_buttonPos, _buttonSize);
 
         if (!_isUnlocked) {

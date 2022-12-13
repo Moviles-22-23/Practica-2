@@ -6,13 +6,13 @@ import java.util.HashMap;
 
 import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.Engine;
-import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.data.GameData;
 import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
 import es.ucm.stalos.nonogramas.logic.enums.FontName;
 import es.ucm.stalos.nonogramas.logic.enums.SoundName;
 import es.ucm.stalos.nonogramas.logic.enums.ImageName;
 import es.ucm.stalos.nonogramas.logic.enums.MyColor;
+import es.ucm.stalos.nonogramas.logic.objects.ColorPalette;
 
 /**
  * This state is created to initialize all the assets of the game before it starts
@@ -44,6 +44,8 @@ public class LoadState extends State {
                     ImageName.HeartDisable.getFileName());
             _graphics.newImage(ImageName.Share.getName(),
                     ImageName.Share.getFileName());
+            _graphics.newImage(ImageName.HeartAdd.getName(),
+                    ImageName.HeartAdd.getFileName());
 
             // Fonts
             _graphics.newFont(FontName.TitleMainMenu.getName(),
@@ -73,20 +75,20 @@ public class LoadState extends State {
             _audio.newSound(SoundName.WindSound.getName(), SoundName.WindSound.getFileName());
 
             // Color Sets
-            Assets.colorSets = new HashMap<>();
-            Assets.colorSets.put(0, new Point(MyColor.BLACK.getValue(),
+            ColorPalette._colorSets = new HashMap<>();
+            ColorPalette._colorSets.put(0, new Point(MyColor.BLACK.getValue(),
                     MyColor.WHITE.getValue()));
-            Assets.colorSets.put(1, new Point(MyColor.ORANGE.getValue(),
+            ColorPalette._colorSets.put(1, new Point(MyColor.ORANGE.getValue(),
                     MyColor.LIGHT_ORANGE.getValue()));
-            Assets.colorSets.put(2, new Point(MyColor.DARK_GREEN.getValue(),
+            ColorPalette._colorSets.put(2, new Point(MyColor.DARK_GREEN.getValue(),
                     MyColor.LIGHT_GREEN.getValue()));
-            Assets.colorSets.put(3, new Point(MyColor.SOFT_BLUE.getValue(),
+            ColorPalette._colorSets.put(3, new Point(MyColor.SOFT_BLUE.getValue(),
                     MyColor.LIGHT_BLUE.getValue()));
-            Assets.colorSets.put(4,new Point(MyColor.DARK_RED.getValue(),
+            ColorPalette._colorSets.put(4, new Point(MyColor.DARK_RED.getValue(),
                     MyColor.LIGHT_RED.getValue()));
-            Assets.colorSets.put(5, new Point(MyColor.PURPLE.getValue(),
+            ColorPalette._colorSets.put(5, new Point(MyColor.PURPLE.getValue(),
                     MyColor.LIGHT_PURPLE.getValue()));
-            Assets.colorSets.put(6, new Point(MyColor.DARK_PURPLE.getValue(),
+            ColorPalette._colorSets.put(6, new Point(MyColor.DARK_PURPLE.getValue(),
                     MyColor.SKY_BLUE.getValue()));
 
             // LOAD DATA
@@ -107,7 +109,7 @@ public class LoadState extends State {
                 State mainMenu = new MainMenuState(_engine);
                 _engine.reqNewState(mainMenu);
             }
-            Assets.currPalette = _data._currPalette;
+            ColorPalette._currPalette = _data._currPalette;
 
         } catch (Exception e) {
             System.out.println("Error en init de LoadState");

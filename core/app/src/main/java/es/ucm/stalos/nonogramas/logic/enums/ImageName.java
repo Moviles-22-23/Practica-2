@@ -13,7 +13,8 @@ public enum ImageName {
     GameOver(4),
     Ads(5),
     HeartDisable(6),
-    Share(7);
+    Share(7),
+    HeartAdd(8);
 
     ImageName(int i) {
         this._value = i;
@@ -49,6 +50,10 @@ public enum ImageName {
             case 7:
                 _name = "share";
                 _fileName = "share.png";
+                break;
+            case 8:
+                _name = "heartAdd";
+                _fileName = "heartAdd.png";
                 break;
         }
     }

@@ -74,10 +74,12 @@ public class Input implements View.OnTouchListener, View.OnLongClickListener {
             v.performClick();
             if (!_longTouching) {
                 onTouchDownEvent((int) e.getX(), (int) e.getY());
-            } else if (e.getX() == lastTouchX && e.getY() == lastTouchY) {
+            }
+            else if (e.getX() == lastTouchX && e.getY() == lastTouchY) {
                 onLongTouchEvent((int) e.getX(), (int) e.getY());
                 _longTouching = false;
-            } else _longTouching = false;
+            }
+            else _longTouching = false;
         }
         return false;
     }

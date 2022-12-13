@@ -8,7 +8,6 @@ import java.util.Map;
 import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.androidengine.TouchEvent;
-import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
 import es.ucm.stalos.nonogramas.logic.enums.FontName;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
@@ -16,6 +15,7 @@ import es.ucm.stalos.nonogramas.logic.enums.ImageName;
 import es.ucm.stalos.nonogramas.logic.enums.MyColor;
 import es.ucm.stalos.nonogramas.logic.enums.SoundName;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
+import es.ucm.stalos.nonogramas.logic.objects.ColorPalette;
 import es.ucm.stalos.nonogramas.logic.objects.SelectButton;
 
 public class SelectBoardState extends State {
@@ -95,7 +95,7 @@ public class SelectBoardState extends State {
     @Override
     public void render() {
         // BackgroundColor
-        _graphics.clear(Assets.colorSets.get(Assets.currPalette).y);
+        _graphics.clear(ColorPalette._colorSets.get(ColorPalette._currPalette).y);
 
         // Texts
         _graphics.setColor(MyColor.LIGHT_GREY.getValue());

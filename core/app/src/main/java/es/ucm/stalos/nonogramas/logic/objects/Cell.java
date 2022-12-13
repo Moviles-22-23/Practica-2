@@ -2,7 +2,6 @@ package es.ucm.stalos.nonogramas.logic.objects;
 
 import es.ucm.stalos.androidengine.Graphics;
 import es.ucm.stalos.androidengine.TouchEvent;
-import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.enums.CellType;
 import es.ucm.stalos.nonogramas.logic.enums.MyColor;
 
@@ -37,7 +36,7 @@ public class Cell {
         int[] fillPos = new int[]{fx, fy};
 
         if (cellType == CellType.EMPTY) graphics.setColor(MyColor.DARK_GREY.getValue());
-        else if (cellType == CellType.FILL) graphics.setColor(Assets.colorSets.get(Assets.currPalette).x);
+        else if (cellType == CellType.FILL) graphics.setColor(ColorPalette._colorSets.get(ColorPalette._currPalette).x);
         else graphics.setColor(MyColor.WHITE.getValue());
 
         graphics.fillSquare(fillPos, fsize);
@@ -108,10 +107,6 @@ public class Cell {
      * Offset to draw the filled square
      */
     public float whiteMargin = 2;
-    /**
-     * Different colors of the cel
-     */
-//    private Map<CellType, Integer> _colors;
     /**
      *
      */

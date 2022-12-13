@@ -4,13 +4,12 @@ import java.util.List;
 
 import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.Engine;
-import es.ucm.stalos.androidengine.Font;
 import es.ucm.stalos.androidengine.TouchEvent;
-import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.enums.FontName;
 import es.ucm.stalos.nonogramas.logic.enums.MyColor;
 import es.ucm.stalos.nonogramas.logic.enums.SoundName;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
+import es.ucm.stalos.nonogramas.logic.objects.ColorPalette;
 
 
 // TODO: ANUNCIOS
@@ -82,7 +81,7 @@ public class MainMenuState extends State {
     @Override
     public void render() {
         // BackgroundColor
-        _graphics.clear(Assets.colorSets.get(Assets.currPalette).y);
+        _graphics.clear(ColorPalette._colorSets.get(ColorPalette._currPalette).y);
 
         // Texts Color
         _graphics.setColor(MyColor.BLACK.getValue());
@@ -92,15 +91,15 @@ public class MainMenuState extends State {
                 _titlePos, _titleSize);
 
         // Play Button
-        _graphics.setColor(Assets.colorSets.get(Assets.currPalette).x);
-        if (Assets.currPalette == 0) _graphics.drawRect(_playButtonPos, _playButtonSize);
+        _graphics.setColor(ColorPalette._colorSets.get(ColorPalette._currPalette).x);
+        if (ColorPalette._currPalette == 0) _graphics.drawRect(_playButtonPos, _playButtonSize);
         else _graphics.fillSquare(_playButtonPos, _playButtonSize);
         _graphics.drawCenteredString(_playButtonText, FontName.ButtonMainMenu.getName(),
                 _playButtonPos, _playButtonSize);
 
         // Play Random Button
-        _graphics.setColor(Assets.colorSets.get(Assets.currPalette).x);
-        if (Assets.currPalette == 0)
+        _graphics.setColor(ColorPalette._colorSets.get(ColorPalette._currPalette).x);
+        if (ColorPalette._currPalette == 0)
             _graphics.drawRect(_playRandomButtonPos, _playRandomButtonSize);
         else _graphics.fillSquare(_playRandomButtonPos, _playRandomButtonSize);
         _graphics.drawCenteredString(_playRandomButtonText, FontName.ButtonMainMenu.getName(),

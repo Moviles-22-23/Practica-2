@@ -1,14 +1,11 @@
 package es.ucm.stalos.nonogramas.logic.states;
 
-import android.net.Uri;
-
 import java.util.List;
 
 import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.android.ShareIntent;
-import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.data.GameData;
 import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
 import es.ucm.stalos.nonogramas.logic.enums.FontName;
@@ -89,7 +86,7 @@ public class GameState extends State {
     @Override
     public void render() {
         // Background Color
-        _graphics.clear(Assets.colorSets.get(Assets.currPalette).y);
+        _graphics.clear(ColorPalette._colorSets.get(ColorPalette._currPalette).y);
 
         if (_playState != PlayingState.GameOver) {
             _board.render(_graphics);
@@ -128,8 +125,15 @@ public class GameState extends State {
                 }
 
                 // ADS
-                else if (_lives != MAX_LIVES && (_playState == PlayingState.GameOver || _playState == PlayingState.Gaming) &&
-                        clickInsideSquare(clickPos, _adsImagePos, _adsButtonSize))
+                else if (_lives != MAX_LIVES && _playState == PlayingState.Gaming &&
+                        clickInsideSquare(clickPos, new int[]{
+                                (int)(_lifeImagePos[0] + (_lifeImageSize[0] + _liveImageMargin) * _lives),
+                                _lifeImagePos[1] }, _lifeImageSize))
+                    _adsCallback.doSomething();
+
+                // ADS IN GAME OVER
+                else if (_playState == PlayingState.GameOver &&
+                        clickInsideSquare(clickPos, _adsImagePos, _adsImageSize))
                     _adsCallback.doSomething();
 
                     // COLOR PALETTE
@@ -202,7 +206,7 @@ public class GameState extends State {
             _board = new Board(this, _data, _posBoard, _sizeBoard);
         else
             _board = new Board(this, _gridType, _posBoard, _sizeBoard,
-                    _isRandom, _lives, _currentLevel);
+                    _isRandom, _currentLevel);
 
         if (!_board.init(_data, _graphics.getLogWidth(),
                 _graphics.getLogHeight(), _engine.getAssetManager()))
@@ -258,21 +262,15 @@ public class GameState extends State {
         // Life
         _lifeImageSize[0] = _graphics.getLogWidth() * 0.1207f;
         _lifeImageSize[1] = _graphics.getLogHeight() * 0.075f;
-        _lifeImagePos[0] = (int) ((_graphics.getLogWidth() * 0.7f) - _lifeImageSize[0]);
-        _lifeImagePos[1] = (int) (_giveupImagePos[1] - _giveupImageSize[1] / 2);
+        _lifeImagePos[0] = (int) (_graphics.getLogWidth() * 0.5f);
+        _lifeImagePos[1] = (int) (_giveupImagePos[1] - _giveupImageSize[1] * 0.5f);
 
         // ADS - GameOver
-        _adsImageSize[0] = _graphics.getLogWidth() * 0.13f;
-        _adsImageSize[1] = _graphics.getLogHeight() * 0.07f;
+        _adsImageSize[0] = _graphics.getLogWidth() * 0.4f;
+        _adsImageSize[1] = _adsImageSize[0];
+        _adsImagePos[0] = (int) ((_graphics.getLogWidth() + _adsImagePos[0]) * 0.5f);
+        _adsImagePos[1] = (int) ((_graphics.getLogHeight() * 0.6f));
 
-        _adsLifeImageSize[0] = _graphics.getLogWidth() * 0.104f;
-        _adsLifeImageSize[1] = _graphics.getLogHeight() * 0.056f;
-
-        _adsTextSize[0] = _graphics.getLogWidth() * 0.5f;
-        _adsTextSize[1] = _adsImageSize[1];
-
-        _adsButtonSize[0] = _adsImageSize[0] + _adsTextSize[0];
-        _adsButtonSize[1] = _adsImageSize[1];
         _adsCallback = new ButtonCallback() {
             @Override
             public void doSomething() {
@@ -284,15 +282,6 @@ public class GameState extends State {
                 });
             }
         };
-
-        _adsImagePos[0] = (int) (_graphics.getLogWidth() * 0.5f - _adsButtonSize[0] * 0.5f);
-        _adsImagePos[1] = (int) (_graphics.getLogHeight() * 0.77f);
-
-        _adsLifeImagePos[0] = (int) (_adsImagePos[0] + _adsImageSize[0] * 1.1f);
-        _adsLifeImagePos[1] = _adsImagePos[1];
-
-        _adsTextPos[0] = (int) (_adsImagePos[0] + _adsImageSize[0]);
-        _adsTextPos[1] = _adsImagePos[1];
 
         // SHARE
         _shareImageSize[0] = _graphics.getLogWidth() * 0.13f;
@@ -350,7 +339,7 @@ public class GameState extends State {
         _sizeColorPalette[0] = 400.0f;
         _sizeColorPalette[1] = 100.0f;
 
-        _colorPalette = new ColorPalette(_posColorPalette, _sizeColorPalette);
+        _colorPalette = new ColorPalette(_posColorPalette, _sizeColorPalette, this);
 
         if (!_colorPalette.init(_data._lastUnlockedPack, _graphics.getLogWidth(), _graphics.getLogHeight()))
             throw new Exception("Error al iniciar palette");
@@ -366,7 +355,7 @@ public class GameState extends State {
         switch (_playState) {
             case Gaming: {
                 // GiveUp Button
-                _graphics.setColor(Assets.colorSets.get(Assets.currPalette).x);
+                _graphics.setColor(ColorPalette._colorSets.get(ColorPalette._currPalette).x);
                 float[] aux = {_giveupImageSize[0] + _giveupTextSize[0], _giveupImageSize[1]};
 
                 _graphics.setColor(0xFF0);
@@ -375,19 +364,18 @@ public class GameState extends State {
                         _giveupTextPos, _giveupTextSize);
 
                 // Life Image
-                for (int i = 0; i < _lives; i++) {
+                for (int i = 0; i < MAX_LIVES; i++) {
                     int[] pos = new int[]{(int) (_lifeImagePos[0] + (_lifeImageSize[0] + _liveImageMargin) * i), _lifeImagePos[1]};
-                    _graphics.drawImage(ImageName.Heart.getName(), pos, _lifeImageSize);
+                    if(i < _lives) {
+                        _graphics.drawImage(ImageName.Heart.getName(), pos, _lifeImageSize);
+                    }
+                    else if(i == _lives) {
+                        _graphics.drawImage(ImageName.HeartAdd.getName(), pos, _lifeImageSize);
+                    }
+                    else {
+                        _graphics.drawImage(ImageName.HeartDisable.getName(), pos, _lifeImageSize);
+                    }
                 }
-
-                // Ad button
-                _graphics.drawImage(ImageName.Ads.getName(), _adsImagePos, _adsImageSize);
-                if (_lives == MAX_LIVES)
-                    _graphics.drawImage(ImageName.HeartDisable.getName(),
-                            _adsLifeImagePos, _adsLifeImageSize);
-                else
-                    _graphics.drawImage(ImageName.Heart.getName(),
-                            _adsLifeImagePos, _adsLifeImageSize);
 
                 _colorPalette.render(_graphics);
                 break;
@@ -411,9 +399,7 @@ public class GameState extends State {
                 _graphics.drawCenteredString(_giveupText, FontName.GameStateButton.getName(),
                         _giveupTextPos, _giveupTextSize);
                 // Ad button
-                _graphics.drawImage(ImageName.Ads.getName(), _adsImagePos, _adsImageSize);
-                _graphics.drawCenteredString(_adsText, FontName.GameStateButton.getName(),
-                        _adsTextPos, _adsTextSize);
+                _graphics.drawImage(ImageName.HeartAdd.getName(), _adsImagePos, _adsImageSize);
                 break;
             default:
                 break;
@@ -461,38 +447,21 @@ public class GameState extends State {
     /**
      * Updates the current lives and the lives text
      *
-     * @param lvs updated number of lives
+     * @param livesToAdd amount of lives to add
      */
-    public void updateLives(int lvs) {
-        _lives = lvs;
+    public void updateLives(int livesToAdd) {
+        _lives  += livesToAdd;
         if (_lives <= 0)
             _playState = PlayingState.GameOver;
-    }
 
-    /**
-     * Adds a life to the current level
-     */
-    public void addLife() {
-        if (_lives < MAX_LIVES) {
-            _lives++;
-            _board.addLife();
-        }
     }
 
     /**
      * Restores de lives value to MAX_LIVES value
      */
     public void restoreLives() {
-        switch (_playState) {
-            case Gaming:
-                addLife();
-                break;
-            case GameOver:
-                _lives = MAX_LIVES;
-                _board.restoreLives(_lives);
-                _playState = PlayingState.Gaming;
-                break;
-        }
+        updateLives(1);
+        if(_playState == PlayingState.GameOver) _playState = PlayingState.Gaming;
     }
 
     /**
@@ -514,7 +483,7 @@ public class GameState extends State {
     }
 
     public void updateColorPalette() {
-        _data._currPalette = Assets.currPalette;
+        _data._currPalette = ColorPalette._currPalette;
     }
 
     public void playSound(SoundName sound) {
@@ -525,7 +494,7 @@ public class GameState extends State {
         System.out.println("Board re-roll");
         _lives = MAX_LIVES;
         _board = new Board(this, _gridType, _posBoard, _sizeBoard,
-                _isRandom, _lives, _currentLevel);
+                _isRandom, _currentLevel);
 
         if (!_board.init(_data, _graphics.getLogWidth(),
                 _graphics.getLogHeight(), _engine.getAssetManager()))
@@ -616,14 +585,6 @@ public class GameState extends State {
     private int[] _adsImagePos = new int[2];
     private float[] _adsImageSize = new float[2];
 
-    private int[] _adsLifeImagePos = new int[2];
-    private float[] _adsLifeImageSize = new float[2];
-
-    private final String _adsText = "Recuperar vida";
-    private int[] _adsTextPos = new int[2];
-    private float[] _adsTextSize = new float[2];
-
-    private float[] _adsButtonSize = new float[2];
     private ButtonCallback _adsCallback;
     private RewardManager _rewardManager;
 

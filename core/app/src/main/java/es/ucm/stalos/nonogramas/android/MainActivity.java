@@ -47,7 +47,9 @@ public class MainActivity extends AppCompatActivity {
         // NOTIFICATIONS
         _pushNotification = new PushNotification(this, "unique_channel",
                 0, "reminder");
-        _pushNotification._msgs.addAll(Arrays.asList(msgs));
+//        _pushNotification._msgs.add(getResources().getString(R.string.msg_1));
+//        _pushNotification._msgs.add(getResources().getString(R.string.msg_2));
+        _pushNotification._msgs.add(getResources().getString(R.string.msg_3));
 
         // SENSOR
         _sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -81,11 +83,4 @@ public class MainActivity extends AppCompatActivity {
     private PushNotification _pushNotification;
     private SensorManager _sensorManager;
     private AndroidSensor _sensor;
-    private String[] msgs =
-            {
-                    "Te echamos de menos. Nuevos retos te esperan \uD83D\uDE0A",
-                    "No pierdas más el tiempo. Enfréntate a la aventura \uD83D\uDE00",
-                    "Parece que llevas un tiempo sin jugar. " +
-                            "Es hora de ejercitar un poco el coco \uD83D\uDE00"
-            };
 }

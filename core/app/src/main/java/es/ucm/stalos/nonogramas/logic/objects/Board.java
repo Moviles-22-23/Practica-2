@@ -21,7 +21,6 @@ import java.util.Random;
 import es.ucm.stalos.androidengine.Font;
 import es.ucm.stalos.androidengine.Graphics;
 import es.ucm.stalos.androidengine.TouchEvent;
-import es.ucm.stalos.nonogramas.logic.Assets;
 import es.ucm.stalos.nonogramas.logic.data.GameData;
 import es.ucm.stalos.nonogramas.logic.enums.CellType;
 import es.ucm.stalos.nonogramas.logic.enums.FontName;
@@ -40,7 +39,7 @@ public class Board {
      * @param size     Board size (hints includes)
      */
     public Board(GameState state, GridType gridType, int[] pos, float[] size,
-                 boolean isRandom, int lives, int levelIndex) {
+                 boolean isRandom, int levelIndex) {
         // GameState
         this._state = state;
         // Grid Type
@@ -56,8 +55,6 @@ public class Board {
         this._size = size;
         // IsRandom
         this._isRandom = isRandom;
-        // Lives
-        this._lives = lives;
         // Level Index
         this._levelIndex = levelIndex;
 
@@ -97,8 +94,6 @@ public class Board {
         this._size = size;
         // IsRandom
         this._isRandom = data._isRandom;
-        // Lives
-        this._lives = data._currentLives;
         // Level Index
         this._levelIndex = data._currentLevel;
 
@@ -159,7 +154,6 @@ public class Board {
             Random rn = new Random();
             int levelChoosen = Math.abs(rn.nextInt() % numLevels);
 
-            // TODO Quitar pero de momento es defensivo para los paquetes con menos de 20 niveles
             if (_levelIndex <= numLevels) levelChoosen = _levelIndex;
 
             // Skip lines to be on the correct level
@@ -331,8 +325,7 @@ public class Board {
                     if (touch == TouchEvent.touchDown && !_sol[i][j] ||
                             touch == TouchEvent.longTouch && _sol[i][j]) {
                         _state.playSound(SoundName.FailSound);
-                        _lives--;
-                        _state.updateLives(_lives);
+                        _state.updateLives(-1);
                         return;
                     } else _state.playSound(SoundName.GoodSound);
 
@@ -428,7 +421,7 @@ public class Board {
         // Aqui dibuja solo la solucion cuando hemos ganado
         for (int i = 0; i < _rows; i++) {
             for (int j = 0; j < _cols; j++) {
-                graphics.setColor(Assets.colorSets.get(Assets.currPalette).x);
+                graphics.setColor(ColorPalette._colorSets.get(ColorPalette._currPalette).x);
 
                 int[] solPos = {_pos[0] + size * j + margin + _offset, _pos[1] + size * i + margin};
 
@@ -495,34 +488,6 @@ public class Board {
 
     public boolean[][] getBoardSolution() {
         return _sol;
-    }
-
-    /**
-     * Sets the Lives value to the value given
-     *
-     * @param lives number of lives
-     */
-    public void restoreLives(int lives) {
-        _lives = lives;
-        resetBoard();
-    }
-
-    /**
-     * Adds a life to the lives count
-     */
-    public void addLife() {
-        _lives++;
-    }
-
-    /**
-     * Reset the board to the initial state
-     */
-    private void resetBoard() {
-        for (int i = 0; i < _rows; i++) {
-            for (int j = 0; j < _cols; j++) {
-                _boardState[i][j].cellType = CellType.EMPTY;
-            }
-        }
     }
 
     //----------------------------------------ATTRIBUTES----------------------------------------------//
@@ -605,10 +570,6 @@ public class Board {
      * Font size
      */
     private int _fontSize;
-    /**
-     * Number of lives of the level
-     */
-    private int _lives;
     /**
      * Index of current level
      */
