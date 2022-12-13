@@ -497,12 +497,32 @@ public class Board {
         return _sol;
     }
 
+    /**
+     * Sets the Lives value to the value given
+     *
+     * @param lives number of lives
+     */
     public void restoreLives(int lives) {
         _lives = lives;
+        resetBoard();
     }
 
+    /**
+     * Adds a life to the lives count
+     */
     public void addLife() {
         _lives++;
+    }
+
+    /**
+     * Reset the board to the initial state
+     */
+    private void resetBoard() {
+        for (int i = 0; i < _rows; i++) {
+            for (int j = 0; j < _cols; j++) {
+                _boardState[i][j].cellType = CellType.EMPTY;
+            }
+        }
     }
 
     //----------------------------------------ATTRIBUTES----------------------------------------------//

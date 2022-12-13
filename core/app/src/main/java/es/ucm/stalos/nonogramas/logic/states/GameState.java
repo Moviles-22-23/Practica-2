@@ -494,7 +494,6 @@ public class GameState extends State {
                 _lives = MAX_LIVES;
                 _board.restoreLives(_lives);
                 _playState = PlayingState.Gaming;
-                //TODO: Resetear el tablero
                 break;
         }
     }
