@@ -79,6 +79,7 @@ public class RewardManager {
                 public void onAdShowedFullScreenContent() {
                     super.onAdShowedFullScreenContent();
                     System.out.println("Ad showed fullscreen");
+                    // TODO: para el cambio de landscape mientra se reproduce anuncio
                 }
             });
 

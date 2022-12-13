@@ -46,6 +46,10 @@ public class GameData implements Serializable {
      */
     public int _currentLives;
     /**
+     * Figure name saved when the app was closed during GameState
+     */
+    public String _currentFigName;
+    /**
      * GridType saved when the app was closed during GameState
      */
     public GridType _currGridType = GridType.NONE;

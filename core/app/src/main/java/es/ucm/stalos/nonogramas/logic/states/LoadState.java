@@ -9,6 +9,7 @@ import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.nonogramas.logic.data.GameData;
 import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
 import es.ucm.stalos.nonogramas.logic.enums.FontName;
+import es.ucm.stalos.nonogramas.logic.enums.GridType;
 import es.ucm.stalos.nonogramas.logic.enums.SoundName;
 import es.ucm.stalos.nonogramas.logic.enums.ImageName;
 import es.ucm.stalos.nonogramas.logic.enums.MyColor;
@@ -64,7 +65,8 @@ public class LoadState extends State {
                     FontName.GameStateButton.getFileName(), 30, true);
             _graphics.newFont(FontName.FigureName.getName(),
                     FontName.FigureName.getFileName(), 50, true);
-
+            _graphics.newFont(FontName.GameStateText.getName(),
+                    FontName.GameStateText.getFileName(), 20, true);
             // Audio
             _audio = _engine.getAudio();
             _audio.newSound(SoundName.MainTheme.getName(), SoundName.MainTheme.getFileName());

@@ -48,7 +48,8 @@ public class GameState extends State {
         this._isRandom = _data._isRandom;
         this._currentLevel = _data._currentLevel;
         this._lives = _data._currentLives;
-        _rewardManager = new RewardManager(this);
+        this._figNameText = _data._currentFigName;
+        this._rewardManager = new RewardManager(this);
     }
 
 //-----------------------------------------OVERRIDE-----------------------------------------------//
@@ -172,6 +173,7 @@ public class GameState extends State {
         if (_data._inGame) {
             _data._isRandom = _isRandom;
             _data._currentLives = _lives;
+            _data._currentFigName = _figNameText;
             _data._currBoardState = _board.getBoardState();
             _data._randomSol = _board.getBoardSolution();
         }
@@ -182,12 +184,21 @@ public class GameState extends State {
 
     @Override
     protected void manageSensorEvent() {
-        if (_isRandom)
+        // Pasa al siguiente nivel  // TODO ese 18 es un max Levels o algo asi
+        if(!_isRandom && _playState == PlayingState.Win && _currentLevel <= 18){
+//            State gameState = new GameState(_engine, _gridType, _isRandom, _currentLevel + 1);
+//            _engine.reqNewState(gameState);
+//            _audio.playSound(SoundName.ClickSound.getName(), 0);
+//            _audio.stopMusic();
+            // TODO cargar el siguiente nivel
+        }
+        else {
             try {
                 rerollBoard();
             } catch (Exception e) {
                 System.err.println(e.getStackTrace());
             }
+        }
     }
 
 //-------------------------------------------INIT-------------------------------------------------//
@@ -320,6 +331,12 @@ public class GameState extends State {
         _gameOverImageSize[1] = _graphics.getLogHeight() * 0.5f;
         _gameOverImagePos[0] = (int) (_gameOverImageSize[0] * 0.05f);
         _gameOverImagePos[1] = (int) (_gameOverImageSize[1] * 0.5f);
+
+        // AGITA TEXT
+        _nextLevelPos[0] = (int) (_graphics.getLogWidth() * 0.5f);
+        _nextLevelPos[1] = (int) (_graphics.getLogHeight() * 0.8f);
+        _nextLevelSize[0] = _graphics.getLogWidth() * 0.5f;
+        _nextLevelSize[1] =  _graphics.getLogHeight() * 0.9f - _nextLevelPos[1];
     }
 
     /**
@@ -328,12 +345,6 @@ public class GameState extends State {
      * @throws Exception if the initialization fails
      */
     private void initPalette() throws Exception {
-        // TODO leer data de la palette
-//        if(_data._inGame)
-//            _board = new Board(this, _data, _posBoard, _sizeBoard);
-//        else
-//            _board = new Board(this, _gridType, _posBoard, _sizeBoard,
-//                    _isRandom, _lives, _currentLevel);
         _posColorPalette[0] = 0;
         _posColorPalette[1] = 520;
         _sizeColorPalette[0] = 400.0f;
@@ -419,8 +430,13 @@ public class GameState extends State {
 
                 // NAME TEXT
                 _graphics.setColor(MyColor.BLACK.getValue());
-                _graphics.drawCenteredString(_levelNameText, FontName.GameStateText.getName(),
+                _graphics.drawCenteredString(_figNameText, FontName.GameStateText.getName(),
                         _levelNamePos, _levelNameSize);
+
+                // AGITAR TEXT
+                _graphics.setColor(MyColor.BLACK.getValue());
+                _graphics.drawCenteredString(_nextLevelText, FontName.GameStateText.getName(),
+                        _nextLevelPos, _nextLevelSize);
                 break;
             case GameOver:
                 _graphics.drawImage(ImageName.GameOver.getName(), _gameOverImagePos, _gameOverImageSize);
@@ -515,8 +531,8 @@ public class GameState extends State {
         _playState = newPlayingState;
     }
 
-    public void setNameText(String n) {
-        _levelNameText = n;
+    public void setFigureName(String name) {
+        _figNameText = name;
     }
 
 //----------------------------------------ATTRIBUTES----------------------------------------------//
@@ -543,7 +559,7 @@ public class GameState extends State {
     private float[] _winSize1 = new float[2];
 
     // Name
-    private String _levelNameText = "RANDOM";
+    private String _figNameText = "RANDOM";
     private int[] _levelNamePos = new int[2];
     private float[] _levelNameSize = new float[2];
 
@@ -587,6 +603,12 @@ public class GameState extends State {
 
     private ButtonCallback _adsCallback;
     private RewardManager _rewardManager;
+
+    // Texto siguiente nivel
+    private final String _nextLevelText = "Agita el telefono";
+    private int[] _nextLevelPos = new int[2];
+    private float[] _nextLevelSize = new float[2];
+
 
     // Share Button
     private int[] _shareImagePos = new int[2];

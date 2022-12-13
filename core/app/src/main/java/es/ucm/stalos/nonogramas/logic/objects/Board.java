@@ -176,8 +176,7 @@ public class Board {
             // Lee la ultima linea para saber le nombre de la figura
             line = br.readLine();
             if (line != null) {
-                _state.setNameText(line);
-                _figNameText = line;
+                _state.setFigureName(line);
             }
 
         } catch (Exception e) {
@@ -430,11 +429,6 @@ public class Board {
                     graphics.fillSquare(solPos, _cellSize);
             }
         }
-
-        // Muestra el nombre de la figura
-        graphics.setColor(MyColor.BLACK.getValue());
-        graphics.drawCenteredString(_figNameText, FontName.FigureName.getName(),
-                _figNamePos, _figNameSize);
     }
 
     /**
@@ -491,10 +485,6 @@ public class Board {
     }
 
     //----------------------------------------ATTRIBUTES----------------------------------------------//
-    /**
-     * Name of the figure of the board
-     */
-    private String _figNameText = "Figura aleatoria";
     /**
      * Figure's name position
      */

@@ -88,6 +88,10 @@ public class Input implements View.OnTouchListener, View.OnLongClickListener {
     @Override
     public boolean onLongClick(View v) {
         _longTouching = true;
+
+        //TODO Lanzamos una vibracion para indicar que el touch es long
+
+
         return false;
     }
 
