@@ -128,11 +128,11 @@ public class GameState extends State {
                 // ADS
                 else if (_lives != MAX_LIVES && _playState == PlayingState.Gaming &&
                         clickInsideSquare(clickPos, new int[]{
-                                (int)(_lifeImagePos[0] + (_lifeImageSize[0] + _liveImageMargin) * _lives),
-                                _lifeImagePos[1] }, _lifeImageSize))
+                                (int) (_lifeImagePos[0] + (_lifeImageSize[0] + _liveImageMargin) * _lives),
+                                _lifeImagePos[1]}, _lifeImageSize))
                     _adsCallback.doSomething();
 
-                // ADS IN GAME OVER
+                    // ADS IN GAME OVER
                 else if (_playState == PlayingState.GameOver &&
                         clickInsideSquare(clickPos, _adsImagePos, _adsImageSize))
                     _adsCallback.doSomething();
@@ -185,14 +185,13 @@ public class GameState extends State {
     @Override
     protected void manageSensorEvent() {
         // Pasa al siguiente nivel  // TODO ese 18 es un max Levels o algo asi
-        if(!_isRandom && _playState == PlayingState.Win && _currentLevel <= 18){
+        if (!_isRandom && _playState == PlayingState.Win && _currentLevel <= 18) {
 //            State gameState = new GameState(_engine, _gridType, _isRandom, _currentLevel + 1);
 //            _engine.reqNewState(gameState);
 //            _audio.playSound(SoundName.ClickSound.getName(), 0);
 //            _audio.stopMusic();
             // TODO cargar el siguiente nivel
-        }
-        else {
+        } else {
             try {
                 rerollBoard();
             } catch (Exception e) {
@@ -336,7 +335,7 @@ public class GameState extends State {
         _nextLevelPos[0] = (int) (_graphics.getLogWidth() * 0.5f);
         _nextLevelPos[1] = (int) (_graphics.getLogHeight() * 0.8f);
         _nextLevelSize[0] = _graphics.getLogWidth() * 0.5f;
-        _nextLevelSize[1] =  _graphics.getLogHeight() * 0.9f - _nextLevelPos[1];
+        _nextLevelSize[1] = _graphics.getLogHeight() * 0.9f - _nextLevelPos[1];
     }
 
     /**
@@ -377,13 +376,11 @@ public class GameState extends State {
                 // Life Image
                 for (int i = 0; i < MAX_LIVES; i++) {
                     int[] pos = new int[]{(int) (_lifeImagePos[0] + (_lifeImageSize[0] + _liveImageMargin) * i), _lifeImagePos[1]};
-                    if(i < _lives) {
+                    if (i < _lives) {
                         _graphics.drawImage(ImageName.Heart.getName(), pos, _lifeImageSize);
-                    }
-                    else if(i == _lives) {
+                    } else if (i == _lives) {
                         _graphics.drawImage(ImageName.HeartAdd.getName(), pos, _lifeImageSize);
-                    }
-                    else {
+                    } else {
                         _graphics.drawImage(ImageName.HeartDisable.getName(), pos, _lifeImageSize);
                     }
                 }
@@ -466,7 +463,7 @@ public class GameState extends State {
      * @param livesToAdd amount of lives to add
      */
     public void updateLives(int livesToAdd) {
-        _lives  += livesToAdd;
+        _lives += livesToAdd;
         if (_lives <= 0)
             _playState = PlayingState.GameOver;
 
@@ -477,7 +474,8 @@ public class GameState extends State {
      */
     public void restoreLives() {
         updateLives(1);
-        if(_playState == PlayingState.GameOver) _playState = PlayingState.Gaming;
+        saveData();
+        if (_playState == PlayingState.GameOver) _playState = PlayingState.Gaming;
     }
 
     /**

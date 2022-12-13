@@ -62,7 +62,7 @@ public class RewardManager {
                 @Override
                 public void onAdDismissedFullScreenContent() {
                     super.onAdDismissedFullScreenContent();
-                    System.out.println("Ad dismissed fullscreen");
+                    System.out.println("Ad closed");
                     _rewardedAd = null;
                     // Preload the next ad
                     loadAd(context);
@@ -73,13 +73,14 @@ public class RewardManager {
                     super.onAdFailedToShowFullScreenContent(adError);
                     System.out.println("Ad failed to show fullscreen");
                     _rewardedAd = null;
+                    // Preload next ad
+                    loadAd(context);
+
                 }
 
                 @Override
                 public void onAdShowedFullScreenContent() {
                     super.onAdShowedFullScreenContent();
-                    System.out.println("Ad showed fullscreen");
-                    // TODO: para el cambio de landscape mientra se reproduce anuncio
                 }
             });
 
@@ -92,7 +93,7 @@ public class RewardManager {
             });
         } else {
             System.out.println("Recompensa no disponible");
-            _gameState.restoreLives();
+            //_gameState.restoreLives();
         }
     }
 
