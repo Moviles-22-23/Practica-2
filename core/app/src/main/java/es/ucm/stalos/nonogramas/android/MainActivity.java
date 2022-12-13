@@ -1,4 +1,4 @@
-package es.ucm.stalos.nonogramas;
+package es.ucm.stalos.nonogramas.android;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +17,7 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
 import java.util.Arrays;
 
 import es.ucm.stalos.androidengine.Engine;
+import es.ucm.stalos.nonogramas.R;
 import es.ucm.stalos.nonogramas.logic.states.LoadState;
 
 public class MainActivity extends AppCompatActivity {

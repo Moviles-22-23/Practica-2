@@ -1,4 +1,4 @@
-package es.ucm.stalos.nonogramas;
+package es.ucm.stalos.nonogramas.android;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -16,6 +16,8 @@ import androidx.core.content.ContextCompat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+
+import es.ucm.stalos.nonogramas.R;
 
 public class PushNotification {
 
