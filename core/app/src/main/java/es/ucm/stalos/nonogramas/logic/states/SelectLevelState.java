@@ -1,21 +1,11 @@
 package es.ucm.stalos.nonogramas.logic.states;
 
-
-//TODO: Hacer toda la lógica de los paquetes
-
-// LÓGICA CON DATOS GUARDADOS: Consiste en un conjunto de categorías y niveles en los que
-// únicamente podremos avanzar al siguiente si hemos completado el nivel actual. Los niveles y
-// categorías en este modo son fijos. Para poder tener este modo tenemos que guardar cuantos niveles
-// ha desbloqueado el jugador hasta el momento
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import es.ucm.stalos.androidengine.Engine;
-import es.ucm.stalos.androidengine.Font;
-import es.ucm.stalos.androidengine.Image;
 import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.Assets;
@@ -92,10 +82,10 @@ public class SelectLevelState extends State {
     @Override
     public void render() {
         // BackgroundColor
-        _graphics.clear(Assets.colorSets.get(Assets.currPalette).getSecond());
+        _graphics.clear(Assets.colorSets.get(Assets.currPalette).y);
 
         // Texts
-        _graphics.setColor(MyColor.GREY_SOFT.getValue());
+        _graphics.setColor(MyColor.LIGHT_GREY.getValue());
         _graphics.drawCenteredString(_modeText, FontName.DefaultFont.getName(),
                 _modePos, _modeSize);
 
