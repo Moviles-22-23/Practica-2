@@ -128,23 +128,34 @@ public class GameState extends State {
 
                 // ADS
                 else if (_lives != MAX_LIVES && _playState == PlayingState.Gaming &&
-                        clickInsideSquare(clickPos, new int[]{
-                                (int) (_lifeImagePos[0] + (_lifeImageSize[0] + _liveImageMargin) * _lives),
-                                _lifeImagePos[1]}, _lifeImageSize))
+                        clickInsideSquare(clickPos, _currHeartAdsPos, _lifeImageSize))
                     _adsCallback.doSomething();
 
-                    // ADS IN GAME OVER
+                // ADS IN GAME OVER
                 else if (_playState == PlayingState.GameOver &&
                         clickInsideSquare(clickPos, _adsImagePos, _adsImageSize))
                     _adsCallback.doSomething();
 
-                    // COLOR PALETTE
-                else if (clickInsideSquare(clickPos, _posColorPalette, _sizeColorPalette)) {
+                // COLOR PALETTE
+                else if (_playState == PlayingState.Gaming &&
+                        clickInsideSquare(clickPos, _posColorPalette, _sizeColorPalette)) {
                     System.out.println("Click en Palette");
                     _colorPalette.handleInput(clickPos, currEvent);
-                } else if (_playState == PlayingState.Win &&
-                        clickInsideSquare(clickPos, _shareImagePos, _shareImageSize)) {
-                    _shareCallback.doSomething();
+                }
+                // TWITTER
+                else if (_playState == PlayingState.Win &&
+                        clickInsideSquare(clickPos, _twitterPos, _shareSize)) {
+                    _twitterCallback.doSomething();
+                }
+                // WHATASPP
+                else if (_playState == PlayingState.Win &&
+                        clickInsideSquare(clickPos, _whatsPos, _shareSize)) {
+                    _whatsCallback.doSomething();
+                }
+                // TELEGRAM
+                else if (_playState == PlayingState.Win &&
+                        clickInsideSquare(clickPos, _telegramPos, _shareSize)) {
+                    _telegramCallback.doSomething();
                 }
             }
 
@@ -295,12 +306,33 @@ public class GameState extends State {
         };
 
         // SHARE
-        _shareImageSize[0] = _graphics.getLogWidth() * 0.13f;
-        _shareImageSize[1] = _graphics.getLogHeight() * 0.07f;
+        _shareSize[0] = _graphics.getLogWidth() * 0.1f;
+        _shareSize[1] = _graphics.getLogHeight() * 0.09f;
 
-        _shareImagePos[0] = (int) ((_graphics.getLogWidth() - _shareImageSize[0]) * 0.75f);
-        _shareImagePos[1] = (int) (_graphics.getLogHeight() * 0.8f);
-        _shareCallback = new ButtonCallback() {
+        _twitterPos[0] = (int) ((_graphics.getLogWidth() - _shareSize[0]) * 0.2f);
+        _twitterPos[1] = (int) (_graphics.getLogHeight() * 0.9f);
+        _twitterCallback = new ButtonCallback() {
+            @Override
+            public void doSomething() {
+                ShareIntent intent = new ShareIntent("Paquete " + _gridType.getText() +
+                        " - Nivel " + _currentLevel + " completado");
+                intent.shareContent(_engine.getContext(), ShareType.TWITTER);
+            }
+        };
+        _whatsPos[0] = (int) ((_graphics.getLogWidth() - _shareSize[0]) * 0.5f);
+        _whatsPos[1] = (int) (_graphics.getLogHeight() * 0.9f);
+        _whatsCallback = new ButtonCallback() {
+            @Override
+            public void doSomething() {
+                ShareIntent intent = new ShareIntent("Paquete " + _gridType.getText() +
+                        " - Nivel " + _currentLevel + " completado");
+                intent.shareContent(_engine.getContext(), ShareType.WHATSAPP);
+            }
+        };
+
+        _telegramPos[0] = (int) ((_graphics.getLogWidth() - _shareSize[0]) * 0.8f);
+        _telegramPos[1] = (int) (_graphics.getLogHeight() * 0.9f);
+        _telegramCallback = new ButtonCallback() {
             @Override
             public void doSomething() {
                 ShareIntent intent = new ShareIntent("Paquete " + _gridType.getText() +
@@ -362,7 +394,7 @@ public class GameState extends State {
      * Renders every button of the state
      */
     private void renderButtons() {
-        _graphics.setColor(MyColor.BLACK.getValue());
+        _graphics.setColor(MyColor.BLACK.get_color());
         switch (_playState) {
             case Gaming: {
                 // GiveUp Button
@@ -391,18 +423,20 @@ public class GameState extends State {
             }
             case Win: {
                 // Back Button
-                _graphics.setColor(MyColor.BLACK.getValue());
+                _graphics.setColor(MyColor.BLACK.get_color());
 
                 _graphics.drawImage(ImageName.BackArrow.getName(), _backImagePos, _backImageSize);
                 _graphics.drawCenteredString(_backText, FontName.GameStateButton.getName(),
                         _backTextPos, _backTextSize);
 
-                _graphics.drawImage(ImageName.Share.getName(), _shareImagePos, _shareImageSize);
+                _graphics.drawImage(ImageName.Twitter.getName(), _twitterPos, _shareSize);
+                _graphics.drawImage(ImageName.WhatsApp.getName(), _whatsPos, _shareSize);
+                _graphics.drawImage(ImageName.Telegram.getName(), _telegramPos, _shareSize);
                 break;
             }
             case GameOver:
                 // GiveUp Button
-                _graphics.setColor(MyColor.BLACK.getValue());
+                _graphics.setColor(MyColor.BLACK.get_color());
 
                 _graphics.drawImage(ImageName.BackArrow.getName(), _giveupImagePos, _giveupImageSize);
                 _graphics.drawCenteredString(_giveupText, FontName.GameStateButton.getName(),
@@ -422,17 +456,17 @@ public class GameState extends State {
         switch (_playState) {
             case Win:
                 // TEXT WIN
-                _graphics.setColor(MyColor.BLACK.getValue());
+                _graphics.setColor(MyColor.BLACK.get_color());
                 _graphics.drawCenteredString(_winText1, FontName.GameStateText.getName(),
                         _winPos1, _winSize1);
 
                 // NAME TEXT
-                _graphics.setColor(MyColor.BLACK.getValue());
+                _graphics.setColor(MyColor.BLACK.get_color());
                 _graphics.drawCenteredString(_figNameText, FontName.GameStateText.getName(),
                         _levelNamePos, _levelNameSize);
 
                 // AGITAR TEXT
-                _graphics.setColor(MyColor.BLACK.getValue());
+                _graphics.setColor(MyColor.BLACK.get_color());
                 _graphics.drawCenteredString(_nextLevelText, FontName.GameStateText.getName(),
                         _nextLevelPos, _nextLevelSize);
                 break;
@@ -466,8 +500,14 @@ public class GameState extends State {
      */
     public void updateLives(int livesToAdd) {
         _lives += livesToAdd;
-        if (_lives <= 0)
+        if (livesToAdd < 0) {
+            _currHeartAdsPos[0] = (int) (_lifeImagePos[0] + (_lifeImageSize[0] + _liveImageMargin) * _lives);
+            _currHeartAdsPos[1] = _lifeImagePos[1];
+        }
+
+        if (_lives <= 0) {
             _playState = PlayingState.GameOver;
+        }
 
     }
 
@@ -599,6 +639,7 @@ public class GameState extends State {
 
     // Ads
     private int[] _adsImagePos = new int[2];
+    private int[] _currHeartAdsPos = new int[2];
     private float[] _adsImageSize = new float[2];
 
     private ButtonCallback _adsCallback;
@@ -609,9 +650,15 @@ public class GameState extends State {
     private int[] _nextLevelPos = new int[2];
     private float[] _nextLevelSize = new float[2];
 
+    // Share Buttons
+    private float[] _shareSize = new float[2];
 
-    // Share Button
-    private int[] _shareImagePos = new int[2];
-    private float[] _shareImageSize = new float[2];
-    private ButtonCallback _shareCallback;
+    private int[] _twitterPos = new int[2];
+    private ButtonCallback _twitterCallback;
+
+    private int[] _whatsPos = new int[2];
+    private ButtonCallback _whatsCallback;
+
+    private int[] _telegramPos = new int[2];
+    private ButtonCallback _telegramCallback;
 }

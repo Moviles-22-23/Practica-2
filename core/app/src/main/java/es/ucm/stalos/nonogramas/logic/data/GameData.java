@@ -16,7 +16,7 @@ public class GameData implements Serializable {
     /**
      * Index of the last unlocked package
      */
-    public int _lastUnlockedPack = 2;
+    public int _lastUnlockedPack = 7;
     /**
      * Index of the last unlocked level
      */

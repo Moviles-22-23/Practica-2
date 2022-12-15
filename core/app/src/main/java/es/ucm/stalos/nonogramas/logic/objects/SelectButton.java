@@ -26,11 +26,11 @@ public class SelectButton {
         else gr.fillSquare(_buttonPos, _buttonSize);
 
         if (!_isUnlocked) {
-            gr.setColor(MyColor.DARK_GREY.getValue());
+            gr.setColor(MyColor.DARK_GREY.get_color());
             gr.fillSquare(_buttonPos, _buttonSize);
             gr.drawImage(ImageName.Lock.getName(), _buttonPos, _buttonSize);
         } else {
-            gr.setColor(MyColor.BLACK.getValue());
+            gr.setColor(MyColor.BLACK.get_color());
             gr.drawCenteredString(_text, _fontName, _buttonPos, _buttonSize);
         }
     }

@@ -33,7 +33,7 @@ public class ColorPalette {
 
     public void render(Graphics graphics) {
         // Black Background
-        graphics.setColor(MyColor.BLACK.getValue());
+        graphics.setColor(MyColor.BLACK.get_color());
         graphics.fillSquare(_pos, _size);
 
         // Buttons

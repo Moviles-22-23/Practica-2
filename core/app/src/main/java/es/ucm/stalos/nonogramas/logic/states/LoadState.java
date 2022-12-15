@@ -49,6 +49,12 @@ public class LoadState extends State {
                     context.getResources().getString(R.string.HeartDisable));
             _graphics.newImage(ImageName.HeartRecovery.getName(),
                     context.getResources().getString(R.string.HeartRecovery));
+            _graphics.newImage(ImageName.Twitter.getName(),
+                    context.getResources().getString(R.string.Twitter));
+            _graphics.newImage(ImageName.WhatsApp.getName(),
+                    context.getResources().getString(R.string.WhatsApp));
+            _graphics.newImage(ImageName.Telegram.getName(),
+                    context.getResources().getString(R.string.Telegram));
 
             // Fonts
             _graphics.newFont(FontName.TitleMainMenu.getName(),
@@ -96,20 +102,20 @@ public class LoadState extends State {
 
             // Color Sets
             ColorPalette._colorSets = new HashMap<>();
-            ColorPalette._colorSets.put(0, new Point(MyColor.BLACK.getValue(),
-                    MyColor.WHITE.getValue()));
-            ColorPalette._colorSets.put(1, new Point(MyColor.ORANGE.getValue(),
-                    MyColor.LIGHT_ORANGE.getValue()));
-            ColorPalette._colorSets.put(2, new Point(MyColor.DARK_GREEN.getValue(),
-                    MyColor.LIGHT_GREEN.getValue()));
-            ColorPalette._colorSets.put(3, new Point(MyColor.SOFT_BLUE.getValue(),
-                    MyColor.LIGHT_BLUE.getValue()));
-            ColorPalette._colorSets.put(4, new Point(MyColor.DARK_RED.getValue(),
-                    MyColor.LIGHT_RED.getValue()));
-            ColorPalette._colorSets.put(5, new Point(MyColor.PURPLE.getValue(),
-                    MyColor.LIGHT_PURPLE.getValue()));
-            ColorPalette._colorSets.put(6, new Point(MyColor.DARK_PURPLE.getValue(),
-                    MyColor.SKY_BLUE.getValue()));
+            ColorPalette._colorSets.put(0, new Point(MyColor.BLACK.get_color(),
+                    MyColor.WHITE.get_color()));
+            ColorPalette._colorSets.put(1, new Point(MyColor.ORANGE.get_color(),
+                    MyColor.LIGHT_ORANGE.get_color()));
+            ColorPalette._colorSets.put(2, new Point(MyColor.DARK_GREEN.get_color(),
+                    MyColor.LIGHT_GREEN.get_color()));
+            ColorPalette._colorSets.put(3, new Point(MyColor.SOFT_BLUE.get_color(),
+                    MyColor.LIGHT_BLUE.get_color()));
+            ColorPalette._colorSets.put(4, new Point(MyColor.DARK_RED.get_color(),
+                    MyColor.LIGHT_RED.get_color()));
+            ColorPalette._colorSets.put(5, new Point(MyColor.PURPLE.get_color(),
+                    MyColor.LIGHT_PURPLE.get_color()));
+            ColorPalette._colorSets.put(6, new Point(MyColor.DARK_PURPLE.get_color(),
+                    MyColor.SKY_BLUE.get_color()));
 
             // LOAD DATA
             _serSystem = new GameDataSystem(_engine.getContext(), _engine.getAssetManager());

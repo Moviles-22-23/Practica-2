@@ -36,7 +36,7 @@ public class ShareIntent {
                 url = "https://api.whatsapp.com/send";
                 break;
             case TELEGRAM:
-                url = "http://telegram.me/shes_ir";
+                url = "http://telegram.me/send";
                 break;
         }
 
@@ -57,6 +57,7 @@ public class ShareIntent {
     }
 
     private Intent _sendIntent;
+    // TODO: Poner otros mensajes
     private String[] _msgs =
             {
                     "Te echamos de menos. Nuevos retos te esperan \uD83D\uDE0A",

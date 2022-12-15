@@ -14,7 +14,11 @@ public enum ImageName {
     Share("Share"),
     Heart("Heart"),
     HeartDisable("HeartDisable"),
-    HeartRecovery("HeartRecovery");
+    HeartRecovery("HeartRecovery"),
+    Twitter("Twitter"),
+    WhatsApp("WhatApp"),
+    Telegram("Telegram"),
+    ;
 
     ImageName(String name) {
         this._name = name;

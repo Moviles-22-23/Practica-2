@@ -30,19 +30,19 @@ public class SelectColorSetButton {
     public void render(Graphics graphics) {
         // Fondo negro
         if (ColorPalette._currPalette == _index) graphics.setColor(_colorSet.y);
-        else graphics.setColor(MyColor.BLACK.getValue());
+        else graphics.setColor(MyColor.BLACK.get_color());
         graphics.fillSquare(_buttonPos, _buttonSize);
         // Color Primario
         graphics.setColor(_colorSet.x);
         graphics.fillCircle(_firstColorPos, _colorRadius);
         // Marco color primario (Si es negro pone borde blanco)
-        if (_index == 0) graphics.setColor(MyColor.WHITE.getValue());
-        else graphics.setColor(MyColor.BLACK.getValue());
+        if (_index == 0) graphics.setColor(MyColor.WHITE.get_color());
+        else graphics.setColor(MyColor.BLACK.get_color());
         graphics.drawCircle(_firstColorPos, _colorRadius);
         // Color Secundario
         graphics.setColor(_colorSet.y);
         graphics.fillCircle(_secondColorPos, _colorRadius);
-        graphics.setColor(MyColor.BLACK.getValue());
+        graphics.setColor(MyColor.BLACK.get_color());
         graphics.drawCircle(_secondColorPos, _colorRadius);
         // Marco
 //        gr.setColor(MyColor.WHITE.getValue());
