@@ -1,5 +1,8 @@
 package es.ucm.stalos.nonogramas.logic.states;
 
+import android.os.VibrationEffect;
+import android.os.Vibrator;
+
 import java.util.List;
 
 import es.ucm.stalos.androidengine.Engine;
@@ -35,6 +38,8 @@ public class GameState extends State {
         this._isRandom = isRandom;
         this._currentLevel = levelIndex;
         _rewardManager = new RewardManager(this);
+        // VIBRATOR
+        _vibrator = (Vibrator) engine.getContext().getSystemService(engine.getContext().VIBRATOR_SERVICE);
     }
 
     /**
@@ -154,6 +159,7 @@ public class GameState extends State {
                 if (_playState == PlayingState.Gaming &&
                         clickInsideSquare(clickPos, _posBoard, _sizeBoard)) {
                     _board.handleInput(clickPos, currEvent);
+                    _vibrator.vibrate(100);
                     //TODO: buscar un sonido para holdClick
                     //_audio.playSound(Assets.clickSound, 0);
                 }
@@ -614,4 +620,7 @@ public class GameState extends State {
     private int[] _shareImagePos = new int[2];
     private float[] _shareImageSize = new float[2];
     private ButtonCallback _shareCallback;
+
+    // Vibration
+    private Vibrator _vibrator;
 }

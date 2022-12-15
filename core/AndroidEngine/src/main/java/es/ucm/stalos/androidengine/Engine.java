@@ -4,6 +4,7 @@ import android.app.GameManager;
 import android.content.res.AssetManager;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.os.Vibrator;
 import android.view.SurfaceView;
 import android.view.View;
 
@@ -78,9 +79,12 @@ public class Engine implements Runnable {
     public void resume() {
         if (!this._running) {
             this._running = true;
-
+            //this.notifyAll();
             this._renderThread = new Thread(this);
             this._renderThread.start();
+
+            if (_lastState != null)
+                reqNewState(_lastState);
 
             _audio.resumeMusic();
         }
@@ -88,6 +92,7 @@ public class Engine implements Runnable {
 
     public void pause() {
         if (this._running) {
+            _lastState = _currState;
             this._running = false;
 
             while (true) {
@@ -99,6 +104,13 @@ public class Engine implements Runnable {
                     e.printStackTrace();
                 }
             }
+ /*
+            try {
+                this.wait();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+  */
 
             _audio.pauseBackMusic();
             _currState.saveData();
@@ -199,6 +211,7 @@ public class Engine implements Runnable {
     private boolean _running;
 
     private boolean _changeState = false;
+    private State _lastState;
     private State _newState;
     private State _currState;
     private Graphics _graphics;
@@ -208,6 +221,9 @@ public class Engine implements Runnable {
     private AppCompatActivity _context;
 
     private Group _adView;
+
+    // Vibration
+    Vibrator _vibrator;
 
     // DELTA TIME
     private long _lastFrameTime = 0;
