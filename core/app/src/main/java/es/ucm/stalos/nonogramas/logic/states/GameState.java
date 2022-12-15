@@ -5,6 +5,7 @@ import java.util.List;
 import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.TouchEvent;
+import es.ucm.stalos.nonogramas.R;
 import es.ucm.stalos.nonogramas.android.ShareIntent;
 import es.ucm.stalos.nonogramas.logic.data.GameData;
 import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
@@ -379,7 +380,7 @@ public class GameState extends State {
                     if (i < _lives) {
                         _graphics.drawImage(ImageName.Heart.getName(), pos, _lifeImageSize);
                     } else if (i == _lives) {
-                        _graphics.drawImage(ImageName.HeartAdd.getName(), pos, _lifeImageSize);
+                        _graphics.drawImage(ImageName.HeartRecovery.getName(), pos, _lifeImageSize);
                     } else {
                         _graphics.drawImage(ImageName.HeartDisable.getName(), pos, _lifeImageSize);
                     }
@@ -407,7 +408,7 @@ public class GameState extends State {
                 _graphics.drawCenteredString(_giveupText, FontName.GameStateButton.getName(),
                         _giveupTextPos, _giveupTextSize);
                 // Ad button
-                _graphics.drawImage(ImageName.HeartAdd.getName(), _adsImagePos, _adsImageSize);
+                _graphics.drawImage(ImageName.HeartRecovery.getName(), _adsImagePos, _adsImageSize);
                 break;
             default:
                 break;
@@ -454,7 +455,8 @@ public class GameState extends State {
      */
     public void createHintFont(int size) throws Exception {
         _graphics.newFont(FontName.HintFont.getName(),
-                FontName.HintFont.getFileName(), size, true);
+                _engine.getContext().getResources().getString(R.string.JoseFinSans),
+                size, true);
     }
 
     /**

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name = "MainTheme">mainTheme.wav</string>
+    <string name = "MenuTheme">menuTheme.wav</string>
+    <string name = "ClickSound">clickSound.wav</string>
+    <string name = "FailSound">failSound.wav</string>
+    <string name = "GoodSound">goodSound.wav</string>
+    <string name = "WindSound">windSound.wav</string>
+</resources>

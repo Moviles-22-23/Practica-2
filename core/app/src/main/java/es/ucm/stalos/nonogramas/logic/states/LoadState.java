@@ -2,14 +2,16 @@ package es.ucm.stalos.nonogramas.logic.states;
 
 import android.graphics.Point;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.HashMap;
 
 import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.Engine;
+import es.ucm.stalos.nonogramas.R;
 import es.ucm.stalos.nonogramas.logic.data.GameData;
 import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
 import es.ucm.stalos.nonogramas.logic.enums.FontName;
-import es.ucm.stalos.nonogramas.logic.enums.GridType;
 import es.ucm.stalos.nonogramas.logic.enums.SoundName;
 import es.ucm.stalos.nonogramas.logic.enums.ImageName;
 import es.ucm.stalos.nonogramas.logic.enums.MyColor;
@@ -27,54 +29,70 @@ public class LoadState extends State {
     public boolean init() {
         try {
             _graphics = _engine.getGraphics();
-
+            AppCompatActivity context = _engine.getContext();
             //Sprites
             _graphics.newImage(ImageName.BackArrow.getName(),
-                    ImageName.BackArrow.getFileName());
+                    context.getResources().getString(R.string.BackArrow));
             _graphics.newImage(ImageName.Lens.getName(),
-                    ImageName.Lens.getFileName());
-            _graphics.newImage(ImageName.Heart.getName(),
-                    ImageName.Heart.getFileName());
+                    context.getResources().getString(R.string.Lens));
             _graphics.newImage(ImageName.Lock.getName(),
-                    ImageName.Lock.getFileName());
+                    context.getResources().getString(R.string.Lock));
             _graphics.newImage(ImageName.GameOver.getName(),
-                    ImageName.GameOver.getFileName());
+                    context.getResources().getString(R.string.GameOver));
             _graphics.newImage(ImageName.Ads.getName(),
-                    ImageName.Ads.getFileName());
-            _graphics.newImage(ImageName.HeartDisable.getName(),
-                    ImageName.HeartDisable.getFileName());
+                    context.getResources().getString(R.string.Ads));
             _graphics.newImage(ImageName.Share.getName(),
-                    ImageName.Share.getFileName());
-            _graphics.newImage(ImageName.HeartAdd.getName(),
-                    ImageName.HeartAdd.getFileName());
+                    context.getResources().getString(R.string.Share));
+            _graphics.newImage(ImageName.Heart.getName(),
+                    context.getResources().getString(R.string.Heart));
+            _graphics.newImage(ImageName.HeartDisable.getName(),
+                    context.getResources().getString(R.string.HeartDisable));
+            _graphics.newImage(ImageName.HeartRecovery.getName(),
+                    context.getResources().getString(R.string.HeartRecovery));
 
             // Fonts
             _graphics.newFont(FontName.TitleMainMenu.getName(),
-                    FontName.TitleMainMenu.getFileName(), 50, true);
+                    context.getResources().getString(R.string.JoseFinSans),
+                    50, true);
             _graphics.newFont(FontName.ButtonMainMenu.getName(),
-                    FontName.ButtonMainMenu.getFileName(), 35, true);
+                    context.getResources().getString(R.string.JoseFinSans),
+                    35, true);
             _graphics.newFont(FontName.DefaultFont.getName(),
-                    FontName.DefaultFont.getFileName(), 25, true);
+                    context.getResources().getString(R.string.JoseFinSans),
+                    25, true);
             _graphics.newFont(FontName.RowColNumber.getName(),
-                    FontName.RowColNumber.getFileName(), 20, true);
+                    context.getResources().getString(R.string.Molle),
+                    20, true);
             _graphics.newFont(FontName.LevelNumber.getName(),
-                    FontName.LevelNumber.getFileName(), 20, true);
+                    context.getResources().getString(R.string.Molle),
+                    20, true);
             _graphics.newFont(FontName.GameStateButton.getName(),
-                    FontName.GameStateButton.getFileName(), 20, true);
+                    context.getResources().getString(R.string.JoseFinSans),
+                    20, true);
             _graphics.newFont(FontName.GameStateButton.getName(),
-                    FontName.GameStateButton.getFileName(), 30, true);
+                    context.getResources().getString(R.string.JoseFinSans),
+                    30, true);
             _graphics.newFont(FontName.FigureName.getName(),
-                    FontName.FigureName.getFileName(), 50, true);
+                    context.getResources().getString(R.string.JoseFinSans),
+                    50, true);
             _graphics.newFont(FontName.GameStateText.getName(),
-                    FontName.GameStateText.getFileName(), 20, true);
+                    context.getResources().getString(R.string.JoseFinSans),
+                    20, true);
+
             // Audio
             _audio = _engine.getAudio();
-            _audio.newSound(SoundName.MainTheme.getName(), SoundName.MainTheme.getFileName());
-            _audio.newSound(SoundName.MenuTheme.getName(), SoundName.MenuTheme.getFileName());
-            _audio.newSound(SoundName.ClickSound.getName(), SoundName.ClickSound.getFileName());
-            _audio.newSound(SoundName.FailSound.getName(), SoundName.FailSound.getFileName());
-            _audio.newSound(SoundName.GoodSound.getName(), SoundName.GoodSound.getFileName());
-            _audio.newSound(SoundName.WindSound.getName(), SoundName.WindSound.getFileName());
+            _audio.newSound(SoundName.MainTheme.getName(),
+                    context.getResources().getString(R.string.MainTheme));
+            _audio.newSound(SoundName.MenuTheme.getName(),
+                context.getResources().getString(R.string.MenuTheme));
+            _audio.newSound(SoundName.ClickSound.getName(),
+                    context.getResources().getString(R.string.ClickSound));
+            _audio.newSound(SoundName.FailSound.getName(),
+                    context.getResources().getString(R.string.FailSound));
+            _audio.newSound(SoundName.GoodSound.getName(),
+                    context.getResources().getString(R.string.GoodSound));
+            _audio.newSound(SoundName.WindSound.getName(),
+                    context.getResources().getString(R.string.WindSound));
 
             // Color Sets
             ColorPalette._colorSets = new HashMap<>();
