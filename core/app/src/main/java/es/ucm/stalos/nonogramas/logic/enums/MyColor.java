@@ -24,9 +24,9 @@ public enum MyColor {
     DARK_PURPLE(0x6F2DBDFF),
     SKY_BLUE(0x00A6FBFF);
 
-    MyColor(int i) { this.value = i; }
+    MyColor(int color) { this._color = color; }
 
-    public int getValue () { return value; }
+    public int get_color() { return _color; }
 
-    private int value;
+    private int _color;
 }

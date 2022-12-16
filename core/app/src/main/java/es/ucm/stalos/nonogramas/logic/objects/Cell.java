@@ -35,15 +35,15 @@ public class Cell {
         // Filled Square
         int[] fillPos = new int[]{fx, fy};
 
-        if (cellType == CellType.EMPTY) graphics.setColor(MyColor.DARK_GREY.getValue());
+        if (cellType == CellType.EMPTY) graphics.setColor(MyColor.DARK_GREY.get_color());
         else if (cellType == CellType.FILL) graphics.setColor(ColorPalette._colorSets.get(ColorPalette._currPalette).x);
-        else graphics.setColor(MyColor.WHITE.getValue());
+        else graphics.setColor(MyColor.WHITE.get_color());
 
         graphics.fillSquare(fillPos, fsize);
 
         int[] fillPos2 = new int[]{fx + (int) fsize, fy + (int) fsize};
         if (cellType == CellType.NOFILL) {
-            graphics.setColor(MyColor.BLACK.getValue());
+            graphics.setColor(MyColor.BLACK.get_color());
             graphics.drawRect(fillPos, fsize);
             graphics.drawLine(fillPos, fillPos2);
         }

@@ -12,9 +12,9 @@ public enum CellType implements Serializable {
     RED(3),
     MAX(4);
 
-    CellType(int i) { this.value = i; }
+    CellType(int type) { this._type = type; }
 
-    public int getValue () { return value; }
+    public int getType() { return _type; }
 
-    private int value;
+    private int _type;
 }

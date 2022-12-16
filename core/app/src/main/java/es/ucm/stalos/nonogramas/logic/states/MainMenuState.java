@@ -11,15 +11,6 @@ import es.ucm.stalos.nonogramas.logic.enums.SoundName;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 import es.ucm.stalos.nonogramas.logic.objects.ColorPalette;
 
-
-// TODO: ANUNCIOS
-
-// ENUNCIADO: La pantalla de título debe mostrar ahora un anuncio de tipo banner en la parte
-// inferior o superior de nuestra ventana (Google Ads).
-
-// Banners: anuncios básicos que aparecen al inicio o al final de la pantalla
-
-
 public class MainMenuState extends State {
 
     public MainMenuState(Engine engine) {
@@ -84,7 +75,7 @@ public class MainMenuState extends State {
         _graphics.clear(ColorPalette._colorSets.get(ColorPalette._currPalette).y);
 
         // Texts Color
-        _graphics.setColor(MyColor.BLACK.getValue());
+        _graphics.setColor(MyColor.BLACK.get_color());
 
         // Title
         _graphics.drawCenteredString(_titleText, FontName.TitleMainMenu.getName(),
