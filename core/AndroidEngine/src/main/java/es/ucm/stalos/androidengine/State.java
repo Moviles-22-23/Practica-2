@@ -1,5 +1,7 @@
 package es.ucm.stalos.androidengine;
 
+import android.content.res.Configuration;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -62,6 +64,10 @@ public abstract class State {
     }
 
     protected void manageSensorEvent() {
+    }
+
+    protected boolean isLandscape() {
+        return _engine.getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
     protected Engine _engine;

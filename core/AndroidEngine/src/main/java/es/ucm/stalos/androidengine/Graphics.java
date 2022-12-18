@@ -31,12 +31,12 @@ public class Graphics {
      *
      * @return the scale factor
      */
-    private float getScaleFactor() {
+    private float[] getScaleFactor() {
         float widthScale = getWidth() / _logWidth;
         float heightScale = getHeight() / _logHeight;
 
         // Nos interesa el tamaño más pequeño
-        return Math.min(widthScale, heightScale);
+        return new float[]{widthScale, heightScale};
     }
 
     /**
@@ -48,25 +48,11 @@ public class Graphics {
      */
     public int[] logPos(int x, int y) {
         _scaleFactor = getScaleFactor();
-        float offsetX = (_logWidth - (getWidth() / _scaleFactor)) / 2.0f;
-        float offsetY = (_logHeight - (getHeight() / _scaleFactor)) / 2.0f;
+        //float offsetX = (_logWidth - (getWidth() / _scaleFactor[0])) / 2.0f;
+        //float offsetY = (_logHeight - (getHeight() / _scaleFactor[1])) / 2.0f;
 
-        int newPosX = (int) ((x / _scaleFactor) + offsetX);
-        int newPosY = (int) ((y / _scaleFactor) + offsetY);
-
-        int[] newPos = new int[2];
-        newPos[0] = newPosX;
-        newPos[1] = newPosY;
-
-        return newPos;
-    }
-
-    private int[] translateWindow() {
-        float offsetX = (getWidth() - (_logWidth * _scaleFactor)) / 2.0f;
-        float offsetY = (getHeight() - (_logHeight) * _scaleFactor) / 2.0f;
-
-        int newPosX = (int) ((_logPosX * _scaleFactor) + offsetX);
-        int newPosY = (int) ((_logPosY * _scaleFactor) + offsetY);
+        int newPosX = (int) (x / _scaleFactor[0]);// + offsetX);
+        int newPosY = (int) (y / _scaleFactor[1]);// + offsetY);
 
         int[] newPos = new int[2];
         newPos[0] = newPosX;
@@ -75,6 +61,21 @@ public class Graphics {
         return newPos;
     }
 
+    /*
+        private int[] translateWindow() {
+            float offsetX = (getWidth() - (_logWidth * _scaleFactor[0])) / 2.0f;
+            float offsetY = (getHeight() - (_logHeight) * _scaleFactor[1]) / 2.0f;
+
+            int newPosX = (int) (_logPosX * _scaleFactor);// + offsetX);
+            int newPosY = (int) (_logPosY * _scaleFactor);// + offsetY);
+
+            int[] newPos = new int[2];
+            newPos[0] = newPosX;
+            newPos[1] = newPosY;
+
+            return newPos;
+        }
+    */
     public int getLogWidth() {
         return (int) _logWidth;
     }
@@ -229,7 +230,7 @@ public class Graphics {
         paintCircle(pos, radius);
     }
 
-    public void fillCircle(int pos[], float radius) {
+    public void fillCircle(int[] pos, float radius) {
         _paint.setStyle(Paint.Style.FILL);
         paintCircle(pos, radius);
     }
@@ -271,9 +272,10 @@ public class Graphics {
         _canvas = _surfaceView.getHolder().lockCanvas();
         // SCALE & TRANSLATE
         _scaleFactor = getScaleFactor();
-        int[] newPos = translateWindow();
-        translate(newPos[0], newPos[1]);
-        scale(_scaleFactor, _scaleFactor);
+
+        //int[] newPos = translateWindow();
+        //translate(newPos[0], newPos[1]);
+        scale(_scaleFactor[0], _scaleFactor[1]);
     }
 
     public void translate(int x, int y) {
@@ -286,6 +288,61 @@ public class Graphics {
 
     public void restore() {
         _surfaceView.getHolder().unlockCanvasAndPost(_canvas);
+    }
+
+    /**
+     * Returns a constrained position based on logic width and height.
+     *
+     * @param c       the constrain to attach the position.
+     * @param size    the size of the object.
+     * @param padding the padding in x and y axis.
+     * @return
+     */
+    public int[] constrainedPos(Constrain c, float[] size, int[] padding) {
+        int[] pos = {0, 0};
+        switch (c) {
+            case TOP:
+                pos[0] = (int) ((_logWidth - size[0]) * 0.5);
+                pos[1] = 0;
+                break;
+            case BOTTOM:
+                pos[0] = (int) ((_logWidth - size[0]) * 0.5);
+                pos[1] = (int) (_logHeight - size[1]);
+                break;
+            case LEFT:
+                pos[0] = 0;
+                pos[1] = (int) ((_logHeight - size[1]) * 0.5);
+                break;
+            case RIGHT:
+                pos[0] = (int) (_logWidth - size[0]);
+                pos[1] = (int) ((_logHeight - size[1]) * 0.5);
+                break;
+            case MIDDLE:
+                pos[0] = (int) ((_logWidth - size[0]) * 0.5);
+                pos[1] = (int) ((_logHeight - size[1]) * 0.5);
+                break;
+            case TOP_LEFT:
+                pos[0] = 0;
+                pos[1] = 0;
+                break;
+            case TOP_RIGHT:
+                pos[0] = (int) (_logWidth - size[0]);
+                pos[1] = 0;
+                break;
+            case BOTTOM_LEFT:
+                pos[0] = 0;
+                pos[1] = (int) (_logHeight - size[1]);
+                break;
+            case BOTTOM_RIGHT:
+                pos[0] = (int) (_logWidth - size[0]);
+                pos[1] = (int) (_logHeight - size[1]);
+                break;
+        }
+
+        pos[0] += padding[0];
+        pos[1] += padding[1];
+
+        return pos;
     }
 
     //----------------------------------------------------------------//
@@ -314,7 +371,7 @@ public class Graphics {
     /**
      * Scale factor
      */
-    private float _scaleFactor;
+    private float[] _scaleFactor;
     /**
      * Dictionary which contains the images
      */

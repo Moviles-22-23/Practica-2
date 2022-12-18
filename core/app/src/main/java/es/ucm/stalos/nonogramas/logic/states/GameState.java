@@ -38,8 +38,6 @@ public class GameState extends State {
         this._isRandom = isRandom;
         this._currentLevel = levelIndex;
         _rewardManager = new RewardManager(this);
-        // VIBRATOR
-        _vibrator = (Vibrator) engine.getContext().getSystemService(engine.getContext().VIBRATOR_SERVICE);
     }
 
     /**
@@ -136,12 +134,12 @@ public class GameState extends State {
                         clickInsideSquare(clickPos, _currHeartAdsPos, _lifeImageSize))
                     _adsCallback.doSomething();
 
-                // ADS IN GAME OVER
+                    // ADS IN GAME OVER
                 else if (_playState == PlayingState.GameOver &&
                         clickInsideSquare(clickPos, _adsImagePos, _adsImageSize))
                     _adsCallback.doSomething();
 
-                // COLOR PALETTE
+                    // COLOR PALETTE
                 else if (_playState == PlayingState.Gaming &&
                         clickInsideSquare(clickPos, _posColorPalette, _sizeColorPalette)) {
                     System.out.println("Click en Palette");
@@ -165,7 +163,6 @@ public class GameState extends State {
                 if (_playState == PlayingState.Gaming &&
                         clickInsideSquare(clickPos, _posBoard, _sizeBoard)) {
                     _board.handleInput(clickPos, currEvent);
-                    _vibrator.vibrate(100);
                     //TODO: buscar un sonido para holdClick
                     //_audio.playSound(Assets.clickSound, 0);
                 }
@@ -197,19 +194,10 @@ public class GameState extends State {
 
     @Override
     protected void manageSensorEvent() {
-        // Pasa al siguiente nivel  // TODO ese 18 es un max Levels o algo asi
-        if (!_isRandom && _playState == PlayingState.Win && _currentLevel <= 18) {
-//            State gameState = new GameState(_engine, _gridType, _isRandom, _currentLevel + 1);
-//            _engine.reqNewState(gameState);
-//            _audio.playSound(SoundName.ClickSound.getName(), 0);
-//            _audio.stopMusic();
-            // TODO cargar el siguiente nivel
-        } else {
-            try {
-                rerollBoard();
-            } catch (Exception e) {
-                System.err.println(e.getStackTrace());
-            }
+        // Pasa al siguiente nivel
+        if (!_isRandom && _playState == PlayingState.Win && _currentLevel < _numLevels - 1) {
+            State gameState = new GameState(_engine, _gridType, _isRandom, _currentLevel + 1);
+            _engine.reqNewState(gameState);
         }
     }
 
@@ -534,7 +522,7 @@ public class GameState extends State {
     public void playSound(SoundName sound) {
         _engine.getAudio().playSound(sound.getName(), 0);
     }
-
+/*
     private void rerollBoard() throws Exception {
         System.out.println("Board re-roll");
         _lives = MAX_LIVES;
@@ -546,6 +534,7 @@ public class GameState extends State {
             throw new Exception("Error al crear el board");
 
     }
+    */
 //------------------------------------------GET-SET-----------------------------------------------//
 
     public ColorPalette getColorPalette() {
@@ -571,6 +560,7 @@ public class GameState extends State {
     private GridType _gridType;
     private int _currentLevel;
     private GameData _data;
+    private final int _numLevels = 20;
 
     // Board
     private Board _board;
@@ -647,7 +637,4 @@ public class GameState extends State {
 
     private int[] _whatsPos = new int[2];
     private ButtonCallback _whatsCallback;
-
-    // Vibration
-    private Vibrator _vibrator;
 }
