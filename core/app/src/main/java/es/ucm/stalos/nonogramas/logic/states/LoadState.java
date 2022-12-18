@@ -53,8 +53,6 @@ public class LoadState extends State {
                     context.getResources().getString(R.string.Twitter));
             _graphics.newImage(ImageName.WhatsApp.getName(),
                     context.getResources().getString(R.string.WhatsApp));
-            _graphics.newImage(ImageName.Telegram.getName(),
-                    context.getResources().getString(R.string.Telegram));
 
             // Fonts
             _graphics.newFont(FontName.TitleMainMenu.getName(),

@@ -5,8 +5,6 @@ import android.net.Uri;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 import es.ucm.stalos.nonogramas.logic.enums.ShareType;
 
 public class ShareIntent {
@@ -14,10 +12,11 @@ public class ShareIntent {
      * Create a new intent to be shared
      * Always use string resources for UI text
      *
-     * @param title title of the intent
+     * @param msg msg to display
      */
-    public ShareIntent(String title) {
-        _sendIntent = new Intent(title);
+    public ShareIntent(String msg) {
+        _sendIntent = new Intent();
+        _msg = msg;
     }
 
     /**
@@ -31,20 +30,16 @@ public class ShareIntent {
         {
             case TWITTER:
                 url = "https://twitter.com/intent/tweet";
+                _msg = _msg + "\nhttps://github.com/Moviles-22-23/Practica-2 \uD83D\uDE0A";
                 break;
             case WHATSAPP:
                 url = "https://api.whatsapp.com/send";
-                break;
-            case TELEGRAM:
-                url = "http://telegram.me/send";
+                _msg = _msg + "\nhttps://github.com/Moviles-22-23/Practica-2 \uD83D\uDE0A";
                 break;
         }
 
-        int rnd = ThreadLocalRandom.current().nextInt(0, _msgs.length);
-        String msg = _msgs[rnd];
-
         Uri builtURI = Uri.parse(url).buildUpon()
-                .appendQueryParameter("text", msg)
+                .appendQueryParameter("text", _msg)
                 .build();
 
         _sendIntent.setAction(Intent.ACTION_VIEW);
@@ -57,12 +52,5 @@ public class ShareIntent {
     }
 
     private Intent _sendIntent;
-    // TODO: Poner otros mensajes
-    private String[] _msgs =
-            {
-                    "Te echamos de menos. Nuevos retos te esperan \uD83D\uDE0A",
-                    "No pierdas más el tiempo. Enfréntate a la aventura \uD83D\uDE00",
-                    "Parece que llevas un tiempo sin jugar. " +
-                            "Es hora de ejercitar un poco el coco \uD83D\uDE00"
-            };
+    private String _msg = "";
 }

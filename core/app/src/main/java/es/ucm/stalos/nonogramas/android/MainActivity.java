@@ -46,9 +46,9 @@ public class MainActivity extends AppCompatActivity {
         _engine = new Engine();
         // NOTIFICATIONS
         _pushNotification = new PushNotification(this, "unique_channel",
-                0, "reminder");
-//        _pushNotification._msgs.add(getResources().getString(R.string.msg_1));
-//        _pushNotification._msgs.add(getResources().getString(R.string.msg_2));
+                R.string.reminder, getResources().getString(R.string.reminder));
+        _pushNotification._msgs.add(getResources().getString(R.string.msg_1));
+        _pushNotification._msgs.add(getResources().getString(R.string.msg_2));
         _pushNotification._msgs.add(getResources().getString(R.string.msg_3));
 
         // SENSOR

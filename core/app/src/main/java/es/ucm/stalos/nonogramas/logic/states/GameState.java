@@ -157,11 +157,6 @@ public class GameState extends State {
                         clickInsideSquare(clickPos, _whatsPos, _shareSize)) {
                     _whatsCallback.doSomething();
                 }
-                // TELEGRAM
-                else if (_playState == PlayingState.Win &&
-                        clickInsideSquare(clickPos, _telegramPos, _shareSize)) {
-                    _telegramCallback.doSomething();
-                }
             }
 
             // longTouch
@@ -276,12 +271,12 @@ public class GameState extends State {
         _backCallback = new ButtonCallback() {
             @Override
             public void doSomething() {
-                State previusState;
+                State previousState;
 
-                if (_isRandom) previusState = new SelectBoardState(_engine, true);
-                else previusState = new SelectLevelState(_engine, _gridType);
+                if (_isRandom) previousState = new SelectBoardState(_engine, true);
+                else previousState = new SelectLevelState(_engine, _gridType);
 
-                _engine.reqNewState(previusState);
+                _engine.reqNewState(previousState);
                 _audio.stopMusic();
                 _audio.playSound(SoundName.ClickSound.getName(), 0);
             }
@@ -315,17 +310,17 @@ public class GameState extends State {
         _shareSize[0] = _graphics.getLogWidth() * 0.1f;
         _shareSize[1] = _graphics.getLogHeight() * 0.09f;
 
-        _twitterPos[0] = (int) ((_graphics.getLogWidth() - _shareSize[0]) * 0.2f);
+        _twitterPos[0] = (int) ((_graphics.getLogWidth() - _shareSize[0]) * 0.33f);
         _twitterPos[1] = (int) (_graphics.getLogHeight() * 0.9f);
         _twitterCallback = new ButtonCallback() {
             @Override
             public void doSomething() {
                 ShareIntent intent = new ShareIntent("Paquete " + _gridType.getText() +
-                        " - Nivel " + _currentLevel + " completado");
+                        " - Nivel " + (_currentLevel + 1) + " completado");
                 intent.shareContent(_engine.getContext(), ShareType.TWITTER);
             }
         };
-        _whatsPos[0] = (int) ((_graphics.getLogWidth() - _shareSize[0]) * 0.5f);
+        _whatsPos[0] = (int) ((_graphics.getLogWidth() - _shareSize[0]) * 0.66f);
         _whatsPos[1] = (int) (_graphics.getLogHeight() * 0.9f);
         _whatsCallback = new ButtonCallback() {
             @Override
@@ -333,17 +328,6 @@ public class GameState extends State {
                 ShareIntent intent = new ShareIntent("Paquete " + _gridType.getText() +
                         " - Nivel " + _currentLevel + " completado");
                 intent.shareContent(_engine.getContext(), ShareType.WHATSAPP);
-            }
-        };
-
-        _telegramPos[0] = (int) ((_graphics.getLogWidth() - _shareSize[0]) * 0.8f);
-        _telegramPos[1] = (int) (_graphics.getLogHeight() * 0.9f);
-        _telegramCallback = new ButtonCallback() {
-            @Override
-            public void doSomething() {
-                ShareIntent intent = new ShareIntent("Paquete " + _gridType.getText() +
-                        " - Nivel " + _currentLevel + " completado");
-                intent.shareContent(_engine.getContext(), ShareType.TELEGRAM);
             }
         };
     }
@@ -437,7 +421,6 @@ public class GameState extends State {
 
                 _graphics.drawImage(ImageName.Twitter.getName(), _twitterPos, _shareSize);
                 _graphics.drawImage(ImageName.WhatsApp.getName(), _whatsPos, _shareSize);
-                _graphics.drawImage(ImageName.Telegram.getName(), _telegramPos, _shareSize);
                 break;
             }
             case GameOver:
@@ -664,9 +647,6 @@ public class GameState extends State {
 
     private int[] _whatsPos = new int[2];
     private ButtonCallback _whatsCallback;
-
-    private int[] _telegramPos = new int[2];
-    private ButtonCallback _telegramCallback;
 
     // Vibration
     private Vibrator _vibrator;

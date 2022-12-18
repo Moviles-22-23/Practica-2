@@ -1,10 +1,13 @@
 package es.ucm.stalos.nonogramas.android;
 
+import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.SystemClock;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +17,8 @@ import androidx.core.app.TaskStackBuilder;
 import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -49,6 +54,7 @@ public class PushNotification {
                 .setContentIntent(launchGame);
 
         notificationManager = NotificationManagerCompat.from(context);
+        alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
     }
 
     /**
@@ -87,6 +93,12 @@ public class PushNotification {
 
         _builder.setStyle(new NotificationCompat.BigTextStyle()
                 .bigText(msg));
+        Date currentTime = Calendar.getInstance().getTime();
+        System.out.println(currentTime.toString());
+//        alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+//                SystemClock.elapsedRealtime() +
+//                        60 * 1000, );
+
         notificationManager.notify(_notificationID, _builder.build());
     }
 
@@ -95,6 +107,7 @@ public class PushNotification {
     private String _channelID;
     private String _name;
     private int _notificationID;
+    private AlarmManager alarmMgr;
 
     /**
      * Contains different messages for the push-notification

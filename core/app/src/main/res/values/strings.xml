@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Nonogramas</string>
+    <string name="reminder">reminder</string>
 </resources>

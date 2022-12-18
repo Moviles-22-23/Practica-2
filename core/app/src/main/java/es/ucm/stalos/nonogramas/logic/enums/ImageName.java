@@ -17,7 +17,6 @@ public enum ImageName {
     HeartRecovery("HeartRecovery"),
     Twitter("Twitter"),
     WhatsApp("WhatApp"),
-    Telegram("Telegram"),
     ;
 
     ImageName(String name) {
