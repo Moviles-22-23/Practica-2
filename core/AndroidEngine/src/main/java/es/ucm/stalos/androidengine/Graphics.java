@@ -302,45 +302,42 @@ public class Graphics {
         int[] pos = {0, 0};
         switch (c) {
             case TOP:
-                pos[0] = (int) ((_logWidth - size[0]) * 0.5);
-                pos[1] = 0;
+                pos[0] = (int) ((_logWidth - size[0]) * 0.5) + padding[0];
+                pos[1] = 0 + padding[1];
                 break;
             case BOTTOM:
-                pos[0] = (int) ((_logWidth - size[0]) * 0.5);
-                pos[1] = (int) (_logHeight - size[1]);
+                pos[0] = (int) ((_logWidth - size[0]) * 0.5) + padding[0];
+                pos[1] = (int) (_logHeight - size[1]) - padding[1];
                 break;
             case LEFT:
-                pos[0] = 0;
-                pos[1] = (int) ((_logHeight - size[1]) * 0.5);
+                pos[0] = 0 + padding[0];
+                pos[1] = (int) ((_logHeight - size[1]) * 0.5) + padding[1];
                 break;
             case RIGHT:
-                pos[0] = (int) (_logWidth - size[0]);
-                pos[1] = (int) ((_logHeight - size[1]) * 0.5);
+                pos[0] = (int) (_logWidth - size[0]) - padding[0];
+                pos[1] = (int) ((_logHeight - size[1]) * 0.5) + padding[1];
                 break;
             case MIDDLE:
-                pos[0] = (int) ((_logWidth - size[0]) * 0.5);
-                pos[1] = (int) ((_logHeight - size[1]) * 0.5);
+                pos[0] = (int) ((_logWidth - size[0]) * 0.5) + padding[0];
+                pos[1] = (int) ((_logHeight - size[1]) * 0.5) + padding[1];
                 break;
             case TOP_LEFT:
-                pos[0] = 0;
-                pos[1] = 0;
+                pos[0] = 0 + padding[0];
+                pos[1] = 0 + padding[1];
                 break;
             case TOP_RIGHT:
-                pos[0] = (int) (_logWidth - size[0]);
-                pos[1] = 0;
+                pos[0] = (int) (_logWidth - size[0]) - padding[0];
+                pos[1] = 0 + padding[1];
                 break;
             case BOTTOM_LEFT:
-                pos[0] = 0;
-                pos[1] = (int) (_logHeight - size[1]);
+                pos[0] = 0 + padding[0];
+                pos[1] = (int) (_logHeight - size[1]) - padding[1];
                 break;
             case BOTTOM_RIGHT:
-                pos[0] = (int) (_logWidth - size[0]);
-                pos[1] = (int) (_logHeight - size[1]);
+                pos[0] = (int) (_logWidth - size[0]) - padding[0];
+                pos[1] = (int) (_logHeight - size[1]) - padding[1];
                 break;
         }
-
-        pos[0] += padding[0];
-        pos[1] += padding[1];
 
         return pos;
     }
