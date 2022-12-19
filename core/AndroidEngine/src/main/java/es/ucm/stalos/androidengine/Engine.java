@@ -2,6 +2,7 @@ package es.ucm.stalos.androidengine;
 
 import android.app.GameManager;
 import android.content.res.AssetManager;
+import android.content.res.Configuration;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Vibrator;
@@ -22,16 +23,16 @@ public class Engine implements Runnable {
         _context = activity;
         _assetsMan = activity.getApplicationContext().getAssets();
 
-        //STATE
+        // STATE
         _currState = initState;
 
-        //GRAPHICS
-        _graphics = new Graphics(w, h, _assetsMan, view);
+        // GRAPHICS
+        _graphics = new Graphics(w, h, _assetsMan, view, isLandScape());
 
         // INPUT
         _input = new Input(this);
 
-        //SCREEN
+        // SCREEN
         _adView = adView;
 
         view.setOnTouchListener(_input);
@@ -87,6 +88,10 @@ public class Engine implements Runnable {
                 reqNewState(_lastState);
 
             _audio.resumeMusic();
+
+            _graphics.togglePortraitLandscape(isLandScape());
+
+            _currState.togglePortraitLandscape(isLandScape());
         }
     }
 
@@ -203,6 +208,10 @@ public class Engine implements Runnable {
             case Sensor.TYPE_GYROSCOPE:
                 break;
         }
+    }
+
+    public boolean isLandScape(){
+        return this.getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
     //--------------------------------------------------------------------------------------------//

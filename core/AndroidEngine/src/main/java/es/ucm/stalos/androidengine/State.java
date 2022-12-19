@@ -70,6 +70,10 @@ public abstract class State {
         return _engine.getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
+    protected void togglePortraitLandscape(boolean isLandscape){
+
+    }
+
     protected Engine _engine;
     protected Graphics _graphics;
     protected Audio _audio;

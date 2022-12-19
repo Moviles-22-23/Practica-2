@@ -12,9 +12,7 @@ import java.util.HashMap;
 
 public class Graphics {
 
-    protected Graphics(int w, int h, AssetManager assetManager, SurfaceView view) {
-        _logWidth = w;
-        _logHeight = h;
+    protected Graphics(int w, int h, AssetManager assetManager, SurfaceView view, boolean isLandscape) {
         _logPosX = 0.0f;
         _logPosY = 0.0f;
         _assetManager = assetManager;
@@ -22,6 +20,14 @@ public class Graphics {
         _images = new HashMap<>();
         _fonts = new HashMap<>();
         _surfaceView = view;
+        this._isLandscape = isLandscape;
+        if(!isLandscape) {
+            _logWidth = w;
+            _logHeight = h;
+        } else {
+            _logWidth = h;
+            _logHeight = w;
+        }
     }
 
     //---------------------------ABSTRACT-GRAPHICS-VIEJO------------------------------------------//
@@ -31,11 +37,19 @@ public class Graphics {
      *
      * @return the scale factor
      */
-    private float[] getScaleFactor() {
-        float widthScale = getWidth() / _logWidth;
-        float heightScale = getHeight() / _logHeight;
+    public float[] getScaleFactor() {
+        float widthScale;
+        float heightScale;
 
-        // Nos interesa el tamaño más pequeño
+//        if(!_isLandscape) {
+        widthScale = getWidth() / _logWidth;
+        heightScale = getHeight() / _logHeight;
+//        } else {
+//            widthScale = getWidth() / _logHeight;
+//            heightScale = getHeight() / _logWidth;
+//        }
+        System.out.println("Scale: " + widthScale+  ", " + heightScale);
+
         return new float[]{widthScale, heightScale};
     }
 
@@ -48,17 +62,11 @@ public class Graphics {
      */
     public int[] logPos(int x, int y) {
         _scaleFactor = getScaleFactor();
-        //float offsetX = (_logWidth - (getWidth() / _scaleFactor[0])) / 2.0f;
-        //float offsetY = (_logHeight - (getHeight() / _scaleFactor[1])) / 2.0f;
 
-        int newPosX = (int) (x / _scaleFactor[0]);// + offsetX);
-        int newPosY = (int) (y / _scaleFactor[1]);// + offsetY);
+        int newPosX = (int) (x / _scaleFactor[0]);
+        int newPosY = (int) (y / _scaleFactor[1]);
 
-        int[] newPos = new int[2];
-        newPos[0] = newPosX;
-        newPos[1] = newPosY;
-
-        return newPos;
+        return new int[]{newPosX, newPosY};
     }
 
     /*
@@ -119,6 +127,21 @@ public class Graphics {
 
         _fonts.put(name, font);
     }
+
+    public void togglePortraitLandscape(boolean isLandscape){
+        // Only swap when orientation changes
+        if(this._isLandscape == isLandscape) return;
+
+        // Setup canvas size
+        _surfaceView.getHolder().setSizeFromLayout();
+
+        float aux = _logHeight;
+        _logHeight = _logWidth;
+        _logWidth = aux;
+
+        this._isLandscape = isLandscape;
+    }
+
 
 //-----------------------------------------------------------------//
 
@@ -200,11 +223,12 @@ public class Graphics {
         // Primera linea
         int yPos = (int) ((pos[1] + size[1] / 2) - ((_paint.descent() + _paint.ascent()) / 2) - ((_paint.descent() - _paint.ascent()) / 2) * (numLines - 1));
         for (String line: text.split("\n")) {
+
             _canvas.drawText(line, xPos, yPos, _paint);
             // Va aumentando la diferencia entre lineas
             yPos += _paint.descent() - _paint.ascent();
         }
-
+//        _canvas.restore();
         _paint.reset();
     }
 
@@ -231,6 +255,7 @@ public class Graphics {
 
     public void fillSquare(int[] pos, float[] size) {
         _paint.setStyle(Paint.Style.FILL);
+        System.out.println("Pos[0]: " + pos[0] + ", Pos[1]: " + pos[1] + ", Size[0]: " + size[0] + ", Size[1]: " + size[1]);
         paintRect(pos, size);
     }
 
@@ -278,12 +303,9 @@ public class Graphics {
             System.out.println("PREPARE FRAME: NULL");
         }
 
+        // Update size by orientation
         _canvas = _surfaceView.getHolder().lockCanvas();
-        // SCALE & TRANSLATE
         _scaleFactor = getScaleFactor();
-
-        //int[] newPos = translateWindow();
-        //translate(newPos[0], newPos[1]);
         scale(_scaleFactor[0], _scaleFactor[1]);
     }
 
@@ -376,6 +398,8 @@ public class Graphics {
                 pos[0] = (int) (parentPos[0] - size[0] - padding[0]);
                 pos[1] = parentPos[1];
                 break;
+            default:
+                break;
         }
 
         return pos;
@@ -387,6 +411,7 @@ public class Graphics {
     private final AssetManager _assetManager;
     private SurfaceView _surfaceView;
     private Canvas _canvas;
+    private boolean _isLandscape;
 
     /**
      * Physic scale
