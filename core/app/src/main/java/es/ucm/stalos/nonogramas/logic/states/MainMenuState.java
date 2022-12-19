@@ -3,7 +3,6 @@ package es.ucm.stalos.nonogramas.logic.states;
 import java.util.List;
 
 import es.ucm.stalos.androidengine.Constrain;
-import es.ucm.stalos.androidengine.Graphics;
 import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.androidengine.TouchEvent;
@@ -28,12 +27,12 @@ public class MainMenuState extends State {
             // PORTRAIT
             _titleSize[0] = _graphics.getLogWidth() * 0.7f;
             _titleSize[1] = _graphics.getLogHeight() * 0.1f;
-            _titlePos = _graphics.constrainedPos(Constrain.TOP, _titleSize, new int[]{0, 100});
+            _titlePos = _graphics.constrainedToScreenPos(Constrain.TOP, _titleSize, new int[]{0, 100});
 
             // LANDSCAPE
             _titleSizeL[0] = _graphics.getLogWidth() * 0.1f;
             _titleSizeL[1] = _graphics.getLogHeight() * 0.3f;
-            _titlePosL = _graphics.constrainedPos(Constrain.TOP, _titleSizeL, new int[]{0, 0});
+            _titlePosL = _graphics.constrainedToScreenPos(Constrain.TOP, _titleSizeL, new int[]{0, 0});
 
             // BUTTONS
             _randCallback = new ButtonCallback() {
@@ -58,19 +57,22 @@ public class MainMenuState extends State {
             int buttonGap = 40;
             _playButtonSize[0] = _graphics.getLogWidth() * 0.7f;
             _playButtonSize[1] = _graphics.getLogHeight() * 0.1f;
-            _playButtonPos = _graphics.constrainedPos(Constrain.MIDDLE, _playButtonSize, new int[]{0, 0});
+            _playButtonPos = _graphics.constrainedToScreenPos(Constrain.MIDDLE, _playButtonSize, new int[]{0, 0});
             // PLAY RANDOM BUTTON LANDSCAPE
             _playButtonSizeL[0] = _graphics.getLogWidth() * 0.42f;
             _playButtonSizeL[1] = _graphics.getLogHeight() * 0.3f;
-            _playButtonPosL = _graphics.constrainedPos(Constrain.LEFT, _playButtonSizeL, new int[]{20, 20});
+            _playButtonPosL = _graphics.constrainedToScreenPos(Constrain.LEFT, _playButtonSizeL, new int[]{20, 20});
 
             // PLAY RANDOM BUTTON PORTRAIT
             _playRandomButtonSize = _playButtonSize;
-            _playRandomButtonPos[0] = _playButtonPos[0];
-            _playRandomButtonPos[1] = (int) (_playButtonPos[1] + _playButtonSize[1] + buttonGap);
+//            _playRandomButtonPos[0] = _playButtonPos[0];
+//            _playRandomButtonPos[1] = (int) (_playButtonPos[1] + _playButtonSize[1] + buttonGap);
+            _playRandomButtonPos = _graphics.constrainedToObjectPos(Constrain.TOP,
+                    _playButtonPos, _playButtonSize,
+                    _playRandomButtonSize, new int[]{0, buttonGap});
             // PLAY RANDOM BUTTON LANDSCAPE
             _playRandomButtonSizeL = _playButtonSizeL;
-            _playRandomButtonPosL = _graphics.constrainedPos(Constrain.RIGHT, _playRandomButtonSizeL, new int[]{20, 20});
+            _playRandomButtonPosL = _graphics.constrainedToScreenPos(Constrain.RIGHT, _playRandomButtonSizeL, new int[]{20, 20});
 
             System.out.println("RandomButtonPos--- X: " + _playRandomButtonPos[0] + ", Y: " + _playRandomButtonPos[1]);
 
