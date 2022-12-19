@@ -1,7 +1,7 @@
 package es.ucm.stalos.androidengine;
 
 public enum Constrain {
-    TOP, BOTTOM, LEFT, RIGHT,
-    TOP_LEFT, TOP_RIGHT,
-    BOTTOM_LEFT, BOTTOM_RIGHT, MIDDLE;
+    TOP_LEFT,     TOP,      TOP_RIGHT,
+    LEFT,        MIDDLE,        RIGHT,
+    BOTTOM_LEFT, BOTTOM, BOTTOM_RIGHT
 }

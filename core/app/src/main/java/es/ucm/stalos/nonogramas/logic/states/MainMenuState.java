@@ -29,10 +29,9 @@ public class MainMenuState extends State {
             _titleSize[0] = _graphics.getLogWidth() * 0.7f;
             _titleSize[1] = _graphics.getLogHeight() * 0.1f;
             _titlePos = _graphics.constrainedPos(Constrain.TOP, _titleSize, new int[]{0, 100});
-
             // LANDSCAPE
-            _titleSizeL[0] = _graphics.getLogWidth() * 0.1f;
-            _titleSizeL[1] = _graphics.getLogHeight() * 0.3f;
+            _titleSizeL[0] = _graphics.getLogHeight() * 0.1f;
+            _titleSizeL[1] = _graphics.getLogWidth() * 0.3f;
             _titlePosL = _graphics.constrainedPos(Constrain.TOP, _titleSizeL, new int[]{0, 0});
 
             // BUTTONS
@@ -121,7 +120,8 @@ public class MainMenuState extends State {
             if (ColorPalette._currPalette == 0)
                 _graphics.drawRect(_playButtonPosL, _playButtonSizeL);
             else _graphics.fillSquare(_playButtonPosL, _playButtonSizeL);
-            _graphics.drawCenteredString(_playButtonText, FontName.ButtonMainMenu.getName(),
+
+            _graphics.drawCenteredString(_playButtonTextL, FontName.ButtonMainMenu.getName(),
                     _playButtonPosL, _playButtonSizeL);
 
             // Play Random Button
@@ -129,7 +129,7 @@ public class MainMenuState extends State {
             if (ColorPalette._currPalette == 0)
                 _graphics.drawRect(_playRandomButtonPosL, _playRandomButtonSizeL);
             else _graphics.fillSquare(_playRandomButtonPosL, _playRandomButtonSizeL);
-            _graphics.drawCenteredString(_playRandomButtonText, FontName.ButtonMainMenu.getName(),
+            _graphics.drawCenteredString(_playRandomButtonTextL, FontName.ButtonMainMenu.getName(),
                     _playRandomButtonPosL, _playRandomButtonSizeL);
         }
     }
@@ -142,13 +142,25 @@ public class MainMenuState extends State {
             if (currEvent == TouchEvent.touchDown) {
                 int[] clickPos = {currEvent.getX(), currEvent.getY()};
 
-                // Play Button
-                if (clickInsideSquare(clickPos, _playButtonPos, _playButtonSize)) {
-                    _storyCallback.doSomething();
+                if(!isLandscape()) {
+                    // Play Button
+                    if (clickInsideSquare(clickPos, _playButtonPos, _playButtonSize)) {
+                        _storyCallback.doSomething();
+                    }
+                    // Play Random Button
+                    else if (clickInsideSquare(clickPos, _playRandomButtonPos, _playRandomButtonSize)) {
+                        _randCallback.doSomething();
+                    }
                 }
-                // Play Random Button
-                else if (clickInsideSquare(clickPos, _playRandomButtonPos, _playRandomButtonSize)) {
-                    _randCallback.doSomething();
+                else{
+                    // Play Button
+                    if (clickInsideSquare(clickPos, _playButtonPosL, _playButtonSizeL)) {
+                        _storyCallback.doSomething();
+                    }
+                    // Play Random Button
+                    else if (clickInsideSquare(clickPos, _playRandomButtonPosL, _playRandomButtonSizeL)) {
+                        _randCallback.doSomething();
+                    }
                 }
             }
         }
@@ -157,6 +169,7 @@ public class MainMenuState extends State {
     //----------------------------------------ATTRIBUTES----------------------------------------------//
     // Title
     private final String _titleText = "Nonogramas";
+
     //Portrait
     private int[] _titlePos = new int[2];
     private float[] _titleSize = new float[2];
@@ -170,6 +183,7 @@ public class MainMenuState extends State {
 
     // Play Button
     private final String _playButtonText = "Modo Historia";
+    private final String _playButtonTextL = "Modo\nHistoria";
     // Portrait
     private int[] _playButtonPos = new int[2];
     private float[] _playButtonSize = new float[2];
@@ -179,6 +193,7 @@ public class MainMenuState extends State {
 
     // Play Random Button
     private final String _playRandomButtonText = "Modo Aleatorio";
+    private final String _playRandomButtonTextL = "Modo\nAleatorio";
     // Portrait
     private int[] _playRandomButtonPos = new int[2];
     private float[] _playRandomButtonSize = new float[2];

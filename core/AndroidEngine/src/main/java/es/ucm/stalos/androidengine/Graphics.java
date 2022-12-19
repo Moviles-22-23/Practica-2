@@ -192,9 +192,18 @@ public class Graphics {
         _paint.setTextSize(fo.getSize());
         _paint.setTextAlign(Paint.Align.CENTER);
 
-        int xPos = (int) (pos[0] + size[0] / 2);
-        int yPos = (int) ((pos[1] + size[1] / 2) - ((_paint.descent() + _paint.ascent()) / 2));
-        _canvas.drawText(text, xPos, yPos, _paint);
+        // La posicion en x va a ser siempre la misma gracias al Aling.CENTER
+        final int xPos = (int) (pos[0] + size[0] / 2);
+        // yPos se modifica con los saltos del linea
+        int numLines = text.split("\n").length;
+
+        // Primera linea
+        int yPos = (int) ((pos[1] + size[1] / 2) - ((_paint.descent() + _paint.ascent()) / 2) - ((_paint.descent() - _paint.ascent()) / 2) * (numLines - 1));
+        for (String line: text.split("\n")) {
+            _canvas.drawText(line, xPos, yPos, _paint);
+            // Va aumentando la diferencia entre lineas
+            yPos += _paint.descent() - _paint.ascent();
+        }
 
         _paint.reset();
     }

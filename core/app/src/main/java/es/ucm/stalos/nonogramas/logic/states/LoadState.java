@@ -57,10 +57,10 @@ public class LoadState extends State {
             // Fonts
             _graphics.newFont(FontName.TitleMainMenu.getName(),
                     context.getResources().getString(R.string.JoseFinSans),
-                    50, true);
+                    150, true);
             _graphics.newFont(FontName.ButtonMainMenu.getName(),
                     context.getResources().getString(R.string.JoseFinSans),
-                    35, true);
+                    100, true);
             _graphics.newFont(FontName.DefaultFont.getName(),
                     context.getResources().getString(R.string.JoseFinSans),
                     25, true);
