@@ -389,12 +389,12 @@ public class Graphics {
                 pos[1] = (int) (parentPos[1] - size[1] - padding[1]);
                 break;
             case LEFT:
-                // Se coloca a la izquierda del padre + padding
+                // Se coloca a la derecha del padre + padding
                 pos[0] = (int) (parentPos[0] + parentSize[0] + padding[0]);
                 pos[1] = parentPos[1];
                 break;
             case RIGHT:
-                // Se coloca a la derecha del padre + padding
+                // Se coloca a la izquierda del padre + padding
                 pos[0] = (int) (parentPos[0] - size[0] - padding[0]);
                 pos[1] = parentPos[1];
                 break;

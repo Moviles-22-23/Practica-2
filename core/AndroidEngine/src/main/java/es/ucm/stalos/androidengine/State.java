@@ -66,10 +66,6 @@ public abstract class State {
     protected void manageSensorEvent() {
     }
 
-    protected boolean isLandscape() {
-        return _engine.getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-    }
-
     protected void togglePortraitLandscape(boolean isLandscape){
 
     }

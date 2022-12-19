@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         LoadState loadAssets = new LoadState(_engine);
 
         // Most common resolution
-        if (!_engine.init(loadAssets, 1440, 2560, this, gameView, adGroup)) {
+        if (!_engine.init(loadAssets, 400, 600, this, gameView, adGroup)) {
             System.out.println("Error al inicializar el engine");
         }
     }

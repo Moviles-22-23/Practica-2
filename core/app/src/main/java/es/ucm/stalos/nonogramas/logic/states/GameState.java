@@ -7,6 +7,7 @@ import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.TouchEvent;
 import es.ucm.stalos.nonogramas.R;
+import es.ucm.stalos.nonogramas.android.RewardManager;
 import es.ucm.stalos.nonogramas.android.ShareIntent;
 import es.ucm.stalos.nonogramas.logic.data.GameData;
 import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
@@ -20,7 +21,6 @@ import es.ucm.stalos.nonogramas.logic.enums.SoundName;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 import es.ucm.stalos.nonogramas.logic.objects.Board;
 import es.ucm.stalos.nonogramas.logic.objects.ColorPalette;
-import es.ucm.stalos.nonogramas.android.RewardManager;
 
 // PRACTICA 2: Refactorización de los GameState
 public class GameState extends State {
@@ -60,10 +60,8 @@ public class GameState extends State {
     public boolean init() {
         try {
             _engine.swapBannerAdVisibility(false);
-            initButtons();
-            initTexts();
-            initPalette();
-            initBoard();
+
+            togglePortraitLandscape(_engine.isLandScape());
 
             _engine.getContext().runOnUiThread(new Runnable() {
                 @Override
@@ -201,19 +199,54 @@ public class GameState extends State {
 
 //-------------------------------------------INIT-------------------------------------------------//
 
+    @Override
+    protected void togglePortraitLandscape(boolean isLandscape) {
+        initButtons(isLandscape);
+        initTexts();
+
+        try {
+            initPalette(isLandscape);
+            initBoard(isLandscape);
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+    }
+
     /**
      * Initializes the board
      */
-    private void initBoard() throws Exception {
-        // Create the board
-        int padding = 10;
-        float maxBoardWidth = _graphics.getLogWidth();
-        float maxBoardHeight = _posColorPalette[1] - _giveupImageSize[1];
+    private void initBoard(boolean isLandscape) throws Exception {
+        float maxBoardWidth, maxBoardHeight;
+        int xPadding, yPadding;
 
-        _sizeBoard[0] = maxBoardWidth;
-        _sizeBoard[1] = maxBoardHeight;
-        _posBoard = _graphics.constrainedToScreenPos(Constrain.TOP_LEFT, _sizeBoard, new int[]{0, 5});
-        _posBoard[1] += (int) (_lifeImagePos[1] + _lifeImageSize[1]);
+        if (!isLandscape) {
+            xPadding = 10;
+            yPadding = 15;
+
+            maxBoardWidth = _graphics.getLogWidth() - xPadding * 2;
+            maxBoardHeight = _posColorPalette[1] - _lifeImageSize[1] - _lifeImagePos[1] - yPadding * 2;
+
+            _sizeBoard[0] = maxBoardWidth;
+            _sizeBoard[1] = maxBoardHeight;
+
+            _posBoard = _graphics.constrainedToScreenPos(Constrain.TOP_LEFT,
+                    _sizeBoard, new int[]{xPadding, yPadding});
+            _posBoard[1] += (int) (_lifeImagePos[1] + _lifeImageSize[1]);
+        } else {
+            xPadding = 10;
+            yPadding = 10;
+
+            maxBoardWidth = _posColorPalette[0] - _giveupImagePos[0] - _giveupButtonSize[0] - xPadding * 2;
+            maxBoardHeight = _graphics.getLogHeight() - yPadding * 2;
+
+            _sizeBoard[0] = maxBoardWidth;
+            _sizeBoard[1] = maxBoardHeight;
+
+            _posBoard = _graphics.constrainedToObjectPos(Constrain.LEFT,
+                    _giveupTextPos, _giveupTextSize,
+                    _sizeBoard, new int[]{0, 0});
+        }
+
         if (_data._inGame)
             _board = new Board(this, _data, _posBoard, _sizeBoard);
         else
@@ -228,34 +261,71 @@ public class GameState extends State {
     /**
      * Initializes every button of the state
      */
-    private void initButtons() {
-        // Give Up
-        _giveupImageSize[0] = _graphics.getLogWidth() * 0.071f;
-        _giveupImageSize[1] = _graphics.getLogHeight() * 0.05f;
-        _giveupImagePos = _graphics.constrainedToScreenPos(Constrain.TOP_LEFT, _giveupImageSize, new int[]{10, 10});
+    private void initButtons(boolean isLandscape) {
+        if (!isLandscape) {
+            // GIVE UP
+            _giveupImageSize[0] = _graphics.getLogWidth() * 0.071f;
+            _giveupImageSize[1] = _graphics.getLogHeight() * 0.05f;
+            _giveupImagePos = _graphics.constrainedToScreenPos(Constrain.TOP_LEFT, _giveupImageSize, new int[]{10, 10});
 
-        _giveupTextSize[0] = _graphics.getLogWidth() * 0.3f;
-        _giveupTextSize[1] = _giveupImageSize[1];
-        _giveupTextPos[0] = (int) (_giveupImagePos[0] + _giveupImageSize[0]);
-        _giveupTextPos[1] = _giveupImagePos[1];
+            _giveupText = "Rendirse";
+            _giveupTextSize[0] = _graphics.getLogWidth() * 0.3f;
+            _giveupTextSize[1] = _giveupImageSize[1];
+            _giveupTextPos[0] = (int) (_giveupImagePos[0] + _giveupImageSize[0]);
+            _giveupTextPos[1] = _giveupImagePos[1];
 
-        _giveupButtonSize[0] = _giveupImageSize[0] + _giveupTextSize[0];
+            // BACK
+            _backImageSize[0] = _giveupImageSize[1];
+            _backImageSize[1] = _giveupImageSize[1];
+            _backTextSize[0] = _graphics.getLogWidth() * 0.2f;
+            _backTextSize[1] = _giveupImageSize[1];
+
+            _backImagePos = _graphics.constrainedToScreenPos(Constrain.BOTTOM_LEFT, _backImageSize,
+                    new int[]{(int) (_graphics.getLogWidth() * 0.25f - _backImageSize[0]), 100});
+            _backTextPos[0] = (int) (_backImagePos[0] + _backImageSize[0]);
+            _backTextPos[1] = _backImagePos[1];
+
+            // LIFE
+            _lifeImageSize[0] = _graphics.getLogWidth() * 0.1207f;
+            _lifeImageSize[1] = _graphics.getLogHeight() * 0.075f;
+            _lifeImagePos = _graphics.constrainedToScreenPos(Constrain.TOP, _lifeImageSize, new int[]{0, 10});
+
+            // ADS - GameOver
+            _adsImageSize[0] = _graphics.getLogWidth() * 0.4f;
+            _adsImageSize[1] = _adsImageSize[0];
+            _adsImagePos = _graphics.constrainedToScreenPos(Constrain.MIDDLE, _adsImageSize, new int[]{0, 120});
+
+            // SHARE
+            _shareSize[0] = _graphics.getLogWidth() * 0.1f;
+            _shareSize[1] = _graphics.getLogWidth() * 0.1f;
+
+            _twitterPos = _graphics.constrainedToScreenPos(Constrain.BOTTOM_LEFT, _shareSize,
+                    new int[]{(int) (_graphics.getLogWidth() * 0.25f), 40});
+            _whatsPos = _graphics.constrainedToScreenPos(Constrain.BOTTOM_RIGHT, _shareSize,
+                    new int[]{(int) (_graphics.getLogWidth() * 0.25f), 40});
+        } else {
+            // GIVE UP
+            _giveupImageSize[0] = _graphics.getLogWidth() * 0.05f;
+            _giveupImageSize[1] = _graphics.getLogHeight() * 0.1f;
+            _giveupImagePos = _graphics.constrainedToScreenPos(Constrain.TOP_LEFT, _giveupImageSize, new int[]{10, 10});
+
+            _giveupText = "";
+            _giveupTextSize[0] = _graphics.getLogWidth() * 0.17f;
+            _giveupTextSize[1] = _giveupImageSize[1];
+            _giveupTextPos = _graphics.constrainedToObjectPos(Constrain.LEFT, // constrain
+                    _giveupImagePos, _giveupImageSize, // father
+                    _giveupTextSize, new int[]{0, 0}); // object and padding
+        }
+
+        // GIVE UP BUTTON SIZE
         _giveupButtonSize[1] = _giveupImageSize[1];
+        _giveupButtonSize[0] = _giveupImageSize[0] + _giveupTextSize[0];
 
-        // Back
-        _backImageSize[0] = _giveupImageSize[1];
-        _backImageSize[1] = _giveupImageSize[1];
-        _backTextSize[0] = _graphics.getLogWidth() * 0.2f;
-        _backTextSize[1] = _giveupImageSize[1];
-
-        _backImagePos = _graphics.constrainedToScreenPos(Constrain.BOTTOM_LEFT, _backImageSize,
-                new int[]{(int) (_graphics.getLogWidth() * 0.25f - _backImageSize[0]), 100});
-        _backTextPos[0] = (int) (_backImagePos[0] + _backImageSize[0]);
-        _backTextPos[1] = _backImagePos[1];
-
+        // BACK BUTTON SIZE
         _backButtonSize[0] = _backImageSize[0] + _backTextSize[0];
         _backButtonSize[1] = _backImageSize[1];
 
+        // BUTTON CALLBACKS
         _backCallback = new ButtonCallback() {
             @Override
             public void doSomething() {
@@ -270,16 +340,6 @@ public class GameState extends State {
             }
         };
 
-        // Life
-        _lifeImageSize[0] = _graphics.getLogWidth() * 0.1207f;
-        _lifeImageSize[1] = _graphics.getLogHeight() * 0.075f;
-        _lifeImagePos = _graphics.constrainedToScreenPos(Constrain.TOP, _lifeImageSize, new int[]{0, 10});
-
-        // ADS - GameOver
-        _adsImageSize[0] = _graphics.getLogWidth() * 0.4f;
-        _adsImageSize[1] = _adsImageSize[0];
-        _adsImagePos = _graphics.constrainedToScreenPos(Constrain.MIDDLE, _adsImageSize, new int[]{0, 120});
-
         _adsCallback = new ButtonCallback() {
             @Override
             public void doSomething() {
@@ -292,12 +352,6 @@ public class GameState extends State {
             }
         };
 
-        // SHARE
-        _shareSize[0] = _graphics.getLogWidth() * 0.1f;
-        _shareSize[1] = _graphics.getLogWidth() * 0.1f;
-
-        _twitterPos = _graphics.constrainedToScreenPos(Constrain.BOTTOM_LEFT, _shareSize,
-                new int[]{(int) (_graphics.getLogWidth() * 0.25f), 40});
         _twitterCallback = new ButtonCallback() {
             @Override
             public void doSomething() {
@@ -306,8 +360,7 @@ public class GameState extends State {
                 intent.shareContent(_engine.getContext(), ShareType.TWITTER);
             }
         };
-        _whatsPos = _graphics.constrainedToScreenPos(Constrain.BOTTOM_RIGHT, _shareSize,
-                new int[]{(int) (_graphics.getLogWidth() * 0.25f), 40});
+
         _whatsCallback = new ButtonCallback() {
             @Override
             public void doSomething() {
@@ -348,11 +401,18 @@ public class GameState extends State {
      *
      * @throws Exception if the initialization fails
      */
-    private void initPalette() throws Exception {
-        _sizeColorPalette[0] = 400.0f;
-        _sizeColorPalette[1] = 100.0f;
-        _posColorPalette = _graphics.constrainedToScreenPos(Constrain.BOTTOM_LEFT, _sizeColorPalette, new int[]{0, 3});
+    private void initPalette(boolean isLandscape) throws Exception {
+        if (!isLandscape) {
+            _sizeColorPalette[0] = 400.0f;
+            _sizeColorPalette[1] = 100.0f;
+            _posColorPalette = _graphics.constrainedToScreenPos(Constrain.BOTTOM_LEFT, _sizeColorPalette, new int[]{0, 1});
 
+        } else {
+            // TODO: darle la vuelta
+            _sizeColorPalette[0] = 100.0f;
+            _sizeColorPalette[1] = 400.0f;
+            _posColorPalette = _graphics.constrainedToScreenPos(Constrain.RIGHT, _sizeColorPalette, new int[]{1, 0});
+        }
         _colorPalette = new ColorPalette(_posColorPalette, _sizeColorPalette, this);
 
         if (!_colorPalette.init(_data._lastUnlockedPack, _graphics.getLogWidth(), _graphics.getLogHeight()))
@@ -576,7 +636,7 @@ public class GameState extends State {
     private float[] _levelNameSize = new float[2];
 
     // Give Up Button
-    private final String _giveupText = "Rendirse";
+    private String _giveupText = "Rendirse";
     private int[] _giveupTextPos = new int[2];
     private float[] _giveupTextSize = new float[2];
 
