@@ -5,6 +5,7 @@ import android.os.Vibrator;
 
 import java.util.List;
 
+import es.ucm.stalos.androidengine.Constrain;
 import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.TouchEvent;
@@ -62,10 +63,10 @@ public class GameState extends State {
     public boolean init() {
         try {
             _engine.swapBannerAdVisibility(false);
-            initBoard();
             initButtons();
             initTexts();
             initPalette();
+            initBoard();
 
             _engine.getContext().runOnUiThread(new Runnable() {
                 @Override
@@ -208,11 +209,14 @@ public class GameState extends State {
      */
     private void initBoard() throws Exception {
         // Create the board
-        _posBoard[0] = 20;
-        _posBoard[1] = 100;
-        _sizeBoard[0] = 360.0f;
-        _sizeBoard[1] = 360.0f;
+        int padding = 10;
+        float maxBoardWidth = _graphics.getLogWidth();
+        float maxBoardHeight = _posColorPalette[1] - _giveupImageSize[1];
 
+        _sizeBoard[0] = maxBoardWidth;
+        _sizeBoard[1] = maxBoardHeight;
+        _posBoard = _graphics.constrainedPos(Constrain.TOP_LEFT, _sizeBoard, new int[]{0, 5});
+        _posBoard[1] += (int) (_lifeImagePos[1] + _lifeImageSize[1]);
         if (_data._inGame)
             _board = new Board(this, _data, _posBoard, _sizeBoard);
         else
@@ -231,8 +235,7 @@ public class GameState extends State {
         // Give Up
         _giveupImageSize[0] = _graphics.getLogWidth() * 0.071f;
         _giveupImageSize[1] = _graphics.getLogHeight() * 0.05f;
-        _giveupImagePos[0] = 10;
-        _giveupImagePos[1] = 31;
+        _giveupImagePos = _graphics.constrainedPos(Constrain.TOP_LEFT, _giveupImageSize, new int[]{10, 10});
 
         _giveupTextSize[0] = _graphics.getLogWidth() * 0.3f;
         _giveupTextSize[1] = _giveupImageSize[1];
@@ -248,8 +251,8 @@ public class GameState extends State {
         _backTextSize[0] = _graphics.getLogWidth() * 0.2f;
         _backTextSize[1] = _giveupImageSize[1];
 
-        _backImagePos[0] = (int) ((_graphics.getLogWidth() - (_backTextSize[0] + _backImageSize[0])) * 0.25f);
-        _backImagePos[1] = (int) (_graphics.getLogHeight() * 0.8f);
+        _backImagePos = _graphics.constrainedPos(Constrain.BOTTOM_LEFT, _backImageSize,
+                new int[]{(int) (_graphics.getLogWidth() * 0.25f - _backImageSize[0]), 100});
         _backTextPos[0] = (int) (_backImagePos[0] + _backImageSize[0]);
         _backTextPos[1] = _backImagePos[1];
 
@@ -273,14 +276,12 @@ public class GameState extends State {
         // Life
         _lifeImageSize[0] = _graphics.getLogWidth() * 0.1207f;
         _lifeImageSize[1] = _graphics.getLogHeight() * 0.075f;
-        _lifeImagePos[0] = (int) (_graphics.getLogWidth() * 0.5f);
-        _lifeImagePos[1] = (int) (_giveupImagePos[1] - _giveupImageSize[1] * 0.5f);
+        _lifeImagePos = _graphics.constrainedPos(Constrain.TOP, _lifeImageSize, new int[]{0, 10});
 
         // ADS - GameOver
         _adsImageSize[0] = _graphics.getLogWidth() * 0.4f;
         _adsImageSize[1] = _adsImageSize[0];
-        _adsImagePos[0] = (int) ((_graphics.getLogWidth() + _adsImagePos[0]) * 0.5f);
-        _adsImagePos[1] = (int) ((_graphics.getLogHeight() * 0.6f));
+        _adsImagePos = _graphics.constrainedPos(Constrain.MIDDLE, _adsImageSize, new int[]{0, 120});
 
         _adsCallback = new ButtonCallback() {
             @Override
@@ -296,10 +297,10 @@ public class GameState extends State {
 
         // SHARE
         _shareSize[0] = _graphics.getLogWidth() * 0.1f;
-        _shareSize[1] = _graphics.getLogHeight() * 0.09f;
+        _shareSize[1] = _graphics.getLogWidth() * 0.1f;
 
-        _twitterPos[0] = (int) ((_graphics.getLogWidth() - _shareSize[0]) * 0.33f);
-        _twitterPos[1] = (int) (_graphics.getLogHeight() * 0.9f);
+        _twitterPos = _graphics.constrainedPos(Constrain.BOTTOM_LEFT, _shareSize,
+                new int[]{(int) (_graphics.getLogWidth() * 0.25f), 40});
         _twitterCallback = new ButtonCallback() {
             @Override
             public void doSomething() {
@@ -308,8 +309,8 @@ public class GameState extends State {
                 intent.shareContent(_engine.getContext(), ShareType.TWITTER);
             }
         };
-        _whatsPos[0] = (int) ((_graphics.getLogWidth() - _shareSize[0]) * 0.66f);
-        _whatsPos[1] = (int) (_graphics.getLogHeight() * 0.9f);
+        _whatsPos = _graphics.constrainedPos(Constrain.BOTTOM_RIGHT, _shareSize,
+                new int[]{(int) (_graphics.getLogWidth() * 0.25f), 40});
         _whatsCallback = new ButtonCallback() {
             @Override
             public void doSomething() {
@@ -326,27 +327,23 @@ public class GameState extends State {
     private void initTexts() {
         // WIN TEXT
         _winSize1[0] = _graphics.getLogWidth();
-        _winSize1[1] = _graphics.getLogHeight() * 0.08f;
-        _winPos1[0] = 0;
-        _winPos1[1] = (int) (_graphics.getLogHeight() * 0.0f);
+        _winSize1[1] = _graphics.getLogHeight() * 0.1f;
+        _winPos1 = _graphics.constrainedPos(Constrain.TOP, _winSize1, new int[]{0, 0});
 
         // NAME TEXT
-        _levelNameSize[0] = _graphics.getLogWidth();
-        _levelNameSize[1] = _graphics.getLogHeight() * 0.08f;
-        _levelNamePos[0] = 0;
-        _levelNamePos[1] = (int) (_graphics.getLogHeight() * 0.1f);
+        _levelNameSize = _winSize1;
+        _levelNamePos[0] = _winPos1[0];
+        _levelNamePos[1] = (int) (_winPos1[1] + _winSize1[1] / 2);
 
         // GameOver Text
-        _gameOverImageSize[0] = _graphics.getLogWidth() * 0.9f;
+        _gameOverImageSize[0] = _graphics.getLogWidth();
         _gameOverImageSize[1] = _graphics.getLogHeight() * 0.5f;
-        _gameOverImagePos[0] = (int) (_gameOverImageSize[0] * 0.05f);
-        _gameOverImagePos[1] = (int) (_gameOverImageSize[1] * 0.5f);
+        _gameOverImagePos = _graphics.constrainedPos(Constrain.MIDDLE, _gameOverImageSize, new int[]{0, -100});
 
         // AGITA TEXT
-        _nextLevelPos[0] = (int) (_graphics.getLogWidth() * 0.5f);
-        _nextLevelPos[1] = (int) (_graphics.getLogHeight() * 0.8f);
         _nextLevelSize[0] = _graphics.getLogWidth() * 0.5f;
-        _nextLevelSize[1] = _graphics.getLogHeight() * 0.9f - _nextLevelPos[1];
+        _nextLevelSize[1] = _winSize1[1];
+        _nextLevelPos = _graphics.constrainedPos(Constrain.BOTTOM_RIGHT, _nextLevelSize, new int[]{20, 80});
     }
 
     /**
@@ -355,10 +352,9 @@ public class GameState extends State {
      * @throws Exception if the initialization fails
      */
     private void initPalette() throws Exception {
-        _posColorPalette[0] = 0;
-        _posColorPalette[1] = 520;
         _sizeColorPalette[0] = 400.0f;
         _sizeColorPalette[1] = 100.0f;
+        _posColorPalette = _graphics.constrainedPos(Constrain.BOTTOM_LEFT, _sizeColorPalette, new int[]{0, 3});
 
         _colorPalette = new ColorPalette(_posColorPalette, _sizeColorPalette, this);
 
