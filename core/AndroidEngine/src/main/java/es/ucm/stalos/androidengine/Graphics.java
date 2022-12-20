@@ -21,7 +21,7 @@ public class Graphics {
         _fonts = new HashMap<>();
         _surfaceView = view;
         this._isLandscape = isLandscape;
-        if(!isLandscape) {
+        if (!isLandscape) {
             _logWidth = w;
             _logHeight = h;
         } else {
@@ -119,9 +119,9 @@ public class Graphics {
         _fonts.put(name, font);
     }
 
-    public void togglePortraitLandscape(boolean isLandscape){
+    public void togglePortraitLandscape(boolean isLandscape) {
         // Only swap when orientation changes
-        if(this._isLandscape == isLandscape) return;
+        if (this._isLandscape == isLandscape) return;
 
         // Setup canvas size
         _surfaceView.getHolder().setSizeFromLayout();
@@ -213,7 +213,7 @@ public class Graphics {
 
         // Primera linea
         int yPos = (int) ((pos[1] + size[1] / 2) - ((_paint.descent() + _paint.ascent()) / 2) - ((_paint.descent() - _paint.ascent()) / 2) * (numLines - 1));
-        for (String line: text.split("\n")) {
+        for (String line : text.split("\n")) {
 
             _canvas.drawText(line, xPos, yPos, _paint);
             // Va aumentando la diferencia entre lineas
@@ -370,23 +370,23 @@ public class Graphics {
         switch (c) {
             case TOP:
                 // Se coloca debajo del padre + padding
-                pos[0] = parentPos[0];
+                pos[0] = parentPos[0] + padding[0];
                 pos[1] = (int) (parentPos[1] + parentSize[1] + padding[1]);
                 break;
             case BOTTOM:
                 // Se coloca encima del padre + padding
-                pos[0] = parentPos[0];
+                pos[0] = parentPos[0] + padding[0];
                 pos[1] = (int) (parentPos[1] - size[1] - padding[1]);
                 break;
             case LEFT:
-                // Se coloca a la izquierda del padre + padding
+                // Se coloca a la derecha del padre + padding
                 pos[0] = (int) (parentPos[0] + parentSize[0] + padding[0]);
-                pos[1] = parentPos[1];
+                pos[1] = parentPos[1] + padding[1];
                 break;
             case RIGHT:
-                // Se coloca a la derecha del padre + padding
+                // Se coloca a la izquierda del padre + padding
                 pos[0] = (int) (parentPos[0] - size[0] - padding[0]);
-                pos[1] = parentPos[1];
+                pos[1] = parentPos[1] + padding[1];
                 break;
             default:
                 break;
