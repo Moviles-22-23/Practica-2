@@ -33,8 +33,6 @@ public class LoadState extends State {
             //Sprites
             _graphics.newImage(ImageName.BackArrow.getName(),
                     context.getResources().getString(R.string.BackArrow));
-            _graphics.newImage(ImageName.Lens.getName(),
-                    context.getResources().getString(R.string.Lens));
             _graphics.newImage(ImageName.Lock.getName(),
                     context.getResources().getString(R.string.Lock));
             _graphics.newImage(ImageName.GameOver.getName(),

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="BackArrow">backArrow.png</string>
-    <string name="Lens">lens.png</string>
     <string name="Lock">lock.png</string>
     <string name="GameOver">gameOver.png</string>
     <string name="Ads">ads.png</string>

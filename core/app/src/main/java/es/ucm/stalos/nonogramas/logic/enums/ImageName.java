@@ -7,7 +7,6 @@ package es.ucm.stalos.nonogramas.logic.enums;
  */
 public enum ImageName {
     BackArrow("BackArrow"),
-    Lens("Lens"),
     Lock("Lock"),
     GameOver("GameOver"),
     Ads("Ads"),
