@@ -8,7 +8,8 @@ import java.io.Serializable;
 public enum PlayingState implements Serializable {
     Gaming(0),
     Win(1),
-    GameOver(2);
+    GameOver(2),
+    NONE(3);
 
     PlayingState(int i) { this.value = i; }
 

@@ -5,7 +5,7 @@ import java.io.Serializable;
 import es.ucm.stalos.nonogramas.logic.enums.CellType;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
 import es.ucm.stalos.nonogramas.logic.enums.PlayingState;
-import es.ucm.stalos.androidengine.enums.StateType;
+import es.ucm.stalos.nonogramas.logic.enums.StateType;
 
 /**
  * Son los datos que se van a guardar
@@ -18,7 +18,7 @@ public class GameData implements Serializable {
     /**
      * Index of the last unlocked package
      */
-    public int _lastUnlockedPack = 7;
+    public int _lastUnlockedPack = 0;
     /**
      * Index of the last unlocked level
      */
@@ -31,10 +31,6 @@ public class GameData implements Serializable {
      * Current State when the phone toggled portrait-landscape
      */
     public StateType _currStateType = StateType.MainMenuState;
-    /**
-     * Determine if the game has been quited from GameState
-     */
-    public boolean _inGame = false;
     /**
      * Determine if the current GaeState is random
      */

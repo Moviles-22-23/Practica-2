@@ -1,4 +1,4 @@
-package es.ucm.stalos.androidengine.enums;
+package es.ucm.stalos.nonogramas.logic.enums;
 
 import java.io.Serializable;
 

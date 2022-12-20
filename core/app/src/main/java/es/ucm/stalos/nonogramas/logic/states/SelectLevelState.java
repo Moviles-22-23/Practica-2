@@ -8,7 +8,7 @@ import java.util.Map;
 import es.ucm.stalos.androidengine.Constrain;
 import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.androidengine.State;
-import es.ucm.stalos.androidengine.enums.StateType;
+import es.ucm.stalos.nonogramas.logic.enums.StateType;
 import es.ucm.stalos.androidengine.enums.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
 import es.ucm.stalos.nonogramas.logic.enums.FontName;
@@ -25,7 +25,7 @@ public class SelectLevelState extends State {
     protected SelectLevelState(Engine engine, GridType gridType) {
         super(engine);
         _gridType = gridType;
-        ((GameDataSystem) _serSystem)._data._inGame = false;
+        ((GameDataSystem) _serSystem)._data._currStateType = StateType.SelectLevelState;
     }
 
     @Override
@@ -159,7 +159,6 @@ public class SelectLevelState extends State {
 
     @Override
     protected void saveData() {
-        ((GameDataSystem) _serSystem)._data._currStateType = StateType.SelectLevelState;
         ((GameDataSystem) _serSystem)._data._currGridType = _gridType;
         _serSystem.saveData();
     }

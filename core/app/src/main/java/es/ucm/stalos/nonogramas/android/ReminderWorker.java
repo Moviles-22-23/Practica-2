@@ -37,7 +37,7 @@ public class ReminderWorker extends Worker {
         }
 
         _pushNotification.showNotification();
-
+        
         return Result.success();
     }
 

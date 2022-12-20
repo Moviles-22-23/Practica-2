@@ -5,12 +5,11 @@ import java.util.List;
 import es.ucm.stalos.androidengine.Constrain;
 import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.Engine;
-import es.ucm.stalos.androidengine.enums.StateType;
+import es.ucm.stalos.nonogramas.logic.enums.StateType;
 import es.ucm.stalos.androidengine.enums.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
 import es.ucm.stalos.nonogramas.logic.enums.FontName;
 import es.ucm.stalos.nonogramas.logic.enums.MyColor;
-import es.ucm.stalos.nonogramas.logic.enums.PlayingState;
 import es.ucm.stalos.nonogramas.logic.enums.SoundName;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 import es.ucm.stalos.nonogramas.logic.objects.ColorPalette;
@@ -19,6 +18,8 @@ public class MainMenuState extends State {
 
     public MainMenuState(Engine engine) {
         super(engine);
+
+        ((GameDataSystem) _serSystem)._data._currStateType = StateType.MainMenuState;
     }
 
     //-----------------------------------------OVERRIDE-----------------------------------------------//
@@ -140,11 +141,6 @@ public class MainMenuState extends State {
         }
     }
 
-    @Override
-    protected void saveData() {
-        ((GameDataSystem) _serSystem)._data._currStateType = StateType.MainMenuState;
-        _serSystem.saveData();
-    }
     //----------------------------------------ATTRIBUTES----------------------------------------------//
 
     // Callbacks

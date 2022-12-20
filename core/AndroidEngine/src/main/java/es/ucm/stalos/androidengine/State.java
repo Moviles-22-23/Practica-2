@@ -3,8 +3,6 @@ package es.ucm.stalos.androidengine;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import es.ucm.stalos.androidengine.enums.StateType;
-
 /**
  * Clase base para definir las diferentes escenas
  */
@@ -77,7 +75,6 @@ public abstract class State {
     protected Engine _engine;
     protected Graphics _graphics;
     protected Audio _audio;
-    protected StateType _myType;
 
     // Attributes to create a timer
     protected Timer _timer;

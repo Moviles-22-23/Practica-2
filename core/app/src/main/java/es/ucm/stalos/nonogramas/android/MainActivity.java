@@ -75,15 +75,15 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         _engine.pause();
         _sensor.pause();
+
+        NotificationManager.SetUpReminderNotification(this,
+                getResources().getString(R.string.reminder),
+                TimeUnit.SECONDS, 4);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        NotificationManager.SetUpReminderNotification(this,
-                getResources().getString(R.string.reminder),
-                TimeUnit.SECONDS, 3);
     }
 
     protected Engine _engine;

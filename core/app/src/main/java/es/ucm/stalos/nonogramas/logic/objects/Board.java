@@ -20,12 +20,12 @@ import java.util.Random;
 
 import es.ucm.stalos.androidengine.Font;
 import es.ucm.stalos.androidengine.Graphics;
+import es.ucm.stalos.nonogramas.logic.enums.StateType;
 import es.ucm.stalos.androidengine.enums.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.data.GameData;
 import es.ucm.stalos.nonogramas.logic.enums.CellType;
 import es.ucm.stalos.nonogramas.logic.enums.FontName;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
-import es.ucm.stalos.nonogramas.logic.enums.PlayingState;
 import es.ucm.stalos.nonogramas.logic.enums.SoundName;
 import es.ucm.stalos.nonogramas.logic.states.GameState;
 
@@ -114,7 +114,7 @@ public class Board {
             _fontSize = (int) (_hintSize * 0.9f);
             _state.createHintFont(_fontSize);
 
-            if (!data._inGame) {
+            if (data._currStateType != StateType.GameState) {
                 if (_isRandom)
                     createRandomSolution();
                 else {
@@ -294,7 +294,7 @@ public class Board {
             for (int j = 0; j < _cols; j++) {
                 pos[0] = cellsPos[0] + (int) (j * _cellSize) + _offset;
                 _boardState[i][j] = new Cell(i, j, pos, _cellSize);
-                if (data._inGame)
+                if (data._currStateType == StateType.GameState)
                     _boardState[i][j].cellType = data._currBoardState[i][j];
             }
         }
@@ -331,10 +331,7 @@ public class Board {
 
                     // Comprueba si hay victoria
                     if (checkSolution()) {
-                        _state.setPlayingState(PlayingState.Win);
-
-                        if (!_isRandom)
-                            _state.updateSaveData();
+                        _state.setWinState();
                     }
 
                     return;
@@ -423,8 +420,7 @@ public class Board {
 
                 int[] solPos = {_pos[0] + size * j + margin + _offset, _pos[1] + size * i + margin};
 
-                // Utiliza el estado del tablero por si se ha resuelto con otra solucion
-                if (_boardState[i][j].cellType == CellType.FILL)
+                if (_sol[i][j])
                     graphics.fillSquare(solPos, _cellSize);
             }
         }

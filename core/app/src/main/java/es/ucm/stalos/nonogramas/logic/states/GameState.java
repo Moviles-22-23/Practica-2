@@ -5,7 +5,7 @@ import java.util.List;
 import es.ucm.stalos.androidengine.Constrain;
 import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.androidengine.State;
-import es.ucm.stalos.androidengine.enums.StateType;
+import es.ucm.stalos.nonogramas.logic.enums.StateType;
 import es.ucm.stalos.androidengine.enums.TouchEvent;
 import es.ucm.stalos.nonogramas.R;
 import es.ucm.stalos.nonogramas.android.RewardManager;
@@ -32,6 +32,8 @@ public class GameState extends State {
         _data._currGridType = gridType;
         _data._currentPackage = gridType.getGridType();
         _data._currentLevel = levelIndex;
+        _data._currentPlayingState = PlayingState.Gaming;
+
         // INIT ATTRIBUTES
         this._gridType = gridType;
         this._isRandom = isRandom;
@@ -74,6 +76,9 @@ public class GameState extends State {
 
             _audio.playMusic(SoundName.MainTheme.getName());
 
+            if (_playState == PlayingState.Win) {
+                setWinState();
+            }
         } catch (Exception e) {
             System.out.println("Error init Game State");
             System.out.println(e);
@@ -165,22 +170,11 @@ public class GameState extends State {
     protected void saveData() {
         _data._currStateType = StateType.GameState;
         _data._currentPlayingState = _playState;
-        _data._inGame = _playState != PlayingState.Win &&
-                _playState != PlayingState.GameOver;
-
-        // We only want to save the following data in case of we're still playing:
-        // 1. isRandom
-        // 2. Lives
-        // 3. BoardState
-        // 4. Board solution
-        // 5. Playing State
-        if (_data._inGame) {
-            _data._isRandom = _isRandom;
-            _data._currentLives = _lives;
-            _data._currentFigName = _figNameText;
-            _data._currBoardState = _board.getBoardState();
-            _data._randomSol = _board.getBoardSolution();
-        }
+        _data._isRandom = _isRandom;
+        _data._currentLives = _lives;
+        _data._currentFigName = _figNameText;
+        _data._currBoardState = _board.getBoardState();
+        _data._randomSol = _board.getBoardSolution();
 
         ((GameDataSystem) _serSystem)._data = _data;
         _serSystem.saveData();
@@ -220,10 +214,10 @@ public class GameState extends State {
         float maxBoardSide = Math.min(_graphics.getLogWidth(), _graphics.getLogHeight());
         // We add a little margin
         float margin = maxBoardSide * 0.02f;
-        _sizeBoard = new float[] { maxBoardSide - margin, maxBoardSide - margin};
-        _posBoard = _graphics.constrainedToScreenPos(Constrain.MIDDLE, _sizeBoard, new int[]{ 0, 0 });
+        _sizeBoard = new float[]{maxBoardSide - margin, maxBoardSide - margin};
+        _posBoard = _graphics.constrainedToScreenPos(Constrain.MIDDLE, _sizeBoard, new int[]{0, 0});
 
-        if (_data._inGame)
+        if (_data._currStateType == StateType.GameState)
             _board = new Board(this, _data, _posBoard, _sizeBoard);
         else
             _board = new Board(this, _gridType, _posBoard, _sizeBoard, _isRandom, _currentLevel);
@@ -245,7 +239,7 @@ public class GameState extends State {
 
             _giveupTextSize[0] = _graphics.getLogWidth() * 0.3f;
             _giveupTextSize[1] = _giveupImageSize[1];
-            _giveupTextPos = _graphics.constrainedToObjectPos(Constrain.LEFT, _giveupImagePos, _giveupImageSize, _giveupTextSize, new int[] { 0, 0 });
+            _giveupTextPos = _graphics.constrainedToObjectPos(Constrain.LEFT, _giveupImagePos, _giveupImageSize, _giveupTextSize, new int[]{0, 0});
 
             // LIFE
             _lifeImageSize[0] = _graphics.getLogWidth() * 0.17f;
@@ -293,8 +287,8 @@ public class GameState extends State {
 
             _twitterPos = _graphics.constrainedToScreenPos(Constrain.BOTTOM_LEFT, _shareSize,
                     new int[]{(int) (_graphics.getLogWidth() * 0.08f), (int) (_graphics.getLogHeight() * 0.3f)});
-            _whatsPos = _graphics.constrainedToObjectPos(Constrain.LEFT, _twitterPos, _shareSize , _shareSize,
-                    new int[]{(int) (_graphics.getLogWidth() * 0.08f),0});
+            _whatsPos = _graphics.constrainedToObjectPos(Constrain.LEFT, _twitterPos, _shareSize, _shareSize,
+                    new int[]{(int) (_graphics.getLogWidth() * 0.08f), 0});
         }
 
         // GIVE UP BUTTON SIZE
@@ -355,7 +349,7 @@ public class GameState extends State {
             // WIN TEXT
             _winSize1[0] = _graphics.getLogWidth();
             _winSize1[1] = _graphics.getLogHeight() * 0.1f;
-            _winPos1 = _graphics.constrainedToScreenPos(Constrain.TOP, _winSize1, new int[]{0, (int)(_graphics.getLogHeight() * 0.06f)});
+            _winPos1 = _graphics.constrainedToScreenPos(Constrain.TOP, _winSize1, new int[]{0, (int) (_graphics.getLogHeight() * 0.06f)});
 
             // NAME TEXT
             _levelNameSize = _winSize1;
@@ -370,12 +364,12 @@ public class GameState extends State {
             // AGITA TEXT
             _nextLevelSize[0] = _graphics.getLogWidth() * 0.5f;
             _nextLevelSize[1] = _winSize1[1];
-            _nextLevelPos = _graphics.constrainedToScreenPos(Constrain.BOTTOM, _nextLevelSize, new int[]{0,(int)(_graphics.getLogHeight() * 0.01f)});
+            _nextLevelPos = _graphics.constrainedToScreenPos(Constrain.BOTTOM, _nextLevelSize, new int[]{0, (int) (_graphics.getLogHeight() * 0.01f)});
         } else {
             // WIN TEXT
             _winSize1[0] = _graphics.getLogWidth() * 0.25f;
             _winSize1[1] = _giveupTextSize[1];
-            _winPos1 = _graphics.constrainedToScreenPos(Constrain.TOP_LEFT, _winSize1, new int[]{(int)(_winSize1[0] / 2), (int)(_graphics.getLogHeight() * 0.16f)});
+            _winPos1 = _graphics.constrainedToScreenPos(Constrain.TOP_LEFT, _winSize1, new int[]{(int) (_winSize1[0] / 2), (int) (_graphics.getLogHeight() * 0.16f)});
 
             // NAME TEXT
             _levelNameSize = _winSize1;
@@ -389,7 +383,7 @@ public class GameState extends State {
             // AGITA TEXT
             _nextLevelSize[0] = _graphics.getLogWidth() * 0.25f;
             _nextLevelSize[1] = _giveupImageSize[1];
-            _nextLevelPos = _graphics.constrainedToScreenPos(Constrain.BOTTOM_LEFT, _nextLevelSize, new int[]{(int)(_winSize1[0] / 2),(int)(_graphics.getLogHeight() * 0.16f)});
+            _nextLevelPos = _graphics.constrainedToScreenPos(Constrain.BOTTOM_LEFT, _nextLevelSize, new int[]{(int) (_winSize1[0] / 2), (int) (_graphics.getLogHeight() * 0.16f)});
         }
     }
 
@@ -562,7 +556,7 @@ public class GameState extends State {
     /**
      * Update the data to be save
      */
-    public void updateSaveData() {
+    private void updateSaveData() {
         // 1. Check if the currentPackage is the same as the last unlocked package
         // 2. Check if the currentLevel is the same as the last unlocked level
         if (_data._currentPackage == _data._lastUnlockedPack &&
@@ -607,13 +601,16 @@ public class GameState extends State {
         return _playState;
     }
 
-    public void setPlayingState(PlayingState newPlayingState) {
-        _playState = newPlayingState;
+    public void setWinState() {
+        _playState = PlayingState.Win;
         _giveupText = "Volver";
-        if(_engine.isLandScape()){
-            _posBoard = _graphics.constrainedToScreenPos(Constrain.RIGHT, _sizeBoard, new int[] {0,0});
+        if (_engine.isLandScape()) {
+            _posBoard = _graphics.constrainedToScreenPos(Constrain.RIGHT, _sizeBoard, new int[]{0, 0});
             _board.setPos(_posBoard);
         }
+
+        if (!_isRandom)
+            updateSaveData();
     }
 
     public void setFigureName(String name) {

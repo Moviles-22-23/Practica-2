@@ -47,6 +47,8 @@ public class NotificationManager {
      */
     public static void SetUpReminderNotification(Context context, String workTag,
                                                  TimeUnit timeUnitType, int timeUnitOffset) {
+        // Cancel previous workTag
+        CancelSomeWork(context, workTag);
         OneTimeWorkRequest notificationWork = new OneTimeWorkRequest.Builder(ReminderWorker.class)
                 .setInitialDelay(timeUnitOffset, timeUnitType)
                 .addTag(workTag)

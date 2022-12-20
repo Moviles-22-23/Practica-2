@@ -8,7 +8,7 @@ import java.util.Map;
 import es.ucm.stalos.androidengine.Constrain;
 import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.Engine;
-import es.ucm.stalos.androidengine.enums.StateType;
+import es.ucm.stalos.nonogramas.logic.enums.StateType;
 import es.ucm.stalos.androidengine.enums.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
 import es.ucm.stalos.nonogramas.logic.enums.FontName;
@@ -23,8 +23,9 @@ import es.ucm.stalos.nonogramas.logic.objects.SelectButton;
 public class SelectBoardState extends State {
     public SelectBoardState(Engine engine, boolean isRandom) {
         super(engine);
+
+        ((GameDataSystem) _serSystem)._data._currStateType = StateType.SelectBoardState;
         this._isRandom = isRandom;
-        ((GameDataSystem) _serSystem)._data._inGame = false;
     }
 
 //-----------------------------------------OVERRIDE-----------------------------------------------//
@@ -168,7 +169,6 @@ public class SelectBoardState extends State {
 
     @Override
     protected void saveData() {
-        ((GameDataSystem) _serSystem)._data._currStateType = StateType.SelectBoardState;
         ((GameDataSystem) _serSystem)._data._isRandom = _isRandom;
         _serSystem.saveData();
     }
