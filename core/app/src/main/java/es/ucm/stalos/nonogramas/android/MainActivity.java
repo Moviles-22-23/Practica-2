@@ -75,6 +75,11 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         _engine.pause();
         _sensor.pause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
 
         NotificationManager.SetUpReminderNotification(this,
                 getResources().getString(R.string.reminder),
