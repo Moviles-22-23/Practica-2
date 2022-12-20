@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import es.ucm.stalos.nonogramas.logic.enums.CellType;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
+import es.ucm.stalos.nonogramas.logic.enums.PlayingState;
+import es.ucm.stalos.androidengine.enums.StateType;
 
 /**
  * Son los datos que se van a guardar
@@ -26,6 +28,10 @@ public class GameData implements Serializable {
      */
     public int _currPalette;
     /**
+     * Current State when the phone toggled portrait-landscape
+     */
+    public StateType _currStateType = StateType.MainMenuState;
+    /**
      * Determine if the game has been quited from GameState
      */
     public boolean _inGame = false;
@@ -33,6 +39,10 @@ public class GameData implements Serializable {
      * Determine if the current GaeState is random
      */
     public boolean _isRandom = false;
+    /**
+     * Current status of GameState when the app was closed
+     */
+    public PlayingState _currentPlayingState;
     /**
      * Index of the package when the app was closed during GameState
      */

@@ -1,7 +1,7 @@
 package es.ucm.stalos.nonogramas.logic.objects;
 
 import es.ucm.stalos.androidengine.Graphics;
-import es.ucm.stalos.androidengine.TouchEvent;
+import es.ucm.stalos.androidengine.enums.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.enums.CellType;
 import es.ucm.stalos.nonogramas.logic.enums.MyColor;
 

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import es.ucm.stalos.androidengine.Graphics;
-import es.ucm.stalos.androidengine.TouchEvent;
+import es.ucm.stalos.androidengine.enums.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.enums.MyColor;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 import es.ucm.stalos.nonogramas.logic.states.GameState;

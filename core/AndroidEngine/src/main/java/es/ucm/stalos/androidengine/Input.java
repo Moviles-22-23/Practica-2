@@ -7,6 +7,8 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.ucm.stalos.androidengine.enums.TouchEvent;
+
 // PRACTICA 2: Cambios ahora la clase Input hereda de OnLongClickListener para dar soporte a LongClick
 public class Input implements View.OnTouchListener, View.OnLongClickListener {
     public Input(Engine e) {

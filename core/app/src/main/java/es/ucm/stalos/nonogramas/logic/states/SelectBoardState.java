@@ -8,7 +8,8 @@ import java.util.Map;
 import es.ucm.stalos.androidengine.Constrain;
 import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.Engine;
-import es.ucm.stalos.androidengine.TouchEvent;
+import es.ucm.stalos.androidengine.enums.StateType;
+import es.ucm.stalos.androidengine.enums.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
 import es.ucm.stalos.nonogramas.logic.enums.FontName;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
@@ -165,6 +166,13 @@ public class SelectBoardState extends State {
         initSelectButtons(isLandscape);
     }
 
+    @Override
+    protected void saveData() {
+        ((GameDataSystem) _serSystem)._data._currStateType = StateType.SelectBoardState;
+        ((GameDataSystem) _serSystem)._data._isRandom = _isRandom;
+        _serSystem.saveData();
+    }
+
     //-------------------------------------------MISC-------------------------------------------------//
 
     /**
@@ -204,7 +212,7 @@ public class SelectBoardState extends State {
 
         initGridTypesMap();
 
-        for (int i = 0; i < GridType.MAX.getValue(); i++) {
+        for (int i = 0; i < GridType.MAX.getGridType(); i++) {
             int[] buttonPos = new int[2];
             buttonPos[0] = (int)(fullPosition[0] + (i % numButtonsAxisX) * (paddingX + buttonSide));
             buttonPos[1] = (int)(fullPosition[1] + (i / numButtonsAxisX) * (paddingY + buttonSide));

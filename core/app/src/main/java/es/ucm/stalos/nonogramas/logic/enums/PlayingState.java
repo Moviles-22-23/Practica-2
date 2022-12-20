@@ -1,9 +1,11 @@
 package es.ucm.stalos.nonogramas.logic.enums;
 
+import java.io.Serializable;
+
 /**
- * Information about different game states on GameState
+ * Information about different status on GameState
  */
-public enum PlayingState {
+public enum PlayingState implements Serializable {
     Gaming(0),
     Win(1),
     GameOver(2);

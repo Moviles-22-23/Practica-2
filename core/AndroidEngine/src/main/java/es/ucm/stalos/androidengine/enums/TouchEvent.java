@@ -1,4 +1,4 @@
-package es.ucm.stalos.androidengine;
+package es.ucm.stalos.androidengine.enums;
 
 /**
  * Enum to classify every TouchEvent that can happens
@@ -7,11 +7,14 @@ public enum TouchEvent {
     touchDown(0),
     touchUp(1),
     longTouch(2),
-    touchDrag(3),
-    MAX(4);
+    touchDrag(3);
 
     private int _x, _y;
-    private final int _value;
+    private final int _touchEvent;
+
+    TouchEvent(int touchEvent) {
+        this._touchEvent = touchEvent;
+    }
 
     public void setX(int x) {
         _x = x;
@@ -21,8 +24,8 @@ public enum TouchEvent {
         _y = y;
     }
 
-    public int getValue() {
-        return _value;
+    public int getTouchEvent() {
+        return _touchEvent;
     }
 
     public int getX() {
@@ -33,8 +36,5 @@ public enum TouchEvent {
         return _y;
     }
 
-    TouchEvent(int i) {
-        this._value = i;
-    }
 
 }

@@ -8,7 +8,8 @@ import java.util.Map;
 import es.ucm.stalos.androidengine.Constrain;
 import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.androidengine.State;
-import es.ucm.stalos.androidengine.TouchEvent;
+import es.ucm.stalos.androidengine.enums.StateType;
+import es.ucm.stalos.androidengine.enums.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.data.GameDataSystem;
 import es.ucm.stalos.nonogramas.logic.enums.FontName;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
@@ -156,6 +157,12 @@ public class SelectLevelState extends State {
         initSelectLevelButtons(isLandscape);
     }
 
+    @Override
+    protected void saveData() {
+        ((GameDataSystem) _serSystem)._data._currStateType = StateType.SelectLevelState;
+        ((GameDataSystem) _serSystem)._data._currGridType = _gridType;
+        _serSystem.saveData();
+    }
     //-------------------------------------------MISC-------------------------------------------------//
 
     /**
@@ -188,7 +195,7 @@ public class SelectLevelState extends State {
             buttonPos[0] = (int)(fullPosition[0] + (i % numButtonsAxisX) * (paddingX + buttonSide));
             buttonPos[1] = (int)(fullPosition[1] + (i / numButtonsAxisX) * (paddingY + buttonSide));
 
-            boolean unlocked = _gridType.getValue() < ((GameDataSystem) _serSystem)._data._lastUnlockedPack
+            boolean unlocked = _gridType.getGridType() < ((GameDataSystem) _serSystem)._data._lastUnlockedPack
                     || i <= ((GameDataSystem) _serSystem)._data._lastUnlockedLevel;
 
             String text = "" + (i + 1);
@@ -203,7 +210,7 @@ public class SelectLevelState extends State {
                 public void doSomething() {
                     int r = _level.getRows();
                     int c = _level.getCols();
-                    State gameState = new GameState(_engine, _gridType, _isRandom, aux_i);
+                    State gameState = new GameState(_engine, _gridType, false, aux_i);
                     _engine.reqNewState(gameState);
                     _audio.playSound(SoundName.ClickSound.getName(), 0);
                     _audio.stopMusic();
@@ -228,9 +235,6 @@ public class SelectLevelState extends State {
     //----------------------------------------ATTRIBUTES----------------------------------------------//
     private GridType _gridType;
     private final int _numLevels = 20;
-
-    // Mode
-    private boolean _isRandom = false;
 
     // Mode Text
     private String _modeText = "Paquete NxM";

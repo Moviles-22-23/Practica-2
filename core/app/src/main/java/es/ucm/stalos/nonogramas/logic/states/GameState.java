@@ -5,7 +5,8 @@ import java.util.List;
 import es.ucm.stalos.androidengine.Constrain;
 import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.androidengine.State;
-import es.ucm.stalos.androidengine.TouchEvent;
+import es.ucm.stalos.androidengine.enums.StateType;
+import es.ucm.stalos.androidengine.enums.TouchEvent;
 import es.ucm.stalos.nonogramas.R;
 import es.ucm.stalos.nonogramas.android.RewardManager;
 import es.ucm.stalos.nonogramas.android.ShareIntent;
@@ -29,7 +30,7 @@ public class GameState extends State {
         // INIT DATA OF THE LEVEL
         _data = ((GameDataSystem) _serSystem)._data;
         _data._currGridType = gridType;
-        _data._currentPackage = gridType.getValue();
+        _data._currentPackage = gridType.getGridType();
         _data._currentLevel = levelIndex;
         // INIT ATTRIBUTES
         this._gridType = gridType;
@@ -51,6 +52,7 @@ public class GameState extends State {
         this._currentLevel = _data._currentLevel;
         this._lives = _data._currentLives;
         this._figNameText = _data._currentFigName;
+        this._playState = _data._currentPlayingState;
         this._rewardManager = new RewardManager(this);
     }
 
@@ -161,6 +163,8 @@ public class GameState extends State {
 
     @Override
     protected void saveData() {
+        _data._currStateType = StateType.GameState;
+        _data._currentPlayingState = _playState;
         _data._inGame = _playState != PlayingState.Win &&
                 _playState != PlayingState.GameOver;
 
@@ -169,6 +173,7 @@ public class GameState extends State {
         // 2. Lives
         // 3. BoardState
         // 4. Board solution
+        // 5. Playing State
         if (_data._inGame) {
             _data._isRandom = _isRandom;
             _data._currentLives = _lives;

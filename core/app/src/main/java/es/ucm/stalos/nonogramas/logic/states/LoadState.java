@@ -93,7 +93,7 @@ public class LoadState extends State {
             _audio.newSound(SoundName.MainTheme.getName(),
                     context.getResources().getString(R.string.MainTheme));
             _audio.newSound(SoundName.MenuTheme.getName(),
-                context.getResources().getString(R.string.MenuTheme));
+                    context.getResources().getString(R.string.MenuTheme));
             _audio.newSound(SoundName.ClickSound.getName(),
                     context.getResources().getString(R.string.ClickSound));
             _audio.newSound(SoundName.FailSound.getName(),
@@ -127,18 +127,8 @@ public class LoadState extends State {
             // test the Hash System.
             //((GameDataSystem)_serSystem).loadWrongData();
 
-            GameData _data = ((GameDataSystem) _serSystem)._data;
-            // Was the last game being played?
-            if (_data._inGame) {
-                // 1. Last GameState played
-                State gameState = new GameState(_engine);
-                _engine.reqNewState(gameState);
-            } else {
-                // 2. Init normal way: MainMenu
-                State mainMenu = new MainMenuState(_engine);
-                _engine.reqNewState(mainMenu);
-            }
-            ColorPalette._currPalette = _data._currPalette;
+            loadData();
+
 
         } catch (Exception e) {
             System.out.println("Error en init de LoadState");
@@ -147,5 +137,29 @@ public class LoadState extends State {
         }
 
         return true;
+    }
+
+    private void loadData() {
+        GameData _data = ((GameDataSystem) _serSystem)._data;
+        State currentState;
+        switch (_data._currStateType) {
+            default:
+            case MainMenuState:
+                currentState = new MainMenuState(_engine);
+                break;
+            case SelectBoardState:
+                currentState = new SelectBoardState(_engine, _data._isRandom);
+                break;
+            case SelectLevelState:
+                currentState = new SelectLevelState(_engine, _data._currGridType);
+                break;
+            case GameState:
+                // 1. Last GameState played
+                currentState = new GameState(_engine);
+                break;
+        }
+
+        _engine.reqNewState(currentState);
+        ColorPalette._currPalette = _data._currPalette;
     }
 }

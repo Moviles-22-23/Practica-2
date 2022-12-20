@@ -20,12 +20,11 @@ import java.util.Random;
 
 import es.ucm.stalos.androidengine.Font;
 import es.ucm.stalos.androidengine.Graphics;
-import es.ucm.stalos.androidengine.TouchEvent;
+import es.ucm.stalos.androidengine.enums.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.data.GameData;
 import es.ucm.stalos.nonogramas.logic.enums.CellType;
 import es.ucm.stalos.nonogramas.logic.enums.FontName;
 import es.ucm.stalos.nonogramas.logic.enums.GridType;
-import es.ucm.stalos.nonogramas.logic.enums.MyColor;
 import es.ucm.stalos.nonogramas.logic.enums.PlayingState;
 import es.ucm.stalos.nonogramas.logic.enums.SoundName;
 import es.ucm.stalos.nonogramas.logic.states.GameState;

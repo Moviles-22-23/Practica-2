@@ -15,9 +15,9 @@ public enum GridType implements Serializable {
     MAX(6),
     NONE(1000);
 
-    GridType(int i) {
-        this.value = i;
-        switch (i) {
+    GridType(int gridType) {
+        this._gridType = gridType;
+        switch (gridType) {
             case 0:
                 _rows = 4;
                 _cols = 4;
@@ -51,8 +51,8 @@ public enum GridType implements Serializable {
         }
     }
 
-    public int getValue() {
-        return value;
+    public int getGridType() {
+        return _gridType;
     }
 
 
@@ -68,7 +68,7 @@ public enum GridType implements Serializable {
         return _cols;
     }
 
-    private int value;
+    private int _gridType;
     private int _rows;
     private int _cols;
     private String _text;
