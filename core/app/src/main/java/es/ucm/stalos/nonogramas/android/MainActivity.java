@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.SurfaceView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.Group;
@@ -16,7 +17,7 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
-import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.nonogramas.R;
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            public void onInitializationComplete(@NonNull InitializationStatus initializationStatus) {
             }
         });
 
@@ -44,20 +45,19 @@ public class MainActivity extends AppCompatActivity {
         adView.loadAd(adRequest);
 
         _engine = new Engine();
-        // NOTIFICATIONS
-        _pushNotification = new PushNotification(this, "unique_channel",
-                R.string.reminder, getResources().getString(R.string.reminder));
-        _pushNotification._msgs.add(getResources().getString(R.string.msg_1));
-        _pushNotification._msgs.add(getResources().getString(R.string.msg_2));
-        _pushNotification._msgs.add(getResources().getString(R.string.msg_3));
 
         // SENSOR
         _sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         _sensor = new AndroidSensor(_sensorManager, _engine);
 
+        // Cancel ReminderNotification
+        NotificationManager.CancelSomeWork(this,
+                getResources().getString(R.string.reminder));
+
+        getResources().getString(R.string.reminder);
+
         LoadState loadAssets = new LoadState(_engine);
 
-        // Most common resolution
         if (!_engine.init(loadAssets, 360, 640, this, gameView, adGroup)) {
             System.out.println("Error al inicializar el engine");
         }
@@ -75,13 +75,14 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         _engine.pause();
         _sensor.pause();
-        // TODO: Crear un sistema de alarma para lanzar la notificacion cada cierto tiempo
-        _pushNotification.showNotification();
+
+        NotificationManager.SetUpReminderNotification(this,
+                getResources().getString(R.string.reminder),
+                TimeUnit.SECONDS, 3);
     }
 
     protected Engine _engine;
     private Group adGroup;
-    private PushNotification _pushNotification;
     private SensorManager _sensorManager;
     private AndroidSensor _sensor;
 }

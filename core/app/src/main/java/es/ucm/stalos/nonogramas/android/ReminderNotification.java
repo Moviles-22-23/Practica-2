@@ -1,45 +1,40 @@
 package es.ucm.stalos.nonogramas.android;
 
-import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.os.SystemClock;
 
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.core.app.TaskStackBuilder;
 import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import es.ucm.stalos.nonogramas.R;
 
-public class PushNotification {
+/**
+ * Notification created in order to remind the player that the game exists
+ */
+public class ReminderNotification {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public PushNotification(AppCompatActivity context, String newChannel, int notificationID,
-                            String notificationName) {
+    public ReminderNotification(Context context, String newChannel, int notificationID,
+                                String notificationName) {
         _channelID = newChannel;
         _notificationID = notificationID;
-        _name = notificationName;
+        _notificationName = notificationName;
         _msgs = new ArrayList<>();
 
-        // 1. Set intent to open the activity whe the app is foreground
-        Intent startGameIntent = new Intent(context, context.getClass());
+        // 1. Set intent to open the activity when the app is foreground
+        Intent startGameIntent = new Intent(context, MainActivity.class);
         startGameIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-        stackBuilder.addNextIntentWithParentStack(startGameIntent);
-        PendingIntent launchGame = stackBuilder.getPendingIntent(0,
+        PendingIntent launchGame = PendingIntent.getActivity(context, 0, startGameIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         // 2. Construction of the channel
@@ -51,10 +46,10 @@ public class PushNotification {
                 .setContentTitle(context.getString(R.string.app_name))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setColor(ContextCompat.getColor(context, R.color.purple_200))
-                .setContentIntent(launchGame);
+                .setContentIntent(launchGame)
+                .setAutoCancel(true);
 
         notificationManager = NotificationManagerCompat.from(context);
-        alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
     }
 
     /**
@@ -63,7 +58,7 @@ public class PushNotification {
      * Register the channel with the system; you can't change the importance
      * or other notification behaviors after this
      */
-    private void createNotificationChannel(AppCompatActivity context) {
+    private void createNotificationChannel(Context context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             System.out.println("Creation of channels is not available in your current" +
                     "android version");
@@ -71,7 +66,7 @@ public class PushNotification {
         }
 
         int importance = NotificationManager.IMPORTANCE_DEFAULT;
-        NotificationChannel channel = new NotificationChannel(_channelID, _name, importance);
+        NotificationChannel channel = new NotificationChannel(_channelID, _notificationName, importance);
         channel.setDescription("");
 
         NotificationManager notificationManager =
@@ -85,6 +80,7 @@ public class PushNotification {
     public void showNotification() {
         String msg = "";
 
+        // X. Chosen a random message from messages data
         if(_msgs.size() > 0)
         {
             int rnd = ThreadLocalRandom.current().nextInt(0, _msgs.size());
@@ -93,22 +89,27 @@ public class PushNotification {
 
         _builder.setStyle(new NotificationCompat.BigTextStyle()
                 .bigText(msg));
-        Date currentTime = Calendar.getInstance().getTime();
-        System.out.println(currentTime.toString());
-//        alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-//                SystemClock.elapsedRealtime() +
-//                        60 * 1000, );
 
         notificationManager.notify(_notificationID, _builder.build());
     }
 
+    //--------------------ANDROID-STUFF----------------------//
     private NotificationCompat.Builder _builder;
     private NotificationManagerCompat notificationManager;
-    private String _channelID;
-    private String _name;
-    private int _notificationID;
-    private AlarmManager alarmMgr;
 
+    //------------------------------------------------------//
+    /**
+     * ID of the channel
+     */
+    private String _channelID;
+    /**
+     * Name of the notification
+     */
+    private String _notificationName;
+    /**
+     * ID of the notification
+     */
+    private int _notificationID;
     /**
      * Contains different messages for the push-notification
      */

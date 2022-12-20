@@ -1,9 +1,8 @@
 package es.ucm.stalos.nonogramas.android;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import es.ucm.stalos.nonogramas.logic.enums.ShareType;
 
@@ -22,9 +21,9 @@ public class ShareIntent {
     /**
      * Share the current Intent into the context activity
      *
-     * @param context AppCompatActivity of the which will use the intent
+     * @param context A Context for on-demand initialization.
      */
-    public void shareContent(AppCompatActivity context, ShareType type) {
+    public void shareContent(Context context, ShareType type) {
         String url = "";
         switch (type)
         {
@@ -52,5 +51,5 @@ public class ShareIntent {
     }
 
     private Intent _sendIntent;
-    private String _msg = "";
+    private String _msg;
 }

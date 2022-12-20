@@ -6,7 +6,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
 import es.ucm.stalos.androidengine.Engine;
-import es.ucm.stalos.nonogramas.logic.states.GameState;
 
 public class AndroidSensor implements SensorEventListener {
     public AndroidSensor(SensorManager sensorManager, Engine engine) {
