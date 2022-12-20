@@ -41,6 +41,10 @@ public class SelectColorSetButton {
     }
 
     public void render(Graphics graphics) {
+        // Fondo negro
+        if (ColorPalette._currPalette == _index) graphics.setColor(_colorSet.y);
+        else graphics.setColor(MyColor.BLACK.get_color());
+        graphics.fillSquare(_buttonPos, _buttonSize);
         // Color Primario
         graphics.setColor(_colorSet.x);
         graphics.fillCircle(_firstColorPos, _colorRadius);

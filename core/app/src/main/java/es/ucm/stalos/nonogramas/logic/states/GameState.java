@@ -253,13 +253,13 @@ public class GameState extends State {
             _adsImagePos = _graphics.constrainedToScreenPos(Constrain.MIDDLE, _adsImageSize, new int[]{0, 120});
 
             // SHARE
-            _shareSize[0] = _graphics.getLogWidth() * 0.1f;
-            _shareSize[1] = _graphics.getLogWidth() * 0.1f;
+            _shareSize[0] = _graphics.getLogWidth() * 0.16f;
+            _shareSize[1] = _shareSize[0];
 
             _twitterPos = _graphics.constrainedToScreenPos(Constrain.BOTTOM_LEFT, _shareSize,
-                    new int[]{(int) (_graphics.getLogWidth() * 0.2f), 40});
+                    new int[]{(int) (_graphics.getLogWidth() * 0.2f), (int) (_graphics.getLogWidth() * 0.20f)});
             _whatsPos = _graphics.constrainedToScreenPos(Constrain.BOTTOM_RIGHT, _shareSize,
-                    new int[]{(int) (_graphics.getLogWidth() * 0.2f), 40});
+                    new int[]{(int) (_graphics.getLogWidth() * 0.2f), (int) (_graphics.getLogWidth() * 0.20f)});
         } else {
             // GIVE UP
             _giveupImageSize[0] = _graphics.getLogWidth() * 0.06f;
@@ -284,12 +284,12 @@ public class GameState extends State {
 
             // SHARE
             _shareSize[0] = _graphics.getLogHeight() * 0.2f;
-            _shareSize[1] = _graphics.getLogHeight() * 0.2f;
+            _shareSize[1] = _shareSize[0];
 
             _twitterPos = _graphics.constrainedToScreenPos(Constrain.BOTTOM_LEFT, _shareSize,
-                    new int[]{(int) (_graphics.getLogWidth() * 0.05f), (int) (_graphics.getLogHeight() * 0.2f)});
-            _whatsPos = _graphics.constrainedToScreenPos(Constrain.BOTTOM_RIGHT, _shareSize,
-                    new int[]{(int) (_graphics.getLogWidth() * 0.05f), (int) (_graphics.getLogHeight() * 0.2f)});
+                    new int[]{(int) (_graphics.getLogWidth() * 0.08f), (int) (_graphics.getLogHeight() * 0.3f)});
+            _whatsPos = _graphics.constrainedToObjectPos(Constrain.LEFT, _twitterPos, _shareSize , _shareSize,
+                    new int[]{(int) (_graphics.getLogWidth() * 0.08f),0});
         }
 
         // GIVE UP BUTTON SIZE
@@ -350,7 +350,7 @@ public class GameState extends State {
             // WIN TEXT
             _winSize1[0] = _graphics.getLogWidth();
             _winSize1[1] = _graphics.getLogHeight() * 0.1f;
-            _winPos1 = _graphics.constrainedToScreenPos(Constrain.TOP, _winSize1, new int[]{0, 0});
+            _winPos1 = _graphics.constrainedToScreenPos(Constrain.TOP, _winSize1, new int[]{0, (int)(_graphics.getLogHeight() * 0.06f)});
 
             // NAME TEXT
             _levelNameSize = _winSize1;
@@ -365,18 +365,16 @@ public class GameState extends State {
             // AGITA TEXT
             _nextLevelSize[0] = _graphics.getLogWidth() * 0.5f;
             _nextLevelSize[1] = _winSize1[1];
-            _nextLevelPos = _graphics.constrainedToScreenPos(Constrain.BOTTOM_RIGHT, _nextLevelSize, new int[]{10, 80});
+            _nextLevelPos = _graphics.constrainedToScreenPos(Constrain.BOTTOM, _nextLevelSize, new int[]{0,(int)(_graphics.getLogHeight() * 0.01f)});
         } else {
             // WIN TEXT
-            _winSize1[0] = _graphics.getLogWidth() * 0.1f;
+            _winSize1[0] = _graphics.getLogWidth() * 0.25f;
             _winSize1[1] = _giveupTextSize[1];
-            _winPos1 = _graphics.constrainedToScreenPos(Constrain.TOP_RIGHT, _winSize1, new int[]{(int) _winSize1[0], 15});
+            _winPos1 = _graphics.constrainedToScreenPos(Constrain.TOP_LEFT, _winSize1, new int[]{(int)(_winSize1[0] / 2), (int)(_graphics.getLogHeight() * 0.16f)});
 
             // NAME TEXT
             _levelNameSize = _winSize1;
-            _levelNamePos = _graphics.constrainedToObjectPos(Constrain.TOP,
-                    _winPos1, _winSize1,
-                    _levelNameSize, new int[]{0, 0});
+            _levelNamePos = _graphics.constrainedToObjectPos(Constrain.TOP, _winPos1, _winSize1, _levelNameSize, new int[]{0, 0});
 
             // GameOver Text
             _gameOverImageSize[0] = _graphics.getLogWidth() * 0.35f;
@@ -386,9 +384,7 @@ public class GameState extends State {
             // AGITA TEXT
             _nextLevelSize[0] = _graphics.getLogWidth() * 0.25f;
             _nextLevelSize[1] = _giveupImageSize[1];
-            _nextLevelPos = _graphics.constrainedToObjectPos(Constrain.TOP,
-                    _winPos1, _winSize1,
-                    _nextLevelSize, new int[]{-(int) (_nextLevelSize[0] * 0.25f), 120});
+            _nextLevelPos = _graphics.constrainedToScreenPos(Constrain.BOTTOM_LEFT, _nextLevelSize, new int[]{(int)(_winSize1[0] / 2),(int)(_graphics.getLogHeight() * 0.16f)});
         }
     }
 
@@ -609,6 +605,10 @@ public class GameState extends State {
     public void setPlayingState(PlayingState newPlayingState) {
         _playState = newPlayingState;
         _giveupText = "Volver";
+        if(_engine.isLandScape()){
+            _posBoard = _graphics.constrainedToScreenPos(Constrain.RIGHT, _sizeBoard, new int[] {0,0});
+            _board.setPos(_posBoard);
+        }
     }
 
     public void setFigureName(String name) {

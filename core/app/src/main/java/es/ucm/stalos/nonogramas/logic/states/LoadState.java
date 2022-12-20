@@ -71,8 +71,6 @@ public class LoadState extends State {
             _graphics.newFont(FontName.LevelNumber.getName(), context.getResources().getString(R.string.Molle),
                     20, true);
 
-
-
             _graphics.newFont(FontName.DefaultFont.getName(), context.getResources().getString(R.string.JoseFinSans),
                     32, true);
             _graphics.newFont(FontName.RowColNumber.getName(),
@@ -88,7 +86,7 @@ public class LoadState extends State {
                     50, true);
             _graphics.newFont(FontName.GameStateText.getName(),
                     context.getResources().getString(R.string.JoseFinSans),
-                    40, true);
+                    30, true);
 
             // Audio
             _audio = _engine.getAudio();
