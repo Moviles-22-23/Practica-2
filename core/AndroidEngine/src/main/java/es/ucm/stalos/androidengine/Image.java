@@ -7,6 +7,10 @@ import android.graphics.BitmapFactory;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * Our engine image class.
+ * Contains different attributes to create images.
+ */
 public class Image {
     public Image(String filename, AssetManager assetManager) {
         _filename = filename;
@@ -27,7 +31,7 @@ public class Image {
                 try {
                     is.close();
                 } catch (IOException e) {
-                    throw new RuntimeException("InputStream null en la carga del asset: " + _filename);
+                    System.err.println("InputStream null en la carga del asset: " + _filename);
                 }
             }
         }

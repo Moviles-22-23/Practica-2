@@ -12,8 +12,7 @@ public enum GridType implements Serializable {
     _8x8(3),
     _10x10(4),
     _15x10(5),
-    MAX(6),
-    NONE(1000);
+    MAX(6);
 
     GridType(int gridType) {
         this._gridType = gridType;

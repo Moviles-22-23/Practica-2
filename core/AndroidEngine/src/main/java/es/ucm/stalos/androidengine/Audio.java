@@ -8,6 +8,10 @@ import android.media.SoundPool;
 import java.io.IOException;
 import java.util.HashMap;
 
+/**
+ * Our engine audio system
+ * Contains different attributes to manage audio
+ */
 public class Audio {
     public Audio(AssetManager assetManager, int numStreams) {
         _assetManager = assetManager;

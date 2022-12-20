@@ -82,7 +82,7 @@ public class GameData implements Serializable {
     /**
      * GridType saved when the app was closed during GameState
      */
-    public GridType _currGridType = GridType.NONE;
+    public GridType _currGridType;
     /**
      * Current board state saved when the app was closed during GameState
      */

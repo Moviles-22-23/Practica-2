@@ -12,6 +12,9 @@ import es.ucm.stalos.nonogramas.logic.enums.MyColor;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 import es.ucm.stalos.nonogramas.logic.states.GameState;
 
+/**
+ * Manage a list of every selectColorSetButton
+ */
 public class ColorPalette {
     public ColorPalette(int[] pos, float[] size, GameState state) {
         this._pos = pos;
@@ -40,7 +43,7 @@ public class ColorPalette {
         graphics.fillSquare(_pos, _size);
 
         // Buttons
-        for (SelectColorSetButton button : _selectColorSetButton) {
+        for (SelectPaletteButton button : _selectPaletteButton) {
             button.render(graphics);
         }
     }
@@ -67,7 +70,7 @@ public class ColorPalette {
             boolean unlocked = lastUnlockedPack >= i;
 
             // Crea el boton
-            final SelectColorSetButton b = new SelectColorSetButton(bPos, bSize, _colorSets.get(i), unlocked, auxI, isLandscape);
+            final SelectPaletteButton b = new SelectPaletteButton(bPos, bSize, _colorSets.get(i), unlocked, auxI, isLandscape);
 
             // Cambia el callBack
             b.setCallback(new ButtonCallback() {
@@ -78,12 +81,12 @@ public class ColorPalette {
                 }
             });
 
-            _selectColorSetButton.add(b);
+            _selectPaletteButton.add(b);
         }
     }
 
     public void handleInput(int[] clickPos, TouchEvent touch) {
-        for (SelectColorSetButton button : _selectColorSetButton) {
+        for (SelectPaletteButton button : _selectPaletteButton) {
             if (button.clickInside(clickPos)) {
                 button.doSomething();
             }
@@ -104,5 +107,5 @@ public class ColorPalette {
     /**
      * List of all select level buttons
      */
-    protected List<SelectColorSetButton> _selectColorSetButton = new ArrayList<>();
+    protected List<SelectPaletteButton> _selectPaletteButton = new ArrayList<>();
 }

@@ -5,6 +5,9 @@ import es.ucm.stalos.androidengine.enums.TouchEvent;
 import es.ucm.stalos.nonogramas.logic.enums.CellType;
 import es.ucm.stalos.nonogramas.logic.enums.MyColor;
 
+/**
+ * Define a cell from the board object
+ */
 public class Cell {
     Cell(int row, int col, int[] pos, float cellSize) {
         // INDEX
@@ -22,13 +25,6 @@ public class Cell {
         this.fsize = cellSize - whiteMargin * 2;
         // TYPE
         this.cellType = CellType.EMPTY;
-
-        // COLORS - MAP
-//        _colors = new HashMap<>();
-//        _colors.put(CellType.FILL, 0x0000FFFF);
-//        _colors.put(CellType.EMPTY, 0xBBBBBBFF);
-//        _colors.put(CellType.NOFILL, 0xFFFFFFFF);
-//        _colors.put(CellType.RED, 0xFF0000FF);
     }
 
     public void render(Graphics graphics) {

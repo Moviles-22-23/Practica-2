@@ -1,10 +1,9 @@
 package es.ucm.stalos.androidengine;
 
-import android.app.GameManager;
+import android.annotation.SuppressLint;
 import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.hardware.Sensor;
-import android.hardware.SensorManager;
 import android.os.Vibrator;
 import android.view.SurfaceView;
 import android.view.View;
@@ -12,13 +11,12 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.Group;
 
-import com.google.android.gms.ads.AdView;
-
 public class Engine implements Runnable {
     public Engine() {
 
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     public boolean init(State initState, int w, int h, AppCompatActivity activity, SurfaceView view, Group adView) {
         _context = activity;
         _assetsMan = activity.getApplicationContext().getAssets();
@@ -90,7 +88,6 @@ public class Engine implements Runnable {
             _audio.resumeMusic();
 
             _graphics.togglePortraitLandscape(isLandScape());
-
             _currState.togglePortraitLandscape(isLandScape());
         }
     }
@@ -109,13 +106,6 @@ public class Engine implements Runnable {
                     e.printStackTrace();
                 }
             }
- /*
-            try {
-                this.wait();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-  */
 
             _audio.pauseBackMusic();
             _currState.saveData();

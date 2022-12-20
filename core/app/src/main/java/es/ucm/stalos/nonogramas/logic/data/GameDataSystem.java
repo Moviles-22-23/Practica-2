@@ -27,7 +27,7 @@ public class GameDataSystem implements SerializableSystem {
 
     //-----------------------------------LOAD-SAVE---------------------------------------//
     @Override
-    public boolean saveData() {
+    public void saveData() {
         try {
             // 1. If there is no data, it is created
             if (_data == null)
@@ -46,14 +46,11 @@ public class GameDataSystem implements SerializableSystem {
         } catch (Exception e) {
             System.out.println("Error guardar los datos");
             System.err.println(e);
-            return false;
         }
-
-        return true;
     }
 
     @Override
-    public boolean loadData() {
+    public void loadData() {
         try {
             // 1. If the file doesn't exist, it is created
             File f = _context.getFileStreamPath(_fileName);
@@ -80,8 +77,6 @@ public class GameDataSystem implements SerializableSystem {
             System.err.println(e);
             _data = new GameData();
         }
-
-        return true;
     }
 
     /**

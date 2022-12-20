@@ -159,8 +159,6 @@ public class GameState extends State {
                 if (_playState == PlayingState.Gaming &&
                         clickInsideSquare(clickPos, _posBoard, _sizeBoard)) {
                     _board.handleInput(clickPos, currEvent);
-                    //TODO: buscar un sonido para holdClick
-                    //_audio.playSound(Assets.clickSound, 0);
                 }
             }
         }
@@ -185,6 +183,12 @@ public class GameState extends State {
         // Pasa al siguiente nivel
         if (!_isRandom && _playState == PlayingState.Win && _currentLevel < _numLevels - 1) {
             State gameState = new GameState(_engine, _gridType, _isRandom, _currentLevel + 1);
+            ((GameDataSystem) _serSystem)._data._currStateType = StateType.MainMenuState;
+            _engine.reqNewState(gameState);
+        }
+        // Genera un nivel nuevo
+        else if (_isRandom && _playState == PlayingState.Win){
+            State gameState = new GameState(_engine, _gridType, _isRandom, 0);
             ((GameDataSystem) _serSystem)._data._currStateType = StateType.MainMenuState;
             _engine.reqNewState(gameState);
         }
@@ -579,19 +583,7 @@ public class GameState extends State {
     public void playSound(SoundName sound) {
         _engine.getAudio().playSound(sound.getName(), 0);
     }
-/*
-    private void rerollBoard() throws Exception {
-        System.out.println("Board re-roll");
-        _lives = MAX_LIVES;
-        _board = new Board(this, _gridType, _posBoard, _sizeBoard,
-                _isRandom, _currentLevel);
 
-        if (!_board.init(_data, _graphics.getLogWidth(),
-                _graphics.getLogHeight(), _engine.getAssetManager()))
-            throw new Exception("Error al crear el board");
-
-    }
-    */
 //------------------------------------------GET-SET-----------------------------------------------//
 
     public ColorPalette getColorPalette() {

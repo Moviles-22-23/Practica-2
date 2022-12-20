@@ -5,6 +5,9 @@ import es.ucm.stalos.nonogramas.logic.enums.ImageName;
 import es.ucm.stalos.nonogramas.logic.enums.MyColor;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 
+/**
+ * Buttons to navigate betweens states
+ */
 public class SelectButton {
     public SelectButton(int[] pos, float[] size, String text, String fontName, boolean unlocked) {
         _buttonPos[0] = pos[0];

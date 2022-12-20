@@ -12,6 +12,10 @@ import java.util.HashMap;
 
 import es.ucm.stalos.androidengine.enums.Constraint;
 
+/**
+ * Our engine audio system
+ * Contains different attributes to manage audio
+ */
 public class Graphics {
 
     protected Graphics(int w, int h, AssetManager assetManager, SurfaceView view, boolean isLandscape) {

@@ -1,5 +1,6 @@
 package es.ucm.stalos.androidengine;
 
+import android.content.Context;
 import android.os.Vibrator;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,13 +15,13 @@ public class Input implements View.OnTouchListener, View.OnLongClickListener {
     public Input(Engine e) {
         _engine = e;
         _events = new ArrayList<>();
-        _vibrator = (Vibrator) e.getContext().getSystemService(e.getContext().VIBRATOR_SERVICE);
+        _vibrator = (Vibrator) e.getContext().getSystemService(Context.VIBRATOR_SERVICE);
     }
 
     /**
      * @return return the list of all events
      */
-    public List<TouchEvent> getTouchEvents() {
+    public synchronized List<TouchEvent> getTouchEvents() {
         if (!_events.isEmpty()) {
             List<TouchEvent> touchEvents = new ArrayList<>(_events);
             _events.clear();
@@ -36,7 +37,7 @@ public class Input implements View.OnTouchListener, View.OnLongClickListener {
      * @param x Window X position
      * @param y Window Y position
      */
-    protected void onTouchDownEvent(int x, int y) {
+    protected synchronized void onTouchDownEvent(int x, int y) {
         Graphics g = _engine.getGraphics();
 
         TouchEvent currEvent = TouchEvent.touchDown;
@@ -57,7 +58,7 @@ public class Input implements View.OnTouchListener, View.OnLongClickListener {
      * @param x Window X position
      * @param y Window Y position
      */
-    protected void onLongTouchEvent(int x, int y) {
+    protected synchronized void onLongTouchEvent(int x, int y) {
         Graphics g = _engine.getGraphics();
 
         TouchEvent currEvent = TouchEvent.longTouch;
@@ -91,7 +92,6 @@ public class Input implements View.OnTouchListener, View.OnLongClickListener {
     public boolean onLongClick(View v) {
         _longTouching = true;
 
-        //TODO Lanzamos una vibracion para indicar que el touch es long
         _vibrator.vibrate(100);
 
         return false;

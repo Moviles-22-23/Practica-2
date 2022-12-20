@@ -7,11 +7,18 @@ import es.ucm.stalos.nonogramas.logic.enums.ImageName;
 import es.ucm.stalos.nonogramas.logic.enums.MyColor;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 
-public class SelectColorSetButton {
-    public SelectColorSetButton(int[] pos, float[] size, Point colorSet, boolean _isUnlocked, int index, boolean isLandscape) {
+/**
+ * Button that changes the current Color Palette
+ */
+public class SelectPaletteButton {
+    public SelectPaletteButton(int[] pos, float[] size, Point colorSet, boolean _isUnlocked, int index, boolean isLandscape) {
         this._buttonPos = pos;
         this._buttonSize = size;
         this._colorSet = colorSet;
+
+        float lockMaxSide = Math.min(_buttonSize[0], _buttonSize[1]);
+        this._lockSize = new float[] { lockMaxSide,lockMaxSide };
+
 
         if(!isLandscape) {
             int margin = 10;
@@ -23,6 +30,8 @@ public class SelectColorSetButton {
             this._secondColorPos[1] = (int) (_buttonPos[1] + _buttonSize[1] * 0.75f);
 
             this._colorRadius = (_buttonSize[0] / 2) - margin;
+
+            this._lockPos = new int[]{_buttonPos[0], (int) (_buttonPos[1] + (_buttonSize[1] - lockMaxSide) / 2)};
         }
         else{
             int margin = 10;
@@ -34,6 +43,8 @@ public class SelectColorSetButton {
             this._secondColorPos[1] = (int) (_buttonPos[1] + _buttonSize[1] * 0.5f);
 
             this._colorRadius = (_buttonSize[1] / 2) - margin;
+
+            this._lockPos = new int[]{(int) (_buttonPos[0] + (_buttonSize[0] - lockMaxSide) / 2), _buttonPos[1]};
         }
 
         this._isUnlocked = _isUnlocked;
@@ -58,7 +69,7 @@ public class SelectColorSetButton {
         graphics.setColor(MyColor.BLACK.get_color());
         graphics.drawCircle(_secondColorPos, _colorRadius);
 
-        if (!_isUnlocked) graphics.drawImage(ImageName.Lock.getName(), _buttonPos, _buttonSize);
+        if (!_isUnlocked) graphics.drawImage(ImageName.Lock.getName(), _lockPos, _lockSize);
     }
 
     public void setCallback(ButtonCallback cb) {
@@ -94,6 +105,15 @@ public class SelectColorSetButton {
      * Button size
      */
     private final float[] _buttonSize;
+
+    /**
+     * Pos to draw lock
+     */
+    private int[] _lockPos;
+    /**
+     * Size to draw lock
+     */
+    private float[] _lockSize;
     /**
      * Font of the text
      */

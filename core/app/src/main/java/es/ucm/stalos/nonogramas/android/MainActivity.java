@@ -48,13 +48,12 @@ public class MainActivity extends AppCompatActivity {
 
         // SENSOR
         _sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        _sensor = new AndroidSensor(_sensorManager, _engine);
+        _sensor = new AccelerometerSensor(_sensorManager, _engine);
 
         // Cancel ReminderNotification
         NotificationManager.CancelSomeWork(this,
                 getResources().getString(R.string.reminder));
 
-        getResources().getString(R.string.reminder);
 
         LoadState loadAssets = new LoadState(_engine);
 
@@ -78,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
         NotificationManager.SetUpReminderNotification(this,
                 getResources().getString(R.string.reminder),
-                TimeUnit.SECONDS, 4);
+                TimeUnit.HOURS, 47);
     }
 
     @Override
@@ -89,5 +88,5 @@ public class MainActivity extends AppCompatActivity {
     protected Engine _engine;
     private Group adGroup;
     private SensorManager _sensorManager;
-    private AndroidSensor _sensor;
+    private AccelerometerSensor _sensor;
 }

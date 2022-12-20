@@ -1,5 +1,8 @@
 package es.ucm.stalos.nonogramas.logic.enums;
 
+/**
+ * Enumerated to facilitate the translation between the name of a color and the value it represents
+ */
 public enum MyColor {
     // USEFULL COLORS
     BLACK(0x000000FF),

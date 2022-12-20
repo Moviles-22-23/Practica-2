@@ -6,12 +6,12 @@ public interface SerializableSystem {
      *
      * @return true if success
      */
-    boolean saveData();
+    void saveData();
 
     /**
      * Load the current data
      *
      * @return true if success
      */
-    boolean loadData();
+    void loadData();
 }

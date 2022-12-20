@@ -4,7 +4,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Clase base para definir las diferentes escenas
+ * Base class to define different states
  */
 public abstract class State {
 

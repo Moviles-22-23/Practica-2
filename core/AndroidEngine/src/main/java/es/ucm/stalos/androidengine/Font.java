@@ -3,6 +3,10 @@ package es.ucm.stalos.androidengine;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 
+/**
+ * Our engine font class.
+ * Contains different attributes to create font.
+ */
 public class Font {
 
     public Font(String fileName, float size, boolean isBold, AssetManager assetManager) {

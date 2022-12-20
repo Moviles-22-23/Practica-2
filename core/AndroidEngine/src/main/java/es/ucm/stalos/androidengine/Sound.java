@@ -3,7 +3,10 @@ package es.ucm.stalos.androidengine;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 
-
+/**
+ * Our engine sound class.
+ * Contains different attributes to create sounds.
+ */
 public class Sound {
     public Sound(String filename, AssetManager assetManager) {
         _filename = filename;

@@ -7,8 +7,11 @@ import android.hardware.SensorManager;
 
 import es.ucm.stalos.androidengine.Engine;
 
-public class AndroidSensor implements SensorEventListener {
-    public AndroidSensor(SensorManager sensorManager, Engine engine) {
+/**
+ * It is the class that is in charge of handling the game logic when the mobile's accelerometer sensor intervenes.
+ */
+public class AccelerometerSensor implements SensorEventListener {
+    public AccelerometerSensor(SensorManager sensorManager, Engine engine) {
         _sensorManager = sensorManager;
         _sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorManager.registerListener(this, _sensor, SensorManager.SENSOR_DELAY_NORMAL);
@@ -32,8 +35,6 @@ public class AndroidSensor implements SensorEventListener {
 
                 if (speed > SHAKE_SENSITIVITY) {
                     // Gesto detectado
-                    System.out.println("AGITAR");
-                    // TODO: Callback
                     _engine.manageSensorEvent(_sensor.getType());
                 }
 
