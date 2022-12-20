@@ -32,10 +32,12 @@ public class GameDataSystem implements SerializableSystem {
             // 1. If there is no data, it is created
             if (_data == null)
                 _data = new GameData();
+
             // 2. Writing/Creating the file data
             FileOutputStream file = _context.openFileOutput(_fileName, Context.MODE_PRIVATE);
             ObjectOutputStream out = new ObjectOutputStream(file);
             out.writeObject(_data);
+
             // 3. Close the streams
             out.close();
             file.close();
@@ -61,7 +63,7 @@ public class GameDataSystem implements SerializableSystem {
             FileInputStream file = _context.openFileInput(_fileName);
             ObjectInputStream in = new ObjectInputStream(file);
 
-            // 3. Method for deserialization of object
+            // 3. Deserialize object
             _data = (GameData) in.readObject();
 
             // 4. Close the streams

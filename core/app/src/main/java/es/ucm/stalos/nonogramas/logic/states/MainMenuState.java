@@ -2,7 +2,7 @@ package es.ucm.stalos.nonogramas.logic.states;
 
 import java.util.List;
 
-import es.ucm.stalos.androidengine.Constrain;
+import es.ucm.stalos.androidengine.enums.Constraint;
 import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.nonogramas.logic.enums.StateType;
@@ -105,18 +105,18 @@ public class MainMenuState extends State {
             // TITLE
             _titleSize[0] = _graphics.getLogWidth() * 0.6f;
             _titleSize[1] = _graphics.getLogHeight() * 0.1f;
-            _titlePos = _graphics.constrainedToScreenPos(Constrain.TOP, _titleSize, new int[]{0, (int) (_graphics.getLogHeight() * 0.15f )});
+            _titlePos = _graphics.constrainedToScreenPos(Constraint.TOP, _titleSize, new int[]{0, (int) (_graphics.getLogHeight() * 0.15f )});
 
             // PLAY BUTTON PORTRAIT
             _playButtonText = "Modo Historia";
             _playButtonSize[0] = _graphics.getLogWidth() * 0.7f;
             _playButtonSize[1] = _graphics.getLogHeight() * 0.1f;
-            _playButtonPos = _graphics.constrainedToScreenPos(Constrain.MIDDLE, _playButtonSize, new int[]{0, 0});
+            _playButtonPos = _graphics.constrainedToScreenPos(Constraint.MIDDLE, _playButtonSize, new int[]{0, 0});
 
             // PLAY RANDOM BUTTON PORTRAIT
             _playRandomButtonText = "Modo Aleatorio";
             _playRandomButtonSize = _playButtonSize;
-            _playRandomButtonPos = _graphics.constrainedToObjectPos(Constrain.TOP,
+            _playRandomButtonPos = _graphics.constrainedToObjectPos(Constraint.TOP,
                     _playButtonPos, _playButtonSize,
                     _playRandomButtonSize, new int[]{0, (int) (_graphics.getLogHeight() * 0.1)});
 
@@ -125,19 +125,19 @@ public class MainMenuState extends State {
             // TITLE
             _titleSize[0] = _graphics.getLogWidth() * 0.6f;
             _titleSize[1] = _graphics.getLogHeight() * 0.1f;
-            _titlePos = _graphics.constrainedToScreenPos(Constrain.TOP, _titleSize, new int[]{0, (int) (_graphics.getLogHeight() * 0.1f )});
+            _titlePos = _graphics.constrainedToScreenPos(Constraint.TOP, _titleSize, new int[]{0, (int) (_graphics.getLogHeight() * 0.1f )});
 
             // PLAY RANDOM BUTTON LANDSCAPE
             _playButtonText = "Modo\nHistoria";
             _playButtonSize[0] = _graphics.getLogWidth() * 0.3f;
             _playButtonSize[1] = _graphics.getLogHeight() * 0.3f;
-            _playButtonPos = _graphics.constrainedToScreenPos(Constrain.LEFT, _playButtonSize, new int[]{ (int) (_graphics.getLogWidth() * 0.15f), (int) (_graphics.getLogWidth() * 0.05f)});
+            _playButtonPos = _graphics.constrainedToScreenPos(Constraint.LEFT, _playButtonSize, new int[]{ (int) (_graphics.getLogWidth() * 0.15f), (int) (_graphics.getLogWidth() * 0.05f)});
 
 
             // PLAY RANDOM BUTTON LANDSCAPE
             _playRandomButtonText = "Modo\nAleatorio";
             _playRandomButtonSize = _playButtonSize;
-            _playRandomButtonPos = _graphics.constrainedToScreenPos(Constrain.RIGHT, _playRandomButtonSize, new int[]{(int)(_graphics.getLogWidth() * 0.15f), (int) (_graphics.getLogWidth() * 0.05f)});
+            _playRandomButtonPos = _graphics.constrainedToScreenPos(Constraint.RIGHT, _playRandomButtonSize, new int[]{(int)(_graphics.getLogWidth() * 0.15f), (int) (_graphics.getLogWidth() * 0.05f)});
         }
     }
 

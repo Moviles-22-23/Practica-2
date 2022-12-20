@@ -1,5 +1,6 @@
 package es.ucm.stalos.nonogramas.logic.data;
 
+import java.io.IOException;
 import java.io.Serializable;
 
 import es.ucm.stalos.nonogramas.logic.enums.CellType;
@@ -12,7 +13,30 @@ import es.ucm.stalos.nonogramas.logic.enums.StateType;
  */
 public class GameData implements Serializable {
 
+    /**
+     * Determines if a de-serialized file is compatible with this class.
+     *
+     * Maintainers must change this value if and only if the new version
+     * of this class is not compatible with old versions. See Sun docs
+     * for <a href=http://java.sun.com/products/jdk/1.1/docs/guide
+     * /serialization/spec/version.doc.html> details. </a>
+     *
+     * Not necessary to include in first version of the class, but
+     * included here as a reminder of its importance.
+     */
+    private static final long serialVersionUID =  1234567L;
+
     public GameData() {
+    }
+
+    private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
+        stream.defaultReadObject();
+        // Initialize non primitive data when they are non saved
+        // if(_data == null) _data = ...;
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
     }
 
     /**
@@ -26,7 +50,7 @@ public class GameData implements Serializable {
     /**
      * Primary Color
      */
-    public int _currPalette;
+    public int _currPalette = 0;
     /**
      * Current State when the phone toggled portrait-landscape
      */

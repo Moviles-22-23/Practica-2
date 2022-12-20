@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import es.ucm.stalos.androidengine.Constrain;
+import es.ucm.stalos.androidengine.enums.Constraint;
 import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.nonogramas.logic.enums.StateType;
@@ -115,23 +115,23 @@ public class SelectBoardState extends State {
             // Mode Text
             _modeSize[0] = _graphics.getLogWidth();
             _modeSize[1] = _graphics.getLogHeight() * 0.1f;
-            _modePos = _graphics.constrainedToScreenPos(Constrain.TOP, _modeSize, new int[]{ 0, (int) (_graphics.getLogHeight() * 0.1f) });
+            _modePos = _graphics.constrainedToScreenPos(Constraint.TOP, _modeSize, new int[]{ 0, (int) (_graphics.getLogHeight() * 0.1f) });
 
             // Comment Text
             _commentSize[0] = _graphics.getLogWidth();
             _commentSize[1] = _graphics.getLogHeight() * 0.1f;
-            _commentPos = _graphics.constrainedToObjectPos(Constrain.TOP, _modePos, _modeSize, _modeSize, new int[]{ 0, 0});
+            _commentPos = _graphics.constrainedToObjectPos(Constraint.TOP, _modePos, _modeSize, _modeSize, new int[]{ 0, 0});
 
             // Back Button
             // Image
             _backImageSize[0] = _graphics.getLogWidth() * 0.108f;
             _backImageSize[1] = _graphics.getLogHeight() * 0.06f;
-            _backImagePos = _graphics.constrainedToScreenPos(Constrain.TOP_LEFT, _backImageSize, new int[] { 0, 0 });
+            _backImagePos = _graphics.constrainedToScreenPos(Constraint.TOP_LEFT, _backImageSize, new int[] { 0, 0 });
 
             // Text
             _backTextSize[0] = _graphics.getLogWidth() * 0.3f;
             _backTextSize[1] = _backImageSize[1];
-            _backTextPos = _graphics.constrainedToObjectPos(Constrain.LEFT, _backImagePos, _backImageSize, _backTextSize, new int[] { 0, 0 });
+            _backTextPos = _graphics.constrainedToObjectPos(Constraint.LEFT, _backImagePos, _backImageSize, _backTextSize, new int[] { 0, 0 });
 
             // Back Button
             _backButtonSize[0] = _backImageSize[0] + _backTextSize[0];
@@ -141,23 +141,23 @@ public class SelectBoardState extends State {
             // Mode Text
             _modeSize[0] = _graphics.getLogWidth();
             _modeSize[1] = _graphics.getLogHeight() * 0.1f;
-            _modePos = _graphics.constrainedToScreenPos(Constrain.TOP, _modeSize, new int[]{ 0, (int) (_graphics.getLogHeight() * 0.1f) });
+            _modePos = _graphics.constrainedToScreenPos(Constraint.TOP, _modeSize, new int[]{ 0, (int) (_graphics.getLogHeight() * 0.1f) });
 
             // Comment Text
             _commentSize[0] = _graphics.getLogWidth();
             _commentSize[1] = _graphics.getLogHeight() * 0.1f;
-            _commentPos = _graphics.constrainedToObjectPos(Constrain.TOP, _modePos, _modeSize, _modeSize, new int[]{ 0, 0});//(int) (_graphics.getLogHeight() * 0.1f) });
+            _commentPos = _graphics.constrainedToObjectPos(Constraint.TOP, _modePos, _modeSize, _modeSize, new int[]{ 0, 0});//(int) (_graphics.getLogHeight() * 0.1f) });
 
             // Back Button
             // Image
             _backImageSize[0] = _graphics.getLogWidth() * 0.06f;
             _backImageSize[1] = _graphics.getLogHeight() * 0.108f;
-            _backImagePos = _graphics.constrainedToScreenPos(Constrain.TOP_LEFT, _backImageSize, new int[] { 0, 0 });
+            _backImagePos = _graphics.constrainedToScreenPos(Constraint.TOP_LEFT, _backImageSize, new int[] { 0, 0 });
 
             // Text
             _backTextSize[0] = _graphics.getLogWidth() * 0.15f;
             _backTextSize[1] = _backImageSize[1];
-            _backTextPos = _graphics.constrainedToObjectPos(Constrain.LEFT, _backImagePos, _backImageSize, _backTextSize, new int[] { 0, 0 });
+            _backTextPos = _graphics.constrainedToObjectPos(Constraint.LEFT, _backImagePos, _backImageSize, _backTextSize, new int[] { 0, 0 });
 
             // Back Button
             _backButtonSize[0] = _backImageSize[0] + _backTextSize[0];
@@ -208,7 +208,7 @@ public class SelectBoardState extends State {
 
         float[] fullSize = new float[]{buttonSide * numButtonsAxisX + paddingX * (numButtonsAxisX - 1),
                 buttonSide * numButtonsAxisY + paddingY * (numButtonsAxisY - 1)};
-        int[] fullPosition = _graphics.constrainedToScreenPos(Constrain.MIDDLE, fullSize, new int[]{ 0, (int) (_graphics.getLogHeight() * 0.1f) });
+        int[] fullPosition = _graphics.constrainedToScreenPos(Constraint.MIDDLE, fullSize, new int[]{ 0, (int) (_graphics.getLogHeight() * 0.1f) });
 
         initGridTypesMap();
 

@@ -10,6 +10,8 @@ import android.view.SurfaceView;
 
 import java.util.HashMap;
 
+import es.ucm.stalos.androidengine.enums.Constraint;
+
 public class Graphics {
 
     protected Graphics(int w, int h, AssetManager assetManager, SurfaceView view, boolean isLandscape) {
@@ -319,7 +321,7 @@ public class Graphics {
      * @param padding the padding in x and y axis.
      * @return
      */
-    public int[] constrainedToScreenPos(Constrain c, float[] size, int[] padding) {
+    public int[] constrainedToScreenPos(Constraint c, float[] size, int[] padding) {
         int[] pos = {0, 0};
 
         switch (c) {
@@ -364,7 +366,7 @@ public class Graphics {
         return pos;
     }
 
-    public int[] constrainedToObjectPos(Constrain c, final int[] parentPos, final float[] parentSize, final float[] size, final int[] padding) {
+    public int[] constrainedToObjectPos(Constraint c, final int[] parentPos, final float[] parentSize, final float[] size, final int[] padding) {
         int[] pos = {0, 0};
 
         switch (c) {
