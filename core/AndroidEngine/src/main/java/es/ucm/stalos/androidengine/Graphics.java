@@ -38,17 +38,8 @@ public class Graphics {
      * @return the scale factor
      */
     public float[] getScaleFactor() {
-        float widthScale;
-        float heightScale;
-
-//        if(!_isLandscape) {
-        widthScale = getWidth() / _logWidth;
-        heightScale = getHeight() / _logHeight;
-//        } else {
-//            widthScale = getWidth() / _logHeight;
-//            heightScale = getHeight() / _logWidth;
-//        }
-        System.out.println("Scale: " + widthScale+  ", " + heightScale);
+        float widthScale = getWidth() / _logWidth;
+        float heightScale = getHeight() / _logHeight;
 
         return new float[]{widthScale, heightScale};
     }
@@ -255,7 +246,6 @@ public class Graphics {
 
     public void fillSquare(int[] pos, float[] size) {
         _paint.setStyle(Paint.Style.FILL);
-        System.out.println("Pos[0]: " + pos[0] + ", Pos[1]: " + pos[1] + ", Size[0]: " + size[0] + ", Size[1]: " + size[1]);
         paintRect(pos, size);
     }
 

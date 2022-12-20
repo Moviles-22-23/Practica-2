@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import es.ucm.stalos.androidengine.Constrain;
 import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.TouchEvent;
@@ -30,31 +31,13 @@ public class SelectLevelState extends State {
     public boolean init() {
         try {
             _engine.swapBannerAdVisibility(false);
+
             // Texts
             _modeText = "Paquete " + _gridType.getText();
 
-            // MODE TEXT
-            _modeSize[0] = _graphics.getLogWidth();
-            _modeSize[1] = _graphics.getLogHeight() * 0.1f;
-            _modePos[0] = (int) (_graphics.getLogWidth() - _modeSize[0]);
-            _modePos[1] = (int) ((_graphics.getLogHeight() - _modeSize[1]) * 0.09f);
+            togglePortraitLandscape(_engine.isLandScape());
 
-            // Back Button
-            // Image
-            _backImageSize[0] = _graphics.getLogWidth() * 0.072f;
-            _backImageSize[1] = _graphics.getLogHeight() * 0.04f;
-            _backImagePos[0] = 10;
-            _backImagePos[1] = 31;
-
-            // Text
-            _backTextSize[0] = _graphics.getLogWidth() * 0.2f;
-            _backTextSize[1] = _backImageSize[1];
-            _backTextPos[0] = (int) (_backImagePos[0] + _backImageSize[0]);
-            _backTextPos[1] = _backImagePos[1];
-
-            // Back Button
-            _backButtonSize[0] = _backImageSize[0] + _backTextSize[0];
-            _backButtonSize[1] = _backImageSize[1];
+            // Callback
             _backCallback = new ButtonCallback() {
                 @Override
                 public void doSomething() {
@@ -63,9 +46,6 @@ public class SelectLevelState extends State {
                     _audio.playSound(SoundName.ClickSound.getName(), 0);
                 }
             };
-
-            // BUTTONS
-            initSelectLevelButtons();
 
             // AUDIO
             _audio.playMusic(SoundName.MenuTheme.getName());
@@ -86,14 +66,16 @@ public class SelectLevelState extends State {
 
         // Texts
         _graphics.setColor(MyColor.LIGHT_GREY.get_color());
-        _graphics.drawCenteredString(_modeText, FontName.DefaultFont.getName(),
+        _graphics.drawCenteredString(_modeText, FontName.SelectStateTitle.getName(),
                 _modePos, _modeSize);
 
         // Back Button
+        _graphics.setColor(ColorPalette._colorSets.get(ColorPalette._currPalette).x);
+        if (ColorPalette._currPalette == 0) _graphics.drawRect(_backImagePos, _backButtonSize);
+        else _graphics.fillSquare(_backImagePos, _backButtonSize);
         _graphics.setColor(MyColor.BLACK.get_color());
         _graphics.drawImage(ImageName.BackArrow.getName(), _backImagePos, _backImageSize);
-        _graphics.drawCenteredString(_backText, FontName.DefaultFont.getName(),
-                _backTextPos, _backTextSize);
+        _graphics.drawCenteredString(_backText, FontName.SelectStateButton.getName(), _backTextPos, _backTextSize);
 
         // SelectLevel buttons
         for (SelectButton button : _selectButtons) {
@@ -125,35 +107,92 @@ public class SelectLevelState extends State {
         }
     }
 
-//-------------------------------------------MISC-------------------------------------------------//
+    @Override
+    protected void togglePortraitLandscape(boolean isLandscape) {
+
+        if(!isLandscape){
+            // Mode Text
+            _modeSize[0] = _graphics.getLogWidth();
+            _modeSize[1] = _graphics.getLogHeight() * 0.1f;
+            _modePos = _graphics.constrainedToScreenPos(Constrain.TOP, _modeSize, new int[]{ 0, (int) (_graphics.getLogHeight() * 0.1f) });
+
+            // Back Button
+            // Image
+            _backImageSize[0] = _graphics.getLogWidth() * 0.108f;
+            _backImageSize[1] = _graphics.getLogHeight() * 0.06f;
+            _backImagePos = _graphics.constrainedToScreenPos(Constrain.TOP_LEFT, _backImageSize, new int[] { 0, 0 });
+
+            // Text
+            _backTextSize[0] = _graphics.getLogWidth() * 0.3f;
+            _backTextSize[1] = _backImageSize[1];
+            _backTextPos = _graphics.constrainedToObjectPos(Constrain.LEFT, _backImagePos, _backImageSize, _backTextSize, new int[] { 0, 0 });
+
+            // Back Button
+            _backButtonSize[0] = _backImageSize[0] + _backTextSize[0];
+            _backButtonSize[1] = _backImageSize[1];
+        }
+        else{
+            // Mode Text
+            _modeSize[0] = _graphics.getLogWidth();
+            _modeSize[1] = _graphics.getLogHeight() * 0.1f;
+            _modePos = _graphics.constrainedToScreenPos(Constrain.TOP, _modeSize, new int[]{ 0, (int) (_graphics.getLogHeight() * 0.1f) });
+
+            // Back Button
+            // Image
+            _backImageSize[0] = _graphics.getLogWidth() * 0.06f;
+            _backImageSize[1] = _graphics.getLogHeight() * 0.108f;
+            _backImagePos = _graphics.constrainedToScreenPos(Constrain.TOP_LEFT, _backImageSize, new int[] { 0, 0 });
+
+            // Text
+            _backTextSize[0] = _graphics.getLogWidth() * 0.15f;
+            _backTextSize[1] = _backImageSize[1];
+            _backTextPos = _graphics.constrainedToObjectPos(Constrain.LEFT, _backImagePos, _backImageSize, _backTextSize, new int[] { 0, 0 });
+
+            // Back Button
+            _backButtonSize[0] = _backImageSize[0] + _backTextSize[0];
+            _backButtonSize[1] = _backImageSize[1];
+        }
+
+        initSelectLevelButtons(isLandscape);
+    }
+
+    //-------------------------------------------MISC-------------------------------------------------//
 
     /**
      * Initialize the buttons to select the levels
      */
-    private void initSelectLevelButtons() {
-        _selectButtons = new ArrayList<>();
+    private void initSelectLevelButtons(boolean isLandscape) {
+        int numButtonsAxisX, numButtonsAxisY;
+        if(!isLandscape){
+            numButtonsAxisX = 4;
+            numButtonsAxisY = 5;
+        }
+        else{
+            numButtonsAxisX = 5;
+            numButtonsAxisY = 4;
+        }
+        float paddingX = _graphics.getLogWidth() * 0.05f;
+        float paddingY = _graphics.getLogHeight() * 0.05f;
+        // Calculate buttons dimensions
+        float buttonSide = Math.min((_graphics.getLogWidth() * 0.15f), (_graphics.getLogHeight() * 0.15f));
+        float[] buttonSize = new float[] { buttonSide, buttonSide};
 
-        float minSize = Math.min((_graphics.getLogWidth() * 0.15f), (_graphics.getLogHeight() * 0.15f));
-        float[] size = new float[]{minSize, minSize};
-
-        float separation = Math.min((_graphics.getLogWidth() * 0.2f), (_graphics.getLogHeight() * 0.2f));
-
-        int[] pos = new int[2];
-        int[] initialPos = new int[2];
-        initialPos[0] = (int) (_graphics.getLogWidth() * 0.125f);
-        initialPos[1] = (int) (_graphics.getLogHeight() * 0.2f);
+        float[] fullSize = new float[]{buttonSide * numButtonsAxisX + paddingX * (numButtonsAxisX - 1),
+                buttonSide * numButtonsAxisY + paddingY * (numButtonsAxisY - 1)};
+        int[] fullPosition = _graphics.constrainedToScreenPos(Constrain.MIDDLE, fullSize, new int[]{ 0, (int) (_graphics.getLogHeight() * 0.1f) });
 
         initGridTypesMap();
 
         for (int i = 0; i < _numLevels; i++) {
-            pos[0] = initialPos[0] + (int) ((i % 4) * separation);
-            pos[1] = initialPos[1] + (int) ((i / 4) * separation);
+            int[] buttonPos = new int[2];
+            buttonPos[0] = (int)(fullPosition[0] + (i % numButtonsAxisX) * (paddingX + buttonSide));
+            buttonPos[1] = (int)(fullPosition[1] + (i / numButtonsAxisX) * (paddingY + buttonSide));
 
             boolean unlocked = _gridType.getValue() < ((GameDataSystem) _serSystem)._data._lastUnlockedPack
                     || i <= ((GameDataSystem) _serSystem)._data._lastUnlockedLevel;
 
             String text = "" + (i + 1);
-            final SelectButton _level = new SelectButton(pos, size, text,
+            final SelectButton _level = new SelectButton(buttonPos, buttonSize, text,
                     FontName.LevelNumber.getName(), unlocked);
 
             // Seleccion de los datos del nivel escogido
@@ -178,7 +217,6 @@ public class SelectLevelState extends State {
      * Initializes rows and cols types of the selectButton.
      */
     private void initGridTypesMap() {
-        _gridTypes = new HashMap<>();
         _gridTypes.put(0, GridType._4x4);
         _gridTypes.put(1, GridType._5x5);
         _gridTypes.put(2, GridType._10x5);
@@ -214,10 +252,10 @@ public class SelectLevelState extends State {
     /**
      * List of all select level buttons
      */
-    List<SelectButton> _selectButtons;
+    List<SelectButton> _selectButtons = new ArrayList<>();
     /**
      * Dictionary of information about
      * different grid level types
      */
-    Map<Integer, GridType> _gridTypes;
+    Map<Integer, GridType> _gridTypes = new HashMap<>();
 }

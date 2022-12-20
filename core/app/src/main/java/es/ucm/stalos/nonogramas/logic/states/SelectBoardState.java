@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import es.ucm.stalos.androidengine.Constrain;
 import es.ucm.stalos.androidengine.State;
 import es.ucm.stalos.androidengine.Engine;
 import es.ucm.stalos.androidengine.TouchEvent;
@@ -32,42 +33,11 @@ public class SelectBoardState extends State {
         try {
             _engine.swapBannerAdVisibility(false);
 
-            if (_isRandom) {
-                _modeText = "JUEGO ALEATORIO";
-                _commentText = "Selecciona el tamaño del puzzle";
-            } else {
-                _modeText = "MODO HISTORIA";
-                _commentText = "Selecciona el paquete";
-            }
+            setCorrectText();
 
-            // MODE TEXT
-            _modeSize[0] = _graphics.getLogWidth();
-            _modeSize[1] = _graphics.getLogHeight() * 0.1f;
-            _modePos[0] = (int) (_graphics.getLogWidth() - _modeSize[0]);
-            _modePos[1] = (int) ((_graphics.getLogHeight() - _modeSize[1]) * 0.18f);
+            togglePortraitLandscape(_engine.isLandScape());
 
-            // Comment Text
-            _commentSize[0] = _graphics.getLogWidth();
-            _commentSize[1] = _graphics.getLogHeight() * 0.1f;
-            _commentPos[0] = (int) (_graphics.getLogWidth() - _commentSize[0]);
-            _commentPos[1] = (int) ((_graphics.getLogHeight() - _commentSize[1]) * 0.28f);
-
-            // Back Button
-            // Image
-            _backImageSize[0] = _graphics.getLogWidth() * 0.072f;
-            _backImageSize[1] = _graphics.getLogHeight() * 0.04f;
-            _backImagePos[0] = 10;
-            _backImagePos[1] = 31;
-
-            // Text
-            _backTextSize[0] = _graphics.getLogWidth() * 0.2f;
-            _backTextSize[1] = _backImageSize[1];
-            _backTextPos[0] = (int) (_backImagePos[0] + _backImageSize[0]);
-            _backTextPos[1] = _backImagePos[1];
-
-            // Back Button
-            _backButtonSize[0] = _backImageSize[0] + _backTextSize[0];
-            _backButtonSize[1] = _backImageSize[1];
+            // Callback
             _backCallback = new ButtonCallback() {
                 @Override
                 public void doSomething() {
@@ -76,9 +46,6 @@ public class SelectBoardState extends State {
                     _audio.playSound(SoundName.ClickSound.getName(), 0);
                 }
             };
-
-            // Buttons
-            initSelectButtons();
 
             // AUDIO
             _audio.playMusic(SoundName.MenuTheme.getName());
@@ -99,16 +66,17 @@ public class SelectBoardState extends State {
 
         // Texts
         _graphics.setColor(MyColor.LIGHT_GREY.get_color());
-        _graphics.drawCenteredString(_modeText, FontName.DefaultFont.getName(),
-                _modePos, _modeSize);
-        _graphics.drawCenteredString(_commentText, FontName.DefaultFont.getName(),
-                _commentPos, _commentSize);
+        _graphics.drawCenteredString(_modeText, FontName.SelectStateTitle.getName(), _modePos, _modeSize);
+        _graphics.setColor(MyColor.LIGHT_GREY.get_color());
+        _graphics.drawCenteredString(_commentText, FontName.SelectStateDescription.getName(), _commentPos, _commentSize);
 
         // Back Button
+        _graphics.setColor(ColorPalette._colorSets.get(ColorPalette._currPalette).x);
+        if (ColorPalette._currPalette == 0) _graphics.drawRect(_backImagePos, _backButtonSize);
+        else _graphics.fillSquare(_backImagePos, _backButtonSize);
         _graphics.setColor(MyColor.BLACK.get_color());
         _graphics.drawImage(ImageName.BackArrow.getName(), _backImagePos, _backImageSize);
-        _graphics.drawCenteredString(_backText, FontName.DefaultFont.getName(),
-                _backTextPos, _backTextSize);
+        _graphics.drawCenteredString(_backText, FontName.SelectStateButton.getName(), _backTextPos, _backTextSize);
 
         // SelectLevel buttons
         for (SelectButton button : _selectButtons) {
@@ -139,12 +107,70 @@ public class SelectBoardState extends State {
         }
     }
 
-//-------------------------------------------MISC-------------------------------------------------//
+    @Override
+    protected void togglePortraitLandscape(boolean isLandscape) {
+        if(!isLandscape){
+            // Mode Text
+            _modeSize[0] = _graphics.getLogWidth();
+            _modeSize[1] = _graphics.getLogHeight() * 0.1f;
+            _modePos = _graphics.constrainedToScreenPos(Constrain.TOP, _modeSize, new int[]{ 0, (int) (_graphics.getLogHeight() * 0.1f) });
+
+            // Comment Text
+            _commentSize[0] = _graphics.getLogWidth();
+            _commentSize[1] = _graphics.getLogHeight() * 0.1f;
+            _commentPos = _graphics.constrainedToObjectPos(Constrain.TOP, _modePos, _modeSize, _modeSize, new int[]{ 0, 0});
+
+            // Back Button
+            // Image
+            _backImageSize[0] = _graphics.getLogWidth() * 0.108f;
+            _backImageSize[1] = _graphics.getLogHeight() * 0.06f;
+            _backImagePos = _graphics.constrainedToScreenPos(Constrain.TOP_LEFT, _backImageSize, new int[] { 0, 0 });
+
+            // Text
+            _backTextSize[0] = _graphics.getLogWidth() * 0.3f;
+            _backTextSize[1] = _backImageSize[1];
+            _backTextPos = _graphics.constrainedToObjectPos(Constrain.LEFT, _backImagePos, _backImageSize, _backTextSize, new int[] { 0, 0 });
+
+            // Back Button
+            _backButtonSize[0] = _backImageSize[0] + _backTextSize[0];
+            _backButtonSize[1] = _backImageSize[1];
+        }
+        else{
+            // Mode Text
+            _modeSize[0] = _graphics.getLogWidth();
+            _modeSize[1] = _graphics.getLogHeight() * 0.1f;
+            _modePos = _graphics.constrainedToScreenPos(Constrain.TOP, _modeSize, new int[]{ 0, (int) (_graphics.getLogHeight() * 0.1f) });
+
+            // Comment Text
+            _commentSize[0] = _graphics.getLogWidth();
+            _commentSize[1] = _graphics.getLogHeight() * 0.1f;
+            _commentPos = _graphics.constrainedToObjectPos(Constrain.TOP, _modePos, _modeSize, _modeSize, new int[]{ 0, 0});//(int) (_graphics.getLogHeight() * 0.1f) });
+
+            // Back Button
+            // Image
+            _backImageSize[0] = _graphics.getLogWidth() * 0.06f;
+            _backImageSize[1] = _graphics.getLogHeight() * 0.108f;
+            _backImagePos = _graphics.constrainedToScreenPos(Constrain.TOP_LEFT, _backImageSize, new int[] { 0, 0 });
+
+            // Text
+            _backTextSize[0] = _graphics.getLogWidth() * 0.15f;
+            _backTextSize[1] = _backImageSize[1];
+            _backTextPos = _graphics.constrainedToObjectPos(Constrain.LEFT, _backImagePos, _backImageSize, _backTextSize, new int[] { 0, 0 });
+
+            // Back Button
+            _backButtonSize[0] = _backImageSize[0] + _backTextSize[0];
+            _backButtonSize[1] = _backImageSize[1];
+        }
+
+        initSelectButtons(isLandscape);
+    }
+
+    //-------------------------------------------MISC-------------------------------------------------//
 
     /**
      * Initializes rows and cols types of the selectButton.
      */
-    protected void initGridTypesMap() {
+    private void initGridTypesMap() {
         _gridTypes.put(0, GridType._4x4);
         _gridTypes.put(1, GridType._5x5);
         _gridTypes.put(2, GridType._10x5);
@@ -156,49 +182,63 @@ public class SelectBoardState extends State {
     /**
      * Initialize the buttons to select the levels
      */
-    private void initSelectButtons() {
+    private void initSelectButtons(boolean isLandscape) {
+        int numButtonsAxisX = 3;
+        int numButtonsAxisY = 2;
+        float paddingX, paddingY;
+        if(!isLandscape){
+            paddingX = _graphics.getLogWidth() * 0.05f;
+            paddingY = _graphics.getLogHeight() * 0.10f;
+        }
+        else{
+            paddingX = _graphics.getLogWidth() * 0.15f;
+            paddingY = _graphics.getLogHeight() * 0.05f;
+        }
         // Calculate buttons dimensions
-        float min = Math.min((_graphics.getLogWidth() * 0.2f), (_graphics.getLogHeight() * 0.2f));
-        float[] size = new float[]{min, min};
+        float buttonSide = Math.min((_graphics.getLogWidth() * 0.25f), (_graphics.getLogHeight() * 0.25f));
+        float[] buttonSize = new float[] { buttonSide, buttonSide};
 
-        int[] pos = new int[2];
+        float[] fullSize = new float[]{buttonSide * numButtonsAxisX + paddingX * (numButtonsAxisX - 1),
+                buttonSide * numButtonsAxisY + paddingY * (numButtonsAxisY - 1)};
+        int[] fullPosition = _graphics.constrainedToScreenPos(Constrain.MIDDLE, fullSize, new int[]{ 0, (int) (_graphics.getLogHeight() * 0.1f) });
 
         initGridTypesMap();
 
-        int j = 0;
         for (int i = 0; i < GridType.MAX.getValue(); i++) {
-            pos[0] = (int) (_graphics.getLogWidth() * 0.1f) * (1 + (3 * j));
-            pos[1] = (int) (_graphics.getLogHeight() * 0.143f) * (3 + (i / 3) * 2);
+            int[] buttonPos = new int[2];
+            buttonPos[0] = (int)(fullPosition[0] + (i % numButtonsAxisX) * (paddingX + buttonSide));
+            buttonPos[1] = (int)(fullPosition[1] + (i / numButtonsAxisX) * (paddingY + buttonSide));
 
-            boolean unlocked = _isRandom ||
-                    ((GameDataSystem) _serSystem)._data._lastUnlockedPack >= i;
+            // Comprueba que este desbloqueado
+            boolean unlocked = _isRandom || ((GameDataSystem) _serSystem)._data._lastUnlockedPack >= i;
 
             final GridType _this_gridType = _gridTypes.get(i);
             String text = _gridTypes.get(i).getRows() + " x " + _gridTypes.get(i).getCols();
-            final SelectButton _level = new SelectButton(pos, size, text,
-                    FontName.RowColNumber.getName(), unlocked);
 
+            final SelectButton _level = new SelectButton(buttonPos, buttonSize, text, FontName.RowColNumber.getName(), unlocked);
             _level.setCallback(new ButtonCallback() {
                 @Override
                 public void doSomething() {
-                    int r = _level.getRows();
-                    int c = _level.getCols();
-
                     State gameState;
-
                     // Dependiendo de si estamos en modo random o no harán cosas distintas
-                    if (_isRandom) gameState = new GameState(_engine, _this_gridType,
-                            true, 0);
+                    if (_isRandom) gameState = new GameState(_engine, _this_gridType,true, 0);
                     else gameState = new SelectLevelState(_engine, _this_gridType);
-
                     _engine.reqNewState(gameState);
                     _audio.playSound(SoundName.ClickSound.getName(), 0);
                     _audio.stopMusic();
                 }
             });
             _selectButtons.add(_level);
-            j++;
-            if (j == 3) j = 0;
+        }
+    }
+
+    private void setCorrectText(){
+        if (_isRandom) {
+            _modeText = "JUEGO ALEATORIO";
+            _commentText = "Selecciona el tamaño del puzzle";
+        } else {
+            _modeText = "MODO HISTORIA";
+            _commentText = "Selecciona el paquete";
         }
     }
 

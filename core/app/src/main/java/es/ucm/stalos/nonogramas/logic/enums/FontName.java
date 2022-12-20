@@ -14,7 +14,10 @@ public enum FontName {
     GameStateButton("gameStateButton"),
     GameStateText("gameStateText"),
     HintFont("hintFont"),
-    FigureName("figureName")
+    FigureName("figureName"),
+    SelectStateButton("selectStateButton"),
+    SelectStateTitle("selectStateTitle"),
+    SelectStateDescription("selectStateDescription"),
     ;
 
     FontName(String name) {

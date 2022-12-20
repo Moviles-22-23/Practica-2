@@ -55,23 +55,30 @@ public class LoadState extends State {
                     context.getResources().getString(R.string.WhatsApp));
 
             // Fonts
-            _graphics.newFont(FontName.TitleMainMenu.getName(),
-                    context.getResources().getString(R.string.Molle),
-                    150, true);
-            _graphics.newFont(FontName.ButtonMainMenu.getName(),
-                    context.getResources().getString(R.string.JoseFinSans),
-                    100, true);
-            _graphics.newFont(FontName.DefaultFont.getName(),
-                    context.getResources().getString(R.string.JoseFinSans),
-                    25, true);
+            // Main Menu
+            _graphics.newFont(FontName.TitleMainMenu.getName(), context.getResources().getString(R.string.Molle),
+                    50, true);
+            _graphics.newFont(FontName.ButtonMainMenu.getName(), context.getResources().getString(R.string.JoseFinSans),
+                    35, true);
+
+            // Select State
+            _graphics.newFont(FontName.SelectStateTitle.getName(), context.getResources().getString(R.string.JoseFinSans),
+                    36, true);
+            _graphics.newFont(FontName.SelectStateDescription.getName(), context.getResources().getString(R.string.JoseFinSans),
+                    26, true);
+            _graphics.newFont(FontName.SelectStateButton.getName(), context.getResources().getString(R.string.JoseFinSans),
+                    26, true);
+            _graphics.newFont(FontName.LevelNumber.getName(), context.getResources().getString(R.string.Molle),
+                    20, true);
+
+
+
+            _graphics.newFont(FontName.DefaultFont.getName(), context.getResources().getString(R.string.JoseFinSans),
+                    32, true);
             _graphics.newFont(FontName.RowColNumber.getName(),
                     context.getResources().getString(R.string.Molle),
                     20, true);
-            _graphics.newFont(FontName.LevelNumber.getName(),
-                    context.getResources().getString(R.string.Molle),
-                    20, true);
-            _graphics.newFont(FontName.GameStateButton.getName(),
-                    context.getResources().getString(R.string.JoseFinSans),
+            _graphics.newFont(FontName.GameStateButton.getName(), context.getResources().getString(R.string.JoseFinSans),
                     20, true);
             _graphics.newFont(FontName.GameStateButton.getName(),
                     context.getResources().getString(R.string.JoseFinSans),
@@ -81,7 +88,7 @@ public class LoadState extends State {
                     50, true);
             _graphics.newFont(FontName.GameStateText.getName(),
                     context.getResources().getString(R.string.JoseFinSans),
-                    20, true);
+                    40, true);
 
             // Audio
             _audio = _engine.getAudio();

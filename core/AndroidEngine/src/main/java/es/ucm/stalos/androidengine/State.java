@@ -59,18 +59,18 @@ public abstract class State {
 
     }
 
+    /**
+     * Change positions and size between Portrait or Landscape
+     */
+    protected void togglePortraitLandscape(boolean isLandscape){
+
+    }
+
     protected void saveData() {
         _serSystem.saveData();
     }
 
     protected void manageSensorEvent() {
-    }
-
-    protected boolean isLandscape() {
-        return _engine.getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-    }
-
-    protected void togglePortraitLandscape(boolean isLandscape){
 
     }
 

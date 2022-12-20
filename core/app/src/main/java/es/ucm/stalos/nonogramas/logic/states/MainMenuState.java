@@ -26,7 +26,7 @@ public class MainMenuState extends State {
 
             togglePortraitLandscape(_engine.isLandScape());
 
-            // BUTTONS
+            // Callbacks
             _randCallback = new ButtonCallback() {
                 @Override
                 public void doSomething() {
@@ -35,7 +35,6 @@ public class MainMenuState extends State {
                     _audio.playSound(SoundName.ClickSound.getName(), 0);
                 }
             };
-
             _storyCallback = new ButtonCallback() {
                 @Override
                 public void doSomething() {
@@ -47,7 +46,7 @@ public class MainMenuState extends State {
             // Audio
             _audio.playMusic(SoundName.MenuTheme.getName());
         } catch (Exception e) {
-            System.out.println("Error init Main Menu");
+            System.out.println("Error init Main Menu State");
             System.out.println(e);
             return false;
         }
@@ -61,23 +60,19 @@ public class MainMenuState extends State {
 
         // Title
         _graphics.setColor(MyColor.BLACK.get_color());
-        _graphics.drawCenteredString(_titleText, FontName.TitleMainMenu.getName(),
-                _titlePos, _titleSize);
+        _graphics.drawCenteredString(_titleText, FontName.TitleMainMenu.getName(), _titlePos, _titleSize);
 
         // Play Button
         _graphics.setColor(ColorPalette._colorSets.get(ColorPalette._currPalette).x);
         if (ColorPalette._currPalette == 0) _graphics.drawRect(_playButtonPos, _playButtonSize);
         else _graphics.fillSquare(_playButtonPos, _playButtonSize);
-        _graphics.drawCenteredString(_playButtonText, FontName.ButtonMainMenu.getName(),
-                _playButtonPos, _playButtonSize);
+        _graphics.drawCenteredString(_playButtonText, FontName.ButtonMainMenu.getName(), _playButtonPos, _playButtonSize);
 
         // Play Random Button
         _graphics.setColor(ColorPalette._colorSets.get(ColorPalette._currPalette).x);
-        if (ColorPalette._currPalette == 0)
-            _graphics.drawRect(_playRandomButtonPos, _playRandomButtonSize);
+        if (ColorPalette._currPalette == 0) _graphics.drawRect(_playRandomButtonPos, _playRandomButtonSize);
         else _graphics.fillSquare(_playRandomButtonPos, _playRandomButtonSize);
-        _graphics.drawCenteredString(_playRandomButtonText, FontName.ButtonMainMenu.getName(),
-                _playRandomButtonPos, _playRandomButtonSize);
+        _graphics.drawCenteredString(_playRandomButtonText, FontName.ButtonMainMenu.getName(), _playRandomButtonPos, _playRandomButtonSize);
     }
 
     @Override
@@ -106,10 +101,9 @@ public class MainMenuState extends State {
             // TITLE
             _titleSize[0] = _graphics.getLogWidth() * 0.6f;
             _titleSize[1] = _graphics.getLogHeight() * 0.1f;
-            _titlePos = _graphics.constrainedToScreenPos(Constrain.TOP, _titleSize, new int[]{0, (int) (_graphics.getLogHeight() * 0.1f )});
+            _titlePos = _graphics.constrainedToScreenPos(Constrain.TOP, _titleSize, new int[]{0, (int) (_graphics.getLogHeight() * 0.15f )});
 
             // PLAY BUTTON PORTRAIT
-            int buttonGap = 40;
             _playButtonText = "Modo Historia";
             _playButtonSize[0] = _graphics.getLogWidth() * 0.7f;
             _playButtonSize[1] = _graphics.getLogHeight() * 0.1f;
@@ -120,10 +114,10 @@ public class MainMenuState extends State {
             _playRandomButtonSize = _playButtonSize;
             _playRandomButtonPos = _graphics.constrainedToObjectPos(Constrain.TOP,
                     _playButtonPos, _playButtonSize,
-                    _playRandomButtonSize, new int[]{0, buttonGap});
+                    _playRandomButtonSize, new int[]{0, (int) (_graphics.getLogHeight() * 0.1)});
 
         }
-        else{
+        else {
             // TITLE
             _titleSize[0] = _graphics.getLogWidth() * 0.6f;
             _titleSize[1] = _graphics.getLogHeight() * 0.1f;
@@ -131,15 +125,15 @@ public class MainMenuState extends State {
 
             // PLAY RANDOM BUTTON LANDSCAPE
             _playButtonText = "Modo\nHistoria";
-            _playButtonSize[0] = _graphics.getLogWidth() * 0.4f;
-            _playButtonSize[1] = _graphics.getLogHeight() * 0.4f;
-            _playButtonPos = _graphics.constrainedToScreenPos(Constrain.LEFT, _playButtonSize, new int[]{ (int) (_graphics.getLogWidth() * 0.05f), 0});
+            _playButtonSize[0] = _graphics.getLogWidth() * 0.3f;
+            _playButtonSize[1] = _graphics.getLogHeight() * 0.3f;
+            _playButtonPos = _graphics.constrainedToScreenPos(Constrain.LEFT, _playButtonSize, new int[]{ (int) (_graphics.getLogWidth() * 0.15f), (int) (_graphics.getLogWidth() * 0.05f)});
 
 
             // PLAY RANDOM BUTTON LANDSCAPE
             _playRandomButtonText = "Modo\nAleatorio";
             _playRandomButtonSize = _playButtonSize;
-            _playRandomButtonPos = _graphics.constrainedToScreenPos(Constrain.RIGHT, _playRandomButtonSize, new int[]{(int)(_graphics.getLogWidth() * 0.05f), 0});
+            _playRandomButtonPos = _graphics.constrainedToScreenPos(Constrain.RIGHT, _playRandomButtonSize, new int[]{(int)(_graphics.getLogWidth() * 0.15f), (int) (_graphics.getLogWidth() * 0.05f)});
         }
     }
 
