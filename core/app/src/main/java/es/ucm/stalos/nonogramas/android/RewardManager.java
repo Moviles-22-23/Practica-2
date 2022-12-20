@@ -93,7 +93,7 @@ public class RewardManager {
             });
         } else {
             System.out.println("Recompensa no disponible");
-            //_gameState.restoreLives();
+            _gameState.restoreLives();
         }
     }
 
