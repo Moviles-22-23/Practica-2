@@ -185,6 +185,7 @@ public class GameState extends State {
         // Pasa al siguiente nivel
         if (!_isRandom && _playState == PlayingState.Win && _currentLevel < _numLevels - 1) {
             State gameState = new GameState(_engine, _gridType, _isRandom, _currentLevel + 1);
+            ((GameDataSystem) _serSystem)._data._currStateType = StateType.MainMenuState;
             _engine.reqNewState(gameState);
         }
     }

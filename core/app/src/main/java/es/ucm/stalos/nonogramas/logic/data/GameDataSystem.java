@@ -60,8 +60,10 @@ public class GameDataSystem implements SerializableSystem {
             // 2. Reading the object from a file
             FileInputStream file = _context.openFileInput(_fileName);
             ObjectInputStream in = new ObjectInputStream(file);
+
             // 3. Method for deserialization of object
             _data = (GameData) in.readObject();
+
             // 4. Close the streams
             in.close();
             file.close();
@@ -271,7 +273,6 @@ public class GameDataSystem implements SerializableSystem {
      * Original secret password
      */
     private final String _originalPass = "stalos_ArFerSer_moviles_22-23";
-
     /**
      * Reference to the AssetManager
      */
