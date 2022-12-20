@@ -8,30 +8,39 @@ import es.ucm.stalos.nonogramas.logic.enums.MyColor;
 import es.ucm.stalos.nonogramas.logic.interfaces.ButtonCallback;
 
 public class SelectColorSetButton {
-    public SelectColorSetButton(int[] pos, float[] size, Point colorSet, boolean _isUnlocked, int index) {
+    public SelectColorSetButton(int[] pos, float[] size, Point colorSet, boolean _isUnlocked, int index, boolean isLandscape) {
         this._buttonPos = pos;
         this._buttonSize = size;
         this._colorSet = colorSet;
 
-        int margin = 10;
+        if(!isLandscape) {
+            int margin = 10;
 
-        this._firstColorPos[0] = (int) (_buttonPos[0] + _buttonSize[0] * 0.5f);
-        this._firstColorPos[1] = (int) (_buttonPos[1] + _buttonSize[1] * 0.25f);
+            this._firstColorPos[0] = (int) (_buttonPos[0] + _buttonSize[0] * 0.5f);
+            this._firstColorPos[1] = (int) (_buttonPos[1] + _buttonSize[1] * 0.25f);
 
-        this._secondColorPos[0] = (int) (_buttonPos[0] + _buttonSize[0] * 0.5f);
-        this._secondColorPos[1] = (int) (_buttonPos[1] + _buttonSize[1] * 0.75f);
+            this._secondColorPos[0] = (int) (_buttonPos[0] + _buttonSize[0] * 0.5f);
+            this._secondColorPos[1] = (int) (_buttonPos[1] + _buttonSize[1] * 0.75f);
 
-        this._colorRadius = (_buttonSize[0] / 2) - margin;
+            this._colorRadius = (_buttonSize[0] / 2) - margin;
+        }
+        else{
+            int margin = 10;
+
+            this._firstColorPos[0] = (int) (_buttonPos[0] + _buttonSize[0] * 0.25f);
+            this._firstColorPos[1] = (int) (_buttonPos[1] + _buttonSize[1] * 0.5f);
+
+            this._secondColorPos[0] = (int) (_buttonPos[0] + _buttonSize[0] * 0.75f);
+            this._secondColorPos[1] = (int) (_buttonPos[1] + _buttonSize[1] * 0.5f);
+
+            this._colorRadius = (_buttonSize[1] / 2) - margin;
+        }
 
         this._isUnlocked = _isUnlocked;
         this._index = index;
     }
 
     public void render(Graphics graphics) {
-        // Fondo negro
-        if (ColorPalette._currPalette == _index) graphics.setColor(_colorSet.y);
-        else graphics.setColor(MyColor.BLACK.get_color());
-        graphics.fillSquare(_buttonPos, _buttonSize);
         // Color Primario
         graphics.setColor(_colorSet.x);
         graphics.fillCircle(_firstColorPos, _colorRadius);
@@ -44,12 +53,8 @@ public class SelectColorSetButton {
         graphics.fillCircle(_secondColorPos, _colorRadius);
         graphics.setColor(MyColor.BLACK.get_color());
         graphics.drawCircle(_secondColorPos, _colorRadius);
-        // Marco
-//        gr.setColor(MyColor.WHITE.getValue());
-//        gr.setColor(MyColor.WHITE.getValue());
 
-        if (!_isUnlocked) graphics.drawImage(ImageName.Lock.getName(),
-                _buttonPos, _buttonSize);
+        if (!_isUnlocked) graphics.drawImage(ImageName.Lock.getName(), _buttonPos, _buttonSize);
     }
 
     public void setCallback(ButtonCallback cb) {

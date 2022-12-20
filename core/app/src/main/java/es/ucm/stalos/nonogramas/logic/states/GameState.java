@@ -107,8 +107,7 @@ public class GameState extends State {
             // touchDown
             if (currEvent == TouchEvent.touchDown) {
                 // GIVE-UP BUTTON
-                if (_playState != PlayingState.Win &&
-                        clickInsideSquare(clickPos, _giveupImagePos, _giveupButtonSize)) {
+                if (clickInsideSquare(clickPos, _giveupImagePos, _giveupButtonSize)) {
                     _backCallback.doSomething();
                 }
 
@@ -117,12 +116,6 @@ public class GameState extends State {
                         clickInsideSquare(clickPos, _posBoard, _sizeBoard)) {
                     _board.handleInput(clickPos, currEvent);
                     _audio.playSound(SoundName.ClickSound.getName(), 0);
-                }
-
-                // BACK BUTTON WIN
-                else if (_playState == PlayingState.Win &&
-                        clickInsideSquare(clickPos, _backImagePos, _backButtonSize)) {
-                    _backCallback.doSomething();
                 }
 
                 // ADS
@@ -218,42 +211,17 @@ public class GameState extends State {
      * Initializes the board
      */
     private void initBoard(boolean isLandscape) throws Exception {
-        float maxBoardWidth, maxBoardHeight;
-        int xPadding, yPadding;
-
-        if (!isLandscape) {
-            xPadding = 10;
-            yPadding = 15;
-
-            maxBoardWidth = _graphics.getLogWidth() - xPadding * 2;
-            maxBoardHeight = _posColorPalette[1] - _lifeImageSize[1] - _lifeImagePos[1] - yPadding * 2;
-
-            _sizeBoard[0] = maxBoardWidth;
-            _sizeBoard[1] = maxBoardHeight;
-
-            _posBoard = _graphics.constrainedToScreenPos(Constrain.TOP_LEFT,
-                    _sizeBoard, new int[]{xPadding, yPadding});
-            _posBoard[1] += (int) (_lifeImagePos[1] + _lifeImageSize[1]);
-        } else {
-            xPadding = 10;
-            yPadding = 10;
-
-            maxBoardWidth = _posColorPalette[0] - _giveupImagePos[0] - _giveupButtonSize[0] - xPadding * 2;
-            maxBoardHeight = _graphics.getLogHeight() - yPadding * 2;
-
-            _sizeBoard[0] = maxBoardWidth;
-            _sizeBoard[1] = maxBoardHeight;
-
-            _posBoard = _graphics.constrainedToObjectPos(Constrain.LEFT,
-                    _giveupTextPos, _giveupTextSize,
-                    _sizeBoard, new int[]{0, 0});
-        }
+        // the board should make the most of the screen
+        float maxBoardSide = Math.min(_graphics.getLogWidth(), _graphics.getLogHeight());
+        // We add a little margin
+        float margin = maxBoardSide * 0.02f;
+        _sizeBoard = new float[] { maxBoardSide - margin, maxBoardSide - margin};
+        _posBoard = _graphics.constrainedToScreenPos(Constrain.MIDDLE, _sizeBoard, new int[]{ 0, 0 });
 
         if (_data._inGame)
             _board = new Board(this, _data, _posBoard, _sizeBoard);
         else
-            _board = new Board(this, _gridType, _posBoard, _sizeBoard,
-                    _isRandom, _currentLevel);
+            _board = new Board(this, _gridType, _posBoard, _sizeBoard, _isRandom, _currentLevel);
 
         if (!_board.init(_data, _graphics.getLogWidth(),
                 _graphics.getLogHeight(), _engine.getAssetManager()))
@@ -266,25 +234,13 @@ public class GameState extends State {
     private void initButtons(boolean isLandscape) {
         if (!isLandscape) {
             // GIVE UP
-            _giveupImageSize[0] = _graphics.getLogWidth() * 0.07f;
-            _giveupImageSize[1] = _graphics.getLogHeight() * 0.05f;
-            _giveupImagePos = _graphics.constrainedToScreenPos(Constrain.TOP_LEFT, _giveupImageSize, new int[]{10, 10});
+            _giveupImageSize[0] = _graphics.getLogWidth() * 0.108f;
+            _giveupImageSize[1] = _graphics.getLogHeight() * 0.06f;
+            _giveupImagePos = _graphics.constrainedToScreenPos(Constrain.TOP_LEFT, _giveupImageSize, new int[]{0, 0});
 
             _giveupTextSize[0] = _graphics.getLogWidth() * 0.3f;
             _giveupTextSize[1] = _giveupImageSize[1];
-            _giveupTextPos[0] = (int) (_giveupImagePos[0] + _giveupImageSize[0]);
-            _giveupTextPos[1] = _giveupImagePos[1];
-
-            // BACK
-            _backImageSize[0] = _giveupImageSize[1];
-            _backImageSize[1] = _giveupImageSize[1];
-            _backTextSize[0] = _graphics.getLogWidth() * 0.2f;
-            _backTextSize[1] = _giveupImageSize[1];
-
-            _backImagePos = _graphics.constrainedToScreenPos(Constrain.BOTTOM_LEFT, _backImageSize,
-                    new int[]{(int) (_graphics.getLogWidth() * 0.2f - _backImageSize[0]), 100});
-            _backTextPos[0] = (int) (_backImagePos[0] + _backImageSize[0]);
-            _backTextPos[1] = _backImagePos[1];
+            _giveupTextPos = _graphics.constrainedToObjectPos(Constrain.LEFT, _giveupImagePos, _giveupImageSize, _giveupTextSize, new int[] { 0, 0 });
 
             // LIFE
             _lifeImageSize[0] = _graphics.getLogWidth() * 0.17f;
@@ -306,30 +262,17 @@ public class GameState extends State {
                     new int[]{(int) (_graphics.getLogWidth() * 0.2f), 40});
         } else {
             // GIVE UP
-            _giveupImageSize[0] = _graphics.getLogWidth() * 0.05f;
-            _giveupImageSize[1] = _graphics.getLogHeight() * 0.07f;
-            _giveupImagePos = _graphics.constrainedToScreenPos(Constrain.TOP_LEFT, _giveupImageSize, new int[]{10, 10});
+            _giveupImageSize[0] = _graphics.getLogWidth() * 0.06f;
+            _giveupImageSize[1] = _graphics.getLogHeight() * 0.108f;
+            _giveupImagePos = _graphics.constrainedToScreenPos(Constrain.TOP_LEFT, _giveupImageSize, new int[]{0, 0});
 
             _giveupTextSize[0] = _graphics.getLogWidth() * 0.15f;
             _giveupTextSize[1] = _giveupImageSize[1];
-            _giveupTextPos = _graphics.constrainedToObjectPos(Constrain.LEFT, // constrain
-                    _giveupImagePos, _giveupImageSize, // father
-                    _giveupTextSize, new int[]{0, 0}); // object and padding
-
-            // BACK
-            _backImageSize[0] = _giveupImageSize[1];
-            _backImageSize[1] = _giveupImageSize[1];
-            _backTextSize[0] = _graphics.getLogWidth() * 0.1f;
-            _backTextSize[1] = _giveupImageSize[1];
-
-            _backImagePos = _graphics.constrainedToScreenPos(Constrain.TOP_LEFT, _backImageSize,
-                    new int[]{10, 10});
-            _backTextPos[0] = (int) (_backImagePos[0] + _backImageSize[0]);
-            _backTextPos[1] = _backImagePos[1];
+            _giveupTextPos = _graphics.constrainedToObjectPos(Constrain.LEFT, _giveupImagePos, _giveupImageSize, _giveupTextSize, new int[]{0, 0}); // object and padding
 
             // LIFE
-            _lifeImageSize[0] = _graphics.getLogWidth() * 0.075f;
-            _lifeImageSize[1] = _graphics.getLogHeight() * 0.15f;
+            _lifeImageSize[0] = _graphics.getLogHeight() * 0.17f;
+            _lifeImageSize[1] = _graphics.getLogWidth() * 0.075f;
             _lifeImagePos = _graphics.constrainedToObjectPos(Constrain.TOP,
                     _giveupImagePos, _giveupButtonSize,
                     _lifeImageSize, new int[]{20, 150});
@@ -352,10 +295,6 @@ public class GameState extends State {
         // GIVE UP BUTTON SIZE
         _giveupButtonSize[1] = _giveupImageSize[1];
         _giveupButtonSize[0] = _giveupImageSize[0] + _giveupTextSize[0];
-
-        // BACK BUTTON SIZE
-        _backButtonSize[0] = _backImageSize[0] + _backTextSize[0];
-        _backButtonSize[1] = _backImageSize[1];
 
         // BUTTON CALLBACKS
         _backCallback = new ButtonCallback() {
@@ -460,19 +399,21 @@ public class GameState extends State {
      */
     private void initPalette(boolean isLandscape) throws Exception {
         if (!isLandscape) {
-            _sizeColorPalette[0] = 400.0f;
-            _sizeColorPalette[1] = 100.0f;
-            _posColorPalette = _graphics.constrainedToScreenPos(Constrain.BOTTOM_LEFT, _sizeColorPalette, new int[]{0, 1});
+            _sizeColorPalette[0] = _graphics.getLogWidth();
+            _sizeColorPalette[1] = _graphics.getLogHeight() * 0.16f;
+            _posColorPalette = _graphics.constrainedToScreenPos(Constrain.BOTTOM, _sizeColorPalette, new int[]{0, 0});
+            System.out.println(_posColorPalette[1]);
 
         } else {
-            // TODO: darle la vuelta
-            _sizeColorPalette[0] = 100.0f;
-            _sizeColorPalette[1] = 400.0f;
-            _posColorPalette = _graphics.constrainedToScreenPos(Constrain.RIGHT, _sizeColorPalette, new int[]{1, 0});
+            _sizeColorPalette[0] = _graphics.getLogWidth() * 0.16f;
+            _sizeColorPalette[1] = _graphics.getLogHeight();
+            _posColorPalette = _graphics.constrainedToScreenPos(Constrain.RIGHT, _sizeColorPalette, new int[]{0, 0});
+            System.out.println(_posColorPalette[0]);
         }
+
         _colorPalette = new ColorPalette(_posColorPalette, _sizeColorPalette, this);
 
-        if (!_colorPalette.init(_data._lastUnlockedPack, _graphics.getLogWidth(), _graphics.getLogHeight()))
+        if (!_colorPalette.init(_data._lastUnlockedPack, _engine.isLandScape()))
             throw new Exception("Error al iniciar palette");
     }
 
@@ -483,16 +424,20 @@ public class GameState extends State {
      */
     private void renderButtons() {
         _graphics.setColor(MyColor.BLACK.get_color());
+
+        _graphics.setColor(ColorPalette._colorSets.get(ColorPalette._currPalette).x);
+        if (ColorPalette._currPalette == 0) _graphics.drawRect(_giveupImagePos, _giveupButtonSize);
+        else _graphics.fillSquare(_giveupImagePos, _giveupButtonSize);
+        _graphics.setColor(MyColor.BLACK.get_color());
+        _graphics.drawImage(ImageName.BackArrow.getName(), _giveupImagePos, _giveupImageSize);
+        _graphics.drawCenteredString(_giveupText, FontName.SelectStateButton.getName(), _giveupTextPos, _giveupTextSize);
+
         switch (_playState) {
             case Gaming: {
                 // GiveUp Button
                 _graphics.setColor(ColorPalette._colorSets.get(ColorPalette._currPalette).x);
                 float[] aux = {_giveupImageSize[0] + _giveupTextSize[0], _giveupImageSize[1]};
 
-                _graphics.setColor(0xFF0);
-                _graphics.drawImage(ImageName.BackArrow.getName(), _giveupImagePos, _giveupImageSize);
-                _graphics.drawCenteredString(_giveupText, FontName.GameStateButton.getName(),
-                        _giveupTextPos, _giveupTextSize);
 
                 // Life Image
                 if (!_engine.isLandScape()) {
@@ -523,24 +468,12 @@ public class GameState extends State {
                 break;
             }
             case Win: {
-                // Back Button
-                _graphics.setColor(MyColor.BLACK.get_color());
-
-                _graphics.drawImage(ImageName.BackArrow.getName(), _backImagePos, _backImageSize);
-                _graphics.drawCenteredString(_backText, FontName.GameStateButton.getName(),
-                        _backTextPos, _backTextSize);
-
+                // Other apps
                 _graphics.drawImage(ImageName.Twitter.getName(), _twitterPos, _shareSize);
                 _graphics.drawImage(ImageName.WhatsApp.getName(), _whatsPos, _shareSize);
                 break;
             }
             case GameOver:
-                // GiveUp Button
-                _graphics.setColor(MyColor.BLACK.get_color());
-
-                _graphics.drawImage(ImageName.BackArrow.getName(), _giveupImagePos, _giveupImageSize);
-                _graphics.drawCenteredString(_giveupText, FontName.GameStateButton.getName(),
-                        _giveupTextPos, _giveupTextSize);
                 // Ad button
                 _graphics.drawImage(ImageName.HeartRecovery.getName(), _adsImagePos, _adsImageSize);
                 break;
@@ -675,6 +608,7 @@ public class GameState extends State {
 
     public void setPlayingState(PlayingState newPlayingState) {
         _playState = newPlayingState;
+        _giveupText = "Volver";
     }
 
     public void setFigureName(String name) {
@@ -711,7 +645,7 @@ public class GameState extends State {
     private float[] _levelNameSize = new float[2];
 
     // Give Up Button
-    private final String _giveupText = "Rendirse";
+    private String _giveupText = "Rendirse";
     private int[] _giveupTextPos = new int[2];
     private float[] _giveupTextSize = new float[2];
 
@@ -720,15 +654,6 @@ public class GameState extends State {
 
     private float[] _giveupButtonSize = new float[2];
 
-    // Back Button
-    private final String _backText = "Volver";
-    private int[] _backTextPos = new int[2];
-    private float[] _backTextSize = new float[2];
-
-    private int[] _backImagePos = new int[2];
-    private float[] _backImageSize = new float[2];
-
-    private float[] _backButtonSize = new float[2];
     private ButtonCallback _backCallback;
 
     // PRACTICA 2
