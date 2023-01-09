@@ -318,7 +318,7 @@ public class Graphics {
     }
 
     /**
-     * Returns a constrained position based on logic width and height.
+     * Returns a constrained to screen position based on logic width and height.
      *
      * @param c       the constrain to attach the position.
      * @param size    the size of the object.
@@ -370,6 +370,16 @@ public class Graphics {
         return pos;
     }
 
+    /**
+     * Returns a constrained to object position based on logic width and height.
+     *
+     * @param c          the constraint to attach the element.
+     * @param parentPos  position of the parent to be attached.
+     * @param parentSize size of the parent ot be attached.
+     * @param size       size of the element to be constrained.
+     * @param padding    the padding in x and y axis.
+     * @return
+     */
     public int[] constrainedToObjectPos(Constraint c, final int[] parentPos, final float[] parentSize, final float[] size, final int[] padding) {
         int[] pos = {0, 0};
 

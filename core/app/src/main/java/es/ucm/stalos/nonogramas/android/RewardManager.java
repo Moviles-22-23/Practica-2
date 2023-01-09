@@ -30,7 +30,6 @@ public class RewardManager {
      */
     public void loadAd(Activity context) {
         if (_rewardedAd == null) {
-            _isLoading = true;
             AdRequest adRequest = new AdRequest.Builder().build();
             RewardedAd.load(context, "ca-app-pub-3940256099942544/5224354917", adRequest, new RewardedAdLoadCallback() {
                 @Override
@@ -38,14 +37,12 @@ public class RewardManager {
                     super.onAdFailedToLoad(loadAdError);
                     _rewardedAd = null;
                     System.out.println("Rewarded Ad failed to load");
-                    _isLoading = false;
                 }
 
                 @Override
                 public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
                     _rewardedAd = rewardedAd;
                     System.out.println("Rewarded Ad was loaded");
-                    _isLoading = false;
                 }
             });
         }
@@ -93,12 +90,12 @@ public class RewardManager {
             });
         } else {
             System.out.println("Recompensa no disponible");
-            _gameState.restoreLives();
+            // Only for debug
+            //_gameState.restoreLives();
         }
     }
 
 
     private GameState _gameState;
     private RewardedAd _rewardedAd;
-    private boolean _isLoading;
 }

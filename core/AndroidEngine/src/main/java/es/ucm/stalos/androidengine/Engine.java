@@ -1,6 +1,7 @@
 package es.ucm.stalos.androidengine;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.hardware.Sensor;
@@ -27,6 +28,9 @@ public class Engine implements Runnable {
         // GRAPHICS
         _graphics = new Graphics(w, h, _assetsMan, view, isLandScape());
 
+        // VIBRATOR
+        _vibrator = (Vibrator) _context.getSystemService(Context.VIBRATOR_SERVICE);
+
         // INPUT
         _input = new Input(this);
 
@@ -38,6 +42,7 @@ public class Engine implements Runnable {
 
         // AUDIO
         _audio = new Audio(_assetsMan, 10);
+
 
         return _currState.init();
     }
@@ -140,10 +145,17 @@ public class Engine implements Runnable {
     }
 
     /**
-     * @return Instace of audio manager
+     * @return Instance of audio manager
      */
     public Audio getAudio() {
         return _audio;
+    }
+
+    /**
+     * @return Instance of vibrator
+     */
+    public Vibrator getVibrator() {
+        return _vibrator;
     }
 
     /**
@@ -200,7 +212,7 @@ public class Engine implements Runnable {
         }
     }
 
-    public boolean isLandScape(){
+    public boolean isLandScape() {
         return this.getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
@@ -222,7 +234,7 @@ public class Engine implements Runnable {
     private Group _adView;
 
     // Vibration
-    Vibrator _vibrator;
+    private Vibrator _vibrator;
 
     // DELTA TIME
     private long _lastFrameTime = 0;

@@ -187,7 +187,7 @@ public class GameState extends State {
             _engine.reqNewState(gameState);
         }
         // Genera un nivel nuevo
-        else if (_isRandom && _playState == PlayingState.Win){
+        else if (_isRandom && _playState == PlayingState.Win) {
             State gameState = new GameState(_engine, _gridType, _isRandom, 0);
             ((GameDataSystem) _serSystem)._data._currStateType = StateType.MainMenuState;
             _engine.reqNewState(gameState);
@@ -582,6 +582,10 @@ public class GameState extends State {
 
     public void playSound(SoundName sound) {
         _engine.getAudio().playSound(sound.getName(), 0);
+    }
+
+    public void vibrate(int time) {
+        _engine.getVibrator().vibrate(time);
     }
 
 //------------------------------------------GET-SET-----------------------------------------------//

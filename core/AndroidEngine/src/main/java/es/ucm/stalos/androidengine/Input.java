@@ -15,7 +15,7 @@ public class Input implements View.OnTouchListener, View.OnLongClickListener {
     public Input(Engine e) {
         _engine = e;
         _events = new ArrayList<>();
-        _vibrator = (Vibrator) e.getContext().getSystemService(Context.VIBRATOR_SERVICE);
+        _vibrator = e.getVibrator();
     }
 
     /**

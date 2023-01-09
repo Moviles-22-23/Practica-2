@@ -323,6 +323,7 @@ public class Board {
                     if (touch == TouchEvent.touchDown && !_sol[i][j] ||
                             touch == TouchEvent.longTouch && _sol[i][j]) {
                         _state.playSound(SoundName.FailSound);
+                        _state.vibrate(600);
                         _state.updateLives(-1);
                         return;
                     } else _state.playSound(SoundName.GoodSound);
