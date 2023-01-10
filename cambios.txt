@@ -1,0 +1,19 @@
+1. Marcar casillas con LongTouch también descuenta vida si la casilla era parte de la solución.
+	Marcar casillas con LongTouch solo sirve para marcar una casilla blanca, es decir que no forma parte de la solución,
+ 	si el LongTouch se realiza sobre una casilla que forma parte de la solución es incorrecto porque debería de hacerse
+	un Touch normal.
+
+2. El sonido para indefinidamente al girar el móvil y cambiar el layout.
+
+3. No hay feedback visual en la casilla que se ha fallado, lo que hace que el usuario si no se fija en las vidas
+o juega sin sonido pueda pensar que no ha pulsado bien la pantalla y repita el fallo.
+	No se ha añadido feedback visual pero se ha añadido una vibración más larga que la del LongTouch indicando que una 
+	casilla se ha marcado de manera incorrecta.
+
+4. Los elementos no mantienen la relación de aspecto, se deforman según el tamaño de la pantalla ya que se escala por diferente factor.
+
+5. Tenéis código que no se usa, como Vibrator en Engine. También código comentado viejo.
+	Ahora vibrator se usa en más lugares con lo cual tiene sentido que esté en Engine
+
+6. Hay código comentado con JavaDoc y otro que no.
+
